@@ -29,16 +29,16 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 
 ## 1 — Foundations
 
-- [ ] Scaffold Vite + React + TypeScript
-- [ ] PWA setup: manifest, service worker, installable, offline shell
+- [x] Scaffold Vite + React + TypeScript
+- [x] PWA setup: manifest, service worker, icons, installable, offline shell
+- [x] IndexedDB layer (Dexie) as the source of truth for reads
+- [x] Finnish string table (`src/i18n.ts`)
+- [x] Design tokens, light + dark, ≥48 px targets (`src/styles.css`)
 - [ ] Supabase project, auth, row-level security
-- [ ] Data model: exercise, movement, workout template, program, session, logged set, body metric
-- [ ] IndexedDB layer (Dexie or similar) as the source of truth for reads
+- [ ] Data model: workout template, program, session, logged set, body metric
 - [ ] Eager library sync at first login, blocking with progress + retry
 - [ ] Write queue + background sync + visible sync state
-- [ ] Finnish string table and `t()` helper
-- [ ] Design tokens (color, type, spacing) and core components
-- [ ] Numeric pad component: 2.5 kg steppers, plate calculator, ≥48 px targets
+- [ ] Numeric pad component: 2.5 kg steppers, plate calculator
 - [ ] Navigation shell — nutrition tab slot reserved but hidden
 
 ## 2 — Exercise library
@@ -49,22 +49,22 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Finnish taxonomy: 17 muscle groups, 12 equipment types
 - [x] Override layer in the build script: merge `data/overrides.json`, reject `id` patches, warn on unknown ids
 - [x] Id ledger: pin all 873 ids, alias-based rename resolution, collision guard, orphan reporting
-- [ ] Schema in the app matching the seed shape; load into IndexedDB
-- [ ] `movement_overrides` table; effective movement = seed merged with override at read time
-- [ ] Search and filter by muscle group / equipment (search both `nameFi` and `nameEn`)
+- [x] Schema in the app matching the seed shape; load into IndexedDB
+- [x] `overrides` table; effective movement = seed merged with override at read time
+- [x] Search and filter by muscle group / equipment (searches both `nameFi` and `nameEn`)
 - [ ] Custom user-created exercises (covers the abductor / adductor / neck gaps)
 - [>] Movement images — deferred, no images in v1
 
 ### Admin editing
 
-- [ ] Liikekirjasto list with per-row edit affordance
-- [ ] `Tarkistettavat` filter — missing `nameFi`, `mechanic`, `force`, `equipment`
-- [ ] Liikkeen muokkaus: edit both names, muscles, equipment, mechanic, force
-- [ ] Edited-field markers + per-field reset to seed default
-- [ ] Hide as an override, never a delete (history must still resolve)
-- [ ] Joukkokäännös — bulk `nameEn` → `nameFi` list, keyboard-tabbable
-- [ ] Export overrides as `data/overrides.json`; import to restore
-- [ ] Editing unreachable from the live session screen
+- [x] Liikekirjasto list with per-row edit affordance
+- [x] `Tarkistettavat` filter — missing `nameFi`, `mechanic`, `force`, `equipment`
+- [x] Liikkeen muokkaus: edit both names, muscles, equipment, mechanic, force, level
+- [x] Edited-field markers + per-field reset to seed default
+- [x] Hide as an override, never a delete (history must still resolve)
+- [x] Joukkokäännös — bulk `nameEn` → `nameFi` list, keyboard-tabbable
+- [x] Export overrides as `data/overrides.json`; import to restore
+- [ ] Editing unreachable from the live session screen (no session screen yet)
 - [ ] Native-speaker review of the 68 draft Finnish names (via Joukkokäännös)
 
 ## 3 — Planning
@@ -130,4 +130,6 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Data plan corrected after verifying sources live. Everkinetic's own images are dead (404s, host unresolvable) but survive as SVG in the rswilley fork, keyed by `id_num`, 269/292 covered. Everything vendored at build time, no runtime source dependency.
 - 2026-08-11 — Images dropped from v1, which removed the whole licensing problem. free-exercise-db (public domain) is now the sole source, metadata only. Built `scripts/build-movements.py` → 873 normalised movements, 68 curated with draft Finnish names, Finnish taxonomy. Everkinetic demoted to a deferred image option.
 - 2026-08-11 — Admin editing specced: immutable seed + override layer keyed by movement id, merged at read time, so library updates never clobber edits. `id` is canonical and frozen; both `nameFi` and `nameEn` are user-facing and editable. Build script now merges `data/overrides.json`, closing the app → repo loop.
+- 2026-08-11 — Repo initialised and pushed to github.com:Pnikanti/qwark.
+- 2026-08-11 — First app slice built: Vite + React + TS + PWA, Dexie with the seed/override split, Liikekirjasto with search and filters, per-movement editor with per-field reset, Joukkokäännös bulk rename, and overrides export/import. Verified in headless Chrome: 68 movements render from IndexedDB, all filters work, edits round-trip, and an offline reload still renders the full library with edits intact. No Supabase yet — local-first means IndexedDB is the source of truth anyway.
 - 2026-08-11 — Id ledger added, pinning all 873 ids so upstream renames can't orphan logged history. Upstream has no stable id of its own (name-derived), so renames are resolved by hand via `aliases`. Tested end-to-end: simulated renaming "Barbell Squat" → "Back Squat (Barbell)", confirmed the orphan+mint report, resolved via alias, verified the id held at `barbell-squat` with the new `nameEn`.

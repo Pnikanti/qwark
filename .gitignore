@@ -24,3 +24,6 @@ dist-ssr/
 # Python
 __pycache__/
 *.py[cod]
+
+# TypeScript incremental build info
+*.tsbuildinfo
