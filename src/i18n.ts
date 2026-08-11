@@ -100,6 +100,7 @@ export const fi = {
   addMovement: 'Lisää liike',
   removeSet: 'Poista sarja',
   removeMovement: 'Poista liike',
+  reorder: 'Siirrä',
   finish: 'Lopeta treeni',
   note: 'Muistiinpano',
   notePlaceholder: 'Esim. otetta leveämmäksi',

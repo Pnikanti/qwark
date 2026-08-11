@@ -92,6 +92,9 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Logged sets collapse to a log line, reopenable to fix a mistyped load
 - [x] Next set outlined; session progress rail
 - [x] Rest phase reveals what's next and upcoming targets
+- [x] Drag to reorder movements mid-session, persisted; arrow keys from the grip
+- [x] `Lisää liike` appends at the end of the list; `Lopeta treeni` alone in the header
+- [ ] Offer to save a reordered session's order back to its routine
 - [x] Set row checkmark → complete + rest timer + haptic
 - [x] Pre-fill from last session; unchanged set is one tap
 - [x] First-session empty state: `Ei aiempaa tietoa`, blank loads, no invented weights
@@ -147,3 +150,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Id ledger added, pinning all 873 ids so upstream renames can't orphan logged history. Upstream has no stable id of its own (name-derived), so renames are resolved by hand via `aliases`. Tested end-to-end: simulated renaming "Barbell Squat" → "Back Squat (Barbell)", confirmed the orphan+mint report, resolved via alias, verified the id held at `barbell-squat` with the new `nameEn`.
 - 2026-08-11 — Training loop built: Tänään, session logging, numeric pad with plate calculator, and summary. 7 Finnish starter routines seeded with movement ids validated at build time. Sessions copy their plan at start so template edits cannot rewrite history. Verified end to end in headless Chrome including a session started, logged, reloaded, and finished entirely offline (3 sets, 1 200 kg). Deferred: programme scheduling, exotic set types, RPE, notes UI, template editing, configurable bar weight.
 - 2026-08-11 — Session view reworked after measuring it: 92 buttons and 1.9 screens of scroll for a one-set decision. Now an accordion — one movement expanded, others folded to a line, logged sets collapsed to the log vernacular, next set outlined, and the rest period used to reveal what's coming. 23 controls, one screen. Also fixed `setsLine` to show reps alone for bodyweight work instead of `– × 8`.
+- 2026-08-11 — Session movements are reorderable by dragging a grip, persisted as the array order. Required giving each entry a stable `uid` (Dexie v3 backfills it) because the active movement was tracked by index, which a reorder breaks — and a session can hold the same movement twice. Pointer Events rather than HTML5 drag-and-drop, which never fires from touch. `Lisää liike` moved to the foot of the list where the append happens; `Lopeta treeni` now alone in the header.

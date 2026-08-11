@@ -37,6 +37,18 @@ class QwarkDB extends Dexie {
       sessions: 'id, startedAt, finishedAt, templateId',
       meta: 'key',
     })
+    // Backfill stable per-entry ids so reordering cannot lose track of which
+    // movement is active. Schema is unchanged; only the row shape moves on.
+    this.version(3).upgrade((tx) =>
+      tx
+        .table<Session>('sessions')
+        .toCollection()
+        .modify((session) => {
+          session.movements.forEach((m, i) => {
+            if (!m.uid) m.uid = `m${session.startedAt}-${i}`
+          })
+        }),
+    )
   }
 }
 

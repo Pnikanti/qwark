@@ -95,6 +95,10 @@ export interface LoggedSet {
 }
 
 export interface SessionMovement {
+  /** Stable identity for this entry. Order is the array's order, but the active
+   *  entry and React keys must survive a reorder, and the same movement can
+   *  appear twice in one session. */
+  uid: string
   movementId: string
   targetReps: number | null
   restSeconds: number | null

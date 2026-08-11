@@ -71,6 +71,7 @@ export async function startSession(template?: Template): Promise<string> {
     startedAt: Date.now(),
     finishedAt: null,
     movements: (template?.items ?? []).map((item) => ({
+      uid: id(),
       movementId: item.movementId,
       targetReps: item.targetReps,
       restSeconds: item.restSeconds,
@@ -111,12 +112,25 @@ async function mutate(
 export const addMovement = (sessionId: string, movementId: string) =>
   mutate(sessionId, (s) => {
     s.movements.push({
+      uid: id(),
       movementId,
       targetReps: null,
       restSeconds: null,
       note: null,
       sets: [emptySet()],
     })
+  })
+
+/**
+ * Move a movement. `session.movements` order is the stored order, so persisting
+ * the new arrangement needs nothing beyond writing the array back.
+ */
+export const reorderMovements = (sessionId: string, from: number, to: number) =>
+  mutate(sessionId, (s) => {
+    if (from === to) return
+    const clamped = Math.max(0, Math.min(s.movements.length - 1, to))
+    const [moved] = s.movements.splice(from, 1)
+    s.movements.splice(clamped, 0, moved)
   })
 
 export const removeMovement = (sessionId: string, index: number) =>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { NumberPad, type PadMode } from '../components/NumberPad'
 import { MovementPicker } from '../components/MovementPicker'
+import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
 import { clock, duration, setsLine } from '../lib/format'
@@ -18,6 +19,7 @@ import {
   previousPerformance,
   removeMovement,
   removeSet,
+  reorderMovements,
   sessionProgress,
   toggleSetDone,
 } from '../lib/session'
@@ -49,8 +51,9 @@ export function SessionScreen({
   const [picking, setPicking] = useState(false)
   const [restUntil, setRestUntil] = useState<number | null>(null)
   const [now, setNow] = useState(Date.now())
-  /** null follows the workout; a number means the user parked on a movement. */
-  const [chosen, setChosen] = useState<number | null>(null)
+  /** null follows the workout; a uid means the user parked on that movement.
+   *  Tracked by uid, not index, so reordering cannot shift the focus. */
+  const [chosenUid, setChosenUid] = useState<string | null>(null)
   const [showLogged, setShowLogged] = useState(false)
 
   useEffect(() => {
@@ -73,18 +76,28 @@ export function SessionScreen({
     [movements],
   )
 
+  const reorder = useDragReorder(session?.movements.length ?? 0, (from, to) =>
+    reorderMovements(id, from, to),
+  )
+
   if (!session || !movements) return <p className="blank note">{fi.loading}</p>
 
   const name = (movementId: string) =>
     byId.get(movementId)?.nameFi ?? byId.get(movementId)?.nameEn ?? movementId
 
-  const active = chosen ?? firstIncomplete(session) ?? session.movements.length - 1
+  const chosenIndex = chosenUid
+    ? session.movements.findIndex((m) => m.uid === chosenUid)
+    : -1
+  const active =
+    chosenIndex >= 0
+      ? chosenIndex
+      : (firstIncomplete(session) ?? session.movements.length - 1)
   const progress = sessionProgress(session)
   const resting = restUntil !== null && restUntil > now
   if (restUntil && restUntil <= now) setRestUntil(null)
 
   const focus = (index: number) => {
-    setChosen(index)
+    setChosenUid(session.movements[index]?.uid ?? null)
     setShowLogged(false)
   }
 
@@ -103,7 +116,7 @@ export function SessionScreen({
       const next = session.movements.findIndex(
         (m, i) => i !== mIndex && !movementComplete(m),
       )
-      setChosen(next === -1 ? null : next)
+      setChosenUid(next === -1 ? null : session.movements[next].uid)
       setShowLogged(false)
     }
   }
@@ -132,10 +145,7 @@ export function SessionScreen({
             }}
           />
         </div>
-        <div className="masthead-actions">
-          <button className="btn" onClick={() => setPicking(true)}>
-            {fi.addMovement}
-          </button>
+        <div className="masthead-actions end">
           <button className="btn solid" onClick={finish}>
             {fi.finish}
           </button>
@@ -149,16 +159,25 @@ export function SessionScreen({
         </div>
       )}
 
-      <ul className="stack">
+      <ul className={`stack${reorder.dragging ? ' reordering' : ''}`} ref={reorder.listRef}>
         {session.movements.map((m, mIndex) => (
-          <li key={`${m.movementId}-${mIndex}`}>
-            {mIndex === active ? (
+          <li
+            key={m.uid}
+            className={reorder.draggingIndex === mIndex ? 'lifted' : undefined}
+            style={
+              reorder.dragging
+                ? { transform: `translateY(${reorder.rowOffset(mIndex)}px)` }
+                : undefined
+            }
+          >
+            {mIndex === active && !reorder.dragging ? (
               <ActiveMovement
                 movement={m}
                 name={name(m.movementId)}
                 previousLine={previous?.[m.movementId] ?? ''}
                 showLogged={showLogged}
                 onToggleLogged={() => setShowLogged((v) => !v)}
+                handleProps={reorder.handleProps(mIndex)}
                 onOpenPad={(sIndex, mode) => setPad({ mIndex, sIndex, mode })}
                 onComplete={(sIndex) => complete(mIndex, sIndex)}
                 onAddSet={() => addSet(id, mIndex)}
@@ -171,12 +190,24 @@ export function SessionScreen({
                 movement={m}
                 name={name(m.movementId)}
                 resting={resting}
+                isActive={mIndex === active}
+                handleProps={reorder.handleProps(mIndex)}
                 onClick={() => focus(mIndex)}
               />
             )}
           </li>
         ))}
       </ul>
+
+      {/* Appending a movement belongs where the append happens, matching
+          "Lisää sarja" at the foot of the expanded movement. */}
+      {session.movements.length > 0 && (
+        <div className="append">
+          <button className="btn btn-tall" onClick={() => setPicking(true)}>
+            + {fi.addMovement}
+          </button>
+        </div>
+      )}
 
       {resting && (
         <div className="restbar">
@@ -216,7 +247,7 @@ export function SessionScreen({
           onPick={async (movementId) => {
             await addMovement(id, movementId)
             setPicking(false)
-            setChosen(session.movements.length)
+            setChosenUid(null)
           }}
           onClose={() => setPicking(false)}
         />
@@ -251,11 +282,15 @@ function CollapsedMovement({
   movement: m,
   name,
   resting,
+  isActive,
+  handleProps,
   onClick,
 }: {
   movement: SessionMovement
   name: string
   resting: boolean
+  isActive: boolean
+  handleProps: GripProps
   onClick: () => void
 }) {
   const { done, total } = movementProgress(m)
@@ -272,12 +307,26 @@ function CollapsedMovement({
         : `${done}/${total}`
 
   return (
-    <button className={`folded${complete ? ' is-done' : ''}`} onClick={onClick}>
-      <span className="folded-mark" aria-hidden="true">
-        {complete ? '✓' : ''}
-      </span>
-      <span className="folded-name grow">{name}</span>
-      <span className="t-data folded-detail">{detail}</span>
+    <div className={`folded${complete ? ' is-done' : ''}${isActive ? ' is-active' : ''}`}>
+      <Grip {...handleProps} label={`${fi.reorder}: ${name}`} />
+      <button className="folded-body" onClick={onClick}>
+        <span className="folded-mark" aria-hidden="true">
+          {complete ? '✓' : ''}
+        </span>
+        <span className="folded-name grow">{name}</span>
+        <span className="t-data folded-detail">{detail}</span>
+      </button>
+    </div>
+  )
+}
+
+export type GripProps = Omit<React.ComponentProps<'button'>, 'className' | 'children'>
+
+/** Drag handle. Also moves the row with the arrow keys, so it is not mouse-only. */
+function Grip({ label, ...props }: GripProps & { label: string }) {
+  return (
+    <button className="grip" aria-label={label} title={label} {...props}>
+      <span aria-hidden="true">⠿</span>
     </button>
   )
 }
@@ -288,6 +337,7 @@ function ActiveMovement({
   previousLine,
   showLogged,
   onToggleLogged,
+  handleProps,
   onOpenPad,
   onComplete,
   onAddSet,
@@ -300,6 +350,7 @@ function ActiveMovement({
   previousLine: string
   showLogged: boolean
   onToggleLogged: () => void
+  handleProps: GripProps
   onOpenPad: (sIndex: number, mode: PadMode) => void
   onComplete: (sIndex: number) => void
   onAddSet: () => void
@@ -325,6 +376,7 @@ function ActiveMovement({
   return (
     <section className="active">
       <div className="active-head">
+        <Grip {...handleProps} label={`${fi.reorder}: ${name}`} />
         <h2 className="t-name grow">{name}</h2>
         <span className="t-data">
           {done}/{total}

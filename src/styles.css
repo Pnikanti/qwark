@@ -1132,24 +1132,8 @@ select {
   padding: 0;
 }
 
-/* Collapsed movement: one line, tappable to focus. */
-.folded {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px var(--gutter);
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  background: transparent;
-  color: inherit;
-  text-align: left;
-}
-
-.folded:hover {
-  background: var(--raise);
-}
+/* Collapsed movement: one line, tappable to focus. Layout lives in the
+   reorder block below, where the grip splits the row. */
 
 .folded-mark {
   flex: none;
@@ -1252,4 +1236,112 @@ select {
 .rest-next {
   color: var(--accent);
   opacity: 0.85;
+}
+
+/* --- reorder ------------------------------------------------------------- */
+
+.masthead-actions.end {
+  justify-content: flex-end;
+}
+
+/* Ending the session should be unmistakable but not a full-width target under a
+   sticky header you may brush while scrolling. */
+.masthead-actions.end .btn {
+  flex: 0 0 auto;
+  min-width: 168px;
+}
+
+.append {
+  padding: 14px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.append .btn {
+  width: 100%;
+}
+
+.grip {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: grab;
+  /* Without this the browser scrolls instead of reporting the drag. */
+  touch-action: none;
+}
+
+.grip:hover {
+  color: var(--ink);
+}
+
+.folded {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.folded:hover {
+  background: var(--raise);
+}
+
+.folded-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  min-height: 50px;
+  padding: 10px var(--gutter) 10px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+.folded.is-active {
+  border-left: 3px solid var(--accent);
+}
+
+.active-head .grip {
+  margin-left: -6px;
+}
+
+/* While dragging, every row renders folded so heights are uniform: the preview
+   reads cleanly and the target index is one division. */
+.stack.reordering {
+  user-select: none;
+  cursor: grabbing;
+}
+
+.stack.reordering > li {
+  transition: transform 120ms ease;
+}
+
+.stack.reordering > li.lifted {
+  position: relative;
+  z-index: 5;
+  transition: none;
+}
+
+.stack.reordering > li.lifted .folded {
+  background: var(--raise);
+  border-left: 3px solid var(--accent);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+}
+
+.stack.reordering .grip {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack.reordering > li {
+    transition: none;
+  }
 }
