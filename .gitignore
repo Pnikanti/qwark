@@ -1,0 +1,26 @@
+# Upstream download cache — regenerable by scripts/build-movements.py.
+# The built output in data/ is committed, so nothing is lost by ignoring this.
+.cache/
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Python
+__pycache__/
+*.py[cod]

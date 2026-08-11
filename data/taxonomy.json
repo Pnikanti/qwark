@@ -1,0 +1,35 @@
+{
+  "muscles": {
+    "quadriceps": "Etureidet",
+    "hamstrings": "Takareidet",
+    "glutes": "Pakarat",
+    "calves": "Pohkeet",
+    "adductors": "Lähentäjät",
+    "abductors": "Loitontajat",
+    "chest": "Rintalihakset",
+    "lats": "Leveä selkälihas",
+    "middle back": "Keskiselkä",
+    "lower back": "Alaselkä",
+    "traps": "Epäkäslihas",
+    "shoulders": "Olkapäät",
+    "biceps": "Hauikset",
+    "triceps": "Ojentajat",
+    "forearms": "Kyynärvarret",
+    "abdominals": "Vatsalihakset",
+    "neck": "Niska"
+  },
+  "equipment": {
+    "barbell": "Levytanko",
+    "dumbbell": "Käsipainot",
+    "cable": "Talja",
+    "machine": "Laite",
+    "body only": "Kehonpaino",
+    "kettlebells": "Kahvakuulat",
+    "bands": "Vastuskuminauhat",
+    "e-z curl bar": "Kaareva tanko",
+    "exercise ball": "Jumppapallo",
+    "medicine ball": "Kuntopallo",
+    "foam roll": "Putkirulla",
+    "other": "Muu"
+  }
+}

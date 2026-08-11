@@ -1,0 +1,4367 @@
+{
+  "3-4-sit-up": {
+    "upstreamName": "3/4 Sit-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "90-90-hamstring": {
+    "upstreamName": "90/90 Hamstring",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ab-crunch-machine": {
+    "upstreamName": "Ab Crunch Machine",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ab-roller": {
+    "upstreamName": "Ab Roller",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "adductor": {
+    "upstreamName": "Adductor",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "adductor-groin": {
+    "upstreamName": "Adductor/Groin",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "advanced-kettlebell-windmill": {
+    "upstreamName": "Advanced Kettlebell Windmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "air-bike": {
+    "upstreamName": "Air Bike",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "all-fours-quad-stretch": {
+    "upstreamName": "All Fours Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternate-hammer-curl": {
+    "upstreamName": "Alternate Hammer Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternate-heel-touchers": {
+    "upstreamName": "Alternate Heel Touchers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternate-incline-dumbbell-curl": {
+    "upstreamName": "Alternate Incline Dumbbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternate-leg-diagonal-bound": {
+    "upstreamName": "Alternate Leg Diagonal Bound",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-cable-shoulder-press": {
+    "upstreamName": "Alternating Cable Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-deltoid-raise": {
+    "upstreamName": "Alternating Deltoid Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-floor-press": {
+    "upstreamName": "Alternating Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-hang-clean": {
+    "upstreamName": "Alternating Hang Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-kettlebell-press": {
+    "upstreamName": "Alternating Kettlebell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-kettlebell-row": {
+    "upstreamName": "Alternating Kettlebell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "alternating-renegade-row": {
+    "upstreamName": "Alternating Renegade Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ankle-circles": {
+    "upstreamName": "Ankle Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ankle-on-the-knee": {
+    "upstreamName": "Ankle On The Knee",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "anterior-tibialis-smr": {
+    "upstreamName": "Anterior Tibialis-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "anti-gravity-press": {
+    "upstreamName": "Anti-Gravity Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "arm-circles": {
+    "upstreamName": "Arm Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "arnold-dumbbell-press": {
+    "upstreamName": "Arnold Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "around-the-worlds": {
+    "upstreamName": "Around The Worlds",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "atlas-stone-trainer": {
+    "upstreamName": "Atlas Stone Trainer",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "atlas-stones": {
+    "upstreamName": "Atlas Stones",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "axle-deadlift": {
+    "upstreamName": "Axle Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "back-flyes-with-bands": {
+    "upstreamName": "Back Flyes - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "backward-drag": {
+    "upstreamName": "Backward Drag",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "backward-medicine-ball-throw": {
+    "upstreamName": "Backward Medicine Ball Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "balance-board": {
+    "upstreamName": "Balance Board",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ball-leg-curl": {
+    "upstreamName": "Ball Leg Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-assisted-pull-up": {
+    "upstreamName": "Band Assisted Pull-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-good-morning": {
+    "upstreamName": "Band Good Morning",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-good-morning-pull-through": {
+    "upstreamName": "Band Good Morning (Pull Through)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-hip-adductions": {
+    "upstreamName": "Band Hip Adductions",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-pull-apart": {
+    "upstreamName": "Band Pull Apart",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "band-skull-crusher": {
+    "upstreamName": "Band Skull Crusher",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-ab-rollout": {
+    "upstreamName": "Barbell Ab Rollout",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-ab-rollout-on-knees": {
+    "upstreamName": "Barbell Ab Rollout - On Knees",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-bench-press-medium-grip": {
+    "upstreamName": "Barbell Bench Press - Medium Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-curl": {
+    "upstreamName": "Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-curls-lying-against-an-incline": {
+    "upstreamName": "Barbell Curls Lying Against An Incline",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-deadlift": {
+    "upstreamName": "Barbell Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-full-squat": {
+    "upstreamName": "Barbell Full Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-glute-bridge": {
+    "upstreamName": "Barbell Glute Bridge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-guillotine-bench-press": {
+    "upstreamName": "Barbell Guillotine Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-hack-squat": {
+    "upstreamName": "Barbell Hack Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-hip-thrust": {
+    "upstreamName": "Barbell Hip Thrust",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-incline-bench-press-medium-grip": {
+    "upstreamName": "Barbell Incline Bench Press - Medium Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-incline-shoulder-raise": {
+    "upstreamName": "Barbell Incline Shoulder Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-lunge": {
+    "upstreamName": "Barbell Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-rear-delt-row": {
+    "upstreamName": "Barbell Rear Delt Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-rollout-from-bench": {
+    "upstreamName": "Barbell Rollout from Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-seated-calf-raise": {
+    "upstreamName": "Barbell Seated Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-shoulder-press": {
+    "upstreamName": "Barbell Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-shrug": {
+    "upstreamName": "Barbell Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-shrug-behind-the-back": {
+    "upstreamName": "Barbell Shrug Behind The Back",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-side-bend": {
+    "upstreamName": "Barbell Side Bend",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-side-split-squat": {
+    "upstreamName": "Barbell Side Split Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-squat": {
+    "upstreamName": "Barbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-squat-to-a-bench": {
+    "upstreamName": "Barbell Squat To A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-step-ups": {
+    "upstreamName": "Barbell Step Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "barbell-walking-lunge": {
+    "upstreamName": "Barbell Walking Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "battling-ropes": {
+    "upstreamName": "Battling Ropes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bear-crawl-sled-drags": {
+    "upstreamName": "Bear Crawl Sled Drags",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "behind-head-chest-stretch": {
+    "upstreamName": "Behind Head Chest Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-dips": {
+    "upstreamName": "Bench Dips",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-jump": {
+    "upstreamName": "Bench Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-press-powerlifting": {
+    "upstreamName": "Bench Press - Powerlifting",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-press-with-bands": {
+    "upstreamName": "Bench Press - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-press-with-chains": {
+    "upstreamName": "Bench Press with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bench-sprint": {
+    "upstreamName": "Bench Sprint",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-arm-barbell-pullover": {
+    "upstreamName": "Bent-Arm Barbell Pullover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-arm-dumbbell-pullover": {
+    "upstreamName": "Bent-Arm Dumbbell Pullover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-knee-hip-raise": {
+    "upstreamName": "Bent-Knee Hip Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-barbell-row": {
+    "upstreamName": "Bent Over Barbell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-dumbbell-rear-delt-raise-with-head-on-bench": {
+    "upstreamName": "Bent Over Dumbbell Rear Delt Raise With Head On Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-low-pulley-side-lateral": {
+    "upstreamName": "Bent Over Low-Pulley Side Lateral",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-one-arm-long-bar-row": {
+    "upstreamName": "Bent Over One-Arm Long Bar Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-two-arm-long-bar-row": {
+    "upstreamName": "Bent Over Two-Arm Long Bar Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-two-dumbbell-row": {
+    "upstreamName": "Bent Over Two-Dumbbell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-over-two-dumbbell-row-with-palms-in": {
+    "upstreamName": "Bent Over Two-Dumbbell Row With Palms In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bent-press": {
+    "upstreamName": "Bent Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bicycling": {
+    "upstreamName": "Bicycling",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bicycling-stationary": {
+    "upstreamName": "Bicycling, Stationary",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "board-press": {
+    "upstreamName": "Board Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "body-tricep-press": {
+    "upstreamName": "Body Tricep Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "body-up": {
+    "upstreamName": "Body-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bodyweight-flyes": {
+    "upstreamName": "Bodyweight Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bodyweight-mid-row": {
+    "upstreamName": "Bodyweight Mid Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bodyweight-squat": {
+    "upstreamName": "Bodyweight Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bodyweight-walking-lunge": {
+    "upstreamName": "Bodyweight Walking Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bosu-ball-cable-crunch-with-side-bends": {
+    "upstreamName": "Bosu Ball Cable Crunch With Side Bends",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bottoms-up": {
+    "upstreamName": "Bottoms Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bottoms-up-clean-from-the-hang-position": {
+    "upstreamName": "Bottoms-Up Clean From The Hang Position",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "box-jump-multiple-response": {
+    "upstreamName": "Box Jump (Multiple Response)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "box-skip": {
+    "upstreamName": "Box Skip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "box-squat": {
+    "upstreamName": "Box Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "box-squat-with-bands": {
+    "upstreamName": "Box Squat with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "box-squat-with-chains": {
+    "upstreamName": "Box Squat with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "brachialis-smr": {
+    "upstreamName": "Brachialis-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "bradford-rocky-presses": {
+    "upstreamName": "Bradford/Rocky Presses",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "butt-lift-bridge": {
+    "upstreamName": "Butt Lift (Bridge)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "butt-ups": {
+    "upstreamName": "Butt-Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "butterfly": {
+    "upstreamName": "Butterfly",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-chest-press": {
+    "upstreamName": "Cable Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-crossover": {
+    "upstreamName": "Cable Crossover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-crunch": {
+    "upstreamName": "Cable Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-deadlifts": {
+    "upstreamName": "Cable Deadlifts",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-hammer-curls-rope-attachment": {
+    "upstreamName": "Cable Hammer Curls - Rope Attachment",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-hip-adduction": {
+    "upstreamName": "Cable Hip Adduction",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-incline-pushdown": {
+    "upstreamName": "Cable Incline Pushdown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-incline-triceps-extension": {
+    "upstreamName": "Cable Incline Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-internal-rotation": {
+    "upstreamName": "Cable Internal Rotation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-iron-cross": {
+    "upstreamName": "Cable Iron Cross",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-judo-flip": {
+    "upstreamName": "Cable Judo Flip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-lying-triceps-extension": {
+    "upstreamName": "Cable Lying Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-one-arm-tricep-extension": {
+    "upstreamName": "Cable One Arm Tricep Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-preacher-curl": {
+    "upstreamName": "Cable Preacher Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-rear-delt-fly": {
+    "upstreamName": "Cable Rear Delt Fly",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-reverse-crunch": {
+    "upstreamName": "Cable Reverse Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-rope-overhead-triceps-extension": {
+    "upstreamName": "Cable Rope Overhead Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-rope-rear-delt-rows": {
+    "upstreamName": "Cable Rope Rear-Delt Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-russian-twists": {
+    "upstreamName": "Cable Russian Twists",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-seated-crunch": {
+    "upstreamName": "Cable Seated Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-seated-lateral-raise": {
+    "upstreamName": "Cable Seated Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-shoulder-press": {
+    "upstreamName": "Cable Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-shrugs": {
+    "upstreamName": "Cable Shrugs",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cable-wrist-curl": {
+    "upstreamName": "Cable Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-machine-shoulder-shrug": {
+    "upstreamName": "Calf-Machine Shoulder Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-press": {
+    "upstreamName": "Calf Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-press-on-the-leg-press-machine": {
+    "upstreamName": "Calf Press On The Leg Press Machine",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-raise-on-a-dumbbell": {
+    "upstreamName": "Calf Raise On A Dumbbell",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-raises-with-bands": {
+    "upstreamName": "Calf Raises - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-stretch-elbows-against-wall": {
+    "upstreamName": "Calf Stretch Elbows Against Wall",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calf-stretch-hands-against-wall": {
+    "upstreamName": "Calf Stretch Hands Against Wall",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "calves-smr": {
+    "upstreamName": "Calves-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "car-deadlift": {
+    "upstreamName": "Car Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "car-drivers": {
+    "upstreamName": "Car Drivers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "carioca-quick-step": {
+    "upstreamName": "Carioca Quick Step",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cat-stretch": {
+    "upstreamName": "Cat Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "catch-and-overhead-throw": {
+    "upstreamName": "Catch and Overhead Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chain-handle-extension": {
+    "upstreamName": "Chain Handle Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chain-press": {
+    "upstreamName": "Chain Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chair-leg-extended-stretch": {
+    "upstreamName": "Chair Leg Extended Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chair-lower-back-stretch": {
+    "upstreamName": "Chair Lower Back Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chair-squat": {
+    "upstreamName": "Chair Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chair-upper-body-stretch": {
+    "upstreamName": "Chair Upper Body Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-and-front-of-shoulder-stretch": {
+    "upstreamName": "Chest And Front Of Shoulder Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-push-from-3-point-stance": {
+    "upstreamName": "Chest Push from 3 point stance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-push-multiple-response": {
+    "upstreamName": "Chest Push (multiple response)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-push-single-response": {
+    "upstreamName": "Chest Push (single response)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-push-with-run-release": {
+    "upstreamName": "Chest Push with Run Release",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chest-stretch-on-stability-ball": {
+    "upstreamName": "Chest Stretch on Stability Ball",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "child-s-pose": {
+    "upstreamName": "Child's Pose",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chin-to-chest-stretch": {
+    "upstreamName": "Chin To Chest Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "chin-up": {
+    "upstreamName": "Chin-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "circus-bell": {
+    "upstreamName": "Circus Bell",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean": {
+    "upstreamName": "Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-and-jerk": {
+    "upstreamName": "Clean and Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-and-press": {
+    "upstreamName": "Clean and Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-deadlift": {
+    "upstreamName": "Clean Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-from-blocks": {
+    "upstreamName": "Clean from Blocks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-pull": {
+    "upstreamName": "Clean Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clean-shrug": {
+    "upstreamName": "Clean Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "clock-push-up": {
+    "upstreamName": "Clock Push-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-barbell-bench-press": {
+    "upstreamName": "Close-Grip Barbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-dumbbell-press": {
+    "upstreamName": "Close-Grip Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-ez-bar-curl": {
+    "upstreamName": "Close-Grip EZ Bar Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-ez-bar-curl-with-band": {
+    "upstreamName": "Close-Grip EZ-Bar Curl with Band",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-ez-bar-press": {
+    "upstreamName": "Close-Grip EZ-Bar Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-front-lat-pulldown": {
+    "upstreamName": "Close-Grip Front Lat Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-push-up-off-of-a-dumbbell": {
+    "upstreamName": "Close-Grip Push-Up off of a Dumbbell",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "close-grip-standing-barbell-curl": {
+    "upstreamName": "Close-Grip Standing Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cocoons": {
+    "upstreamName": "Cocoons",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "conan-s-wheel": {
+    "upstreamName": "Conan's Wheel",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "concentration-curls": {
+    "upstreamName": "Concentration Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cross-body-crunch": {
+    "upstreamName": "Cross-Body Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cross-body-hammer-curl": {
+    "upstreamName": "Cross Body Hammer Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cross-over-with-bands": {
+    "upstreamName": "Cross Over - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "crossover-reverse-lunge": {
+    "upstreamName": "Crossover Reverse Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "crucifix": {
+    "upstreamName": "Crucifix",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "crunch-hands-overhead": {
+    "upstreamName": "Crunch - Hands Overhead",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "crunch-legs-on-exercise-ball": {
+    "upstreamName": "Crunch - Legs On Exercise Ball",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "crunches": {
+    "upstreamName": "Crunches",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "cuban-press": {
+    "upstreamName": "Cuban Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dancer-s-stretch": {
+    "upstreamName": "Dancer's Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dead-bug": {
+    "upstreamName": "Dead Bug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "deadlift-with-bands": {
+    "upstreamName": "Deadlift with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "deadlift-with-chains": {
+    "upstreamName": "Deadlift with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-barbell-bench-press": {
+    "upstreamName": "Decline Barbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-close-grip-bench-to-skull-crusher": {
+    "upstreamName": "Decline Close-Grip Bench To Skull Crusher",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-crunch": {
+    "upstreamName": "Decline Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-dumbbell-bench-press": {
+    "upstreamName": "Decline Dumbbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-dumbbell-flyes": {
+    "upstreamName": "Decline Dumbbell Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-dumbbell-triceps-extension": {
+    "upstreamName": "Decline Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-ez-bar-triceps-extension": {
+    "upstreamName": "Decline EZ Bar Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-oblique-crunch": {
+    "upstreamName": "Decline Oblique Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-push-up": {
+    "upstreamName": "Decline Push-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-reverse-crunch": {
+    "upstreamName": "Decline Reverse Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "decline-smith-press": {
+    "upstreamName": "Decline Smith Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "deficit-deadlift": {
+    "upstreamName": "Deficit Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "depth-jump-leap": {
+    "upstreamName": "Depth Jump Leap",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dip-machine": {
+    "upstreamName": "Dip Machine",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dips-chest-version": {
+    "upstreamName": "Dips - Chest Version",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dips-triceps-version": {
+    "upstreamName": "Dips - Triceps Version",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "donkey-calf-raises": {
+    "upstreamName": "Donkey Calf Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-kettlebell-alternating-hang-clean": {
+    "upstreamName": "Double Kettlebell Alternating Hang Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-kettlebell-jerk": {
+    "upstreamName": "Double Kettlebell Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-kettlebell-push-press": {
+    "upstreamName": "Double Kettlebell Push Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-kettlebell-snatch": {
+    "upstreamName": "Double Kettlebell Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-kettlebell-windmill": {
+    "upstreamName": "Double Kettlebell Windmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "double-leg-butt-kick": {
+    "upstreamName": "Double Leg Butt Kick",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "downward-facing-balance": {
+    "upstreamName": "Downward Facing Balance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "drag-curl": {
+    "upstreamName": "Drag Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "drop-push": {
+    "upstreamName": "Drop Push",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-alternate-bicep-curl": {
+    "upstreamName": "Dumbbell Alternate Bicep Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-bench-press": {
+    "upstreamName": "Dumbbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-bench-press-with-neutral-grip": {
+    "upstreamName": "Dumbbell Bench Press with Neutral Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-bicep-curl": {
+    "upstreamName": "Dumbbell Bicep Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-clean": {
+    "upstreamName": "Dumbbell Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-floor-press": {
+    "upstreamName": "Dumbbell Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-flyes": {
+    "upstreamName": "Dumbbell Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-incline-row": {
+    "upstreamName": "Dumbbell Incline Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-incline-shoulder-raise": {
+    "upstreamName": "Dumbbell Incline Shoulder Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-lunges": {
+    "upstreamName": "Dumbbell Lunges",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-lying-one-arm-rear-lateral-raise": {
+    "upstreamName": "Dumbbell Lying One-Arm Rear Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-lying-pronation": {
+    "upstreamName": "Dumbbell Lying Pronation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-lying-rear-lateral-raise": {
+    "upstreamName": "Dumbbell Lying Rear Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-lying-supination": {
+    "upstreamName": "Dumbbell Lying Supination",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-one-arm-shoulder-press": {
+    "upstreamName": "Dumbbell One-Arm Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-one-arm-triceps-extension": {
+    "upstreamName": "Dumbbell One-Arm Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-one-arm-upright-row": {
+    "upstreamName": "Dumbbell One-Arm Upright Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-prone-incline-curl": {
+    "upstreamName": "Dumbbell Prone Incline Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-raise": {
+    "upstreamName": "Dumbbell Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-rear-lunge": {
+    "upstreamName": "Dumbbell Rear Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-scaption": {
+    "upstreamName": "Dumbbell Scaption",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-seated-box-jump": {
+    "upstreamName": "Dumbbell Seated Box Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-seated-one-leg-calf-raise": {
+    "upstreamName": "Dumbbell Seated One-Leg Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-shoulder-press": {
+    "upstreamName": "Dumbbell Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-shrug": {
+    "upstreamName": "Dumbbell Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-side-bend": {
+    "upstreamName": "Dumbbell Side Bend",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-squat": {
+    "upstreamName": "Dumbbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-squat-to-a-bench": {
+    "upstreamName": "Dumbbell Squat To A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-step-ups": {
+    "upstreamName": "Dumbbell Step Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dumbbell-tricep-extension-pronated-grip": {
+    "upstreamName": "Dumbbell Tricep Extension -Pronated Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dynamic-back-stretch": {
+    "upstreamName": "Dynamic Back Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "dynamic-chest-stretch": {
+    "upstreamName": "Dynamic Chest Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elbow-circles": {
+    "upstreamName": "Elbow Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elbow-to-knee": {
+    "upstreamName": "Elbow to Knee",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elbows-back": {
+    "upstreamName": "Elbows Back",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elevated-back-lunge": {
+    "upstreamName": "Elevated Back Lunge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elevated-cable-rows": {
+    "upstreamName": "Elevated Cable Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "elliptical-trainer": {
+    "upstreamName": "Elliptical Trainer",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "exercise-ball-crunch": {
+    "upstreamName": "Exercise Ball Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "exercise-ball-pull-in": {
+    "upstreamName": "Exercise Ball Pull-In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "extended-range-one-arm-kettlebell-floor-press": {
+    "upstreamName": "Extended Range One-Arm Kettlebell Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "external-rotation": {
+    "upstreamName": "External Rotation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "external-rotation-with-band": {
+    "upstreamName": "External Rotation with Band",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "external-rotation-with-cable": {
+    "upstreamName": "External Rotation with Cable",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ez-bar-curl": {
+    "upstreamName": "EZ-Bar Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ez-bar-skullcrusher": {
+    "upstreamName": "EZ-Bar Skullcrusher",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "face-pull": {
+    "upstreamName": "Face Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "farmer-s-walk": {
+    "upstreamName": "Farmer's Walk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "fast-skipping": {
+    "upstreamName": "Fast Skipping",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "finger-curls": {
+    "upstreamName": "Finger Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "flat-bench-cable-flyes": {
+    "upstreamName": "Flat Bench Cable Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "flat-bench-leg-pull-in": {
+    "upstreamName": "Flat Bench Leg Pull-In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "flat-bench-lying-leg-raise": {
+    "upstreamName": "Flat Bench Lying Leg Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "flexor-incline-dumbbell-curls": {
+    "upstreamName": "Flexor Incline Dumbbell Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "floor-glute-ham-raise": {
+    "upstreamName": "Floor Glute-Ham Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "floor-press": {
+    "upstreamName": "Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "floor-press-with-chains": {
+    "upstreamName": "Floor Press with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "flutter-kicks": {
+    "upstreamName": "Flutter Kicks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "foot-smr": {
+    "upstreamName": "Foot-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "forward-drag-with-press": {
+    "upstreamName": "Forward Drag with Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "frankenstein-squat": {
+    "upstreamName": "Frankenstein Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "freehand-jump-squat": {
+    "upstreamName": "Freehand Jump Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "frog-hops": {
+    "upstreamName": "Frog Hops",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "frog-sit-ups": {
+    "upstreamName": "Frog Sit-Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-barbell-squat": {
+    "upstreamName": "Front Barbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-barbell-squat-to-a-bench": {
+    "upstreamName": "Front Barbell Squat To A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-box-jump": {
+    "upstreamName": "Front Box Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-cable-raise": {
+    "upstreamName": "Front Cable Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-cone-hops-or-hurdle-hops": {
+    "upstreamName": "Front Cone Hops (or hurdle hops)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-dumbbell-raise": {
+    "upstreamName": "Front Dumbbell Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-incline-dumbbell-raise": {
+    "upstreamName": "Front Incline Dumbbell Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-leg-raises": {
+    "upstreamName": "Front Leg Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-plate-raise": {
+    "upstreamName": "Front Plate Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-raise-and-pullover": {
+    "upstreamName": "Front Raise And Pullover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-squat-clean-grip": {
+    "upstreamName": "Front Squat (Clean Grip)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-squats-with-two-kettlebells": {
+    "upstreamName": "Front Squats With Two Kettlebells",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "front-two-dumbbell-raise": {
+    "upstreamName": "Front Two-Dumbbell Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "full-range-of-motion-lat-pulldown": {
+    "upstreamName": "Full Range-Of-Motion Lat Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "gironda-sternum-chins": {
+    "upstreamName": "Gironda Sternum Chins",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "glute-ham-raise": {
+    "upstreamName": "Glute Ham Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "glute-kickback": {
+    "upstreamName": "Glute Kickback",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "goblet-squat": {
+    "upstreamName": "Goblet Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "good-morning": {
+    "upstreamName": "Good Morning",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "good-morning-off-pins": {
+    "upstreamName": "Good Morning off Pins",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "gorilla-chin-crunch": {
+    "upstreamName": "Gorilla Chin/Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "groin-and-back-stretch": {
+    "upstreamName": "Groin and Back Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "groiners": {
+    "upstreamName": "Groiners",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hack-squat": {
+    "upstreamName": "Hack Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hammer-curls": {
+    "upstreamName": "Hammer Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hammer-grip-incline-db-bench-press": {
+    "upstreamName": "Hammer Grip Incline DB Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hamstring-smr": {
+    "upstreamName": "Hamstring-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hamstring-stretch": {
+    "upstreamName": "Hamstring Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "handstand-push-ups": {
+    "upstreamName": "Handstand Push-Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hang-clean": {
+    "upstreamName": "Hang Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hang-clean-below-the-knees": {
+    "upstreamName": "Hang Clean - Below the Knees",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hang-snatch": {
+    "upstreamName": "Hang Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hang-snatch-below-knees": {
+    "upstreamName": "Hang Snatch - Below Knees",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hanging-bar-good-morning": {
+    "upstreamName": "Hanging Bar Good Morning",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hanging-leg-raise": {
+    "upstreamName": "Hanging Leg Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hanging-pike": {
+    "upstreamName": "Hanging Pike",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "heaving-snatch-balance": {
+    "upstreamName": "Heaving Snatch Balance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "heavy-bag-thrust": {
+    "upstreamName": "Heavy Bag Thrust",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "high-cable-curls": {
+    "upstreamName": "High Cable Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hip-circles-prone": {
+    "upstreamName": "Hip Circles (prone)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hip-extension-with-bands": {
+    "upstreamName": "Hip Extension with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hip-flexion-with-band": {
+    "upstreamName": "Hip Flexion with Band",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hip-lift-with-band": {
+    "upstreamName": "Hip Lift with Band",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hug-a-ball": {
+    "upstreamName": "Hug A Ball",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hug-knees-to-chest": {
+    "upstreamName": "Hug Knees To Chest",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hurdle-hops": {
+    "upstreamName": "Hurdle Hops",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hyperextensions-back-extensions": {
+    "upstreamName": "Hyperextensions (Back Extensions)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "hyperextensions-with-no-hyperextension-bench": {
+    "upstreamName": "Hyperextensions With No Hyperextension Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "iliotibial-tract-smr": {
+    "upstreamName": "Iliotibial Tract-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "inchworm": {
+    "upstreamName": "Inchworm",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-barbell-triceps-extension": {
+    "upstreamName": "Incline Barbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-bench-pull": {
+    "upstreamName": "Incline Bench Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-cable-chest-press": {
+    "upstreamName": "Incline Cable Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-cable-flye": {
+    "upstreamName": "Incline Cable Flye",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-dumbbell-bench-with-palms-facing-in": {
+    "upstreamName": "Incline Dumbbell Bench With Palms Facing In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-dumbbell-curl": {
+    "upstreamName": "Incline Dumbbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-dumbbell-flyes": {
+    "upstreamName": "Incline Dumbbell Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-dumbbell-flyes-with-a-twist": {
+    "upstreamName": "Incline Dumbbell Flyes - With A Twist",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-dumbbell-press": {
+    "upstreamName": "Incline Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-hammer-curls": {
+    "upstreamName": "Incline Hammer Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-inner-biceps-curl": {
+    "upstreamName": "Incline Inner Biceps Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up": {
+    "upstreamName": "Incline Push-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up-close-grip": {
+    "upstreamName": "Incline Push-Up Close-Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up-depth-jump": {
+    "upstreamName": "Incline Push-Up Depth Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up-medium": {
+    "upstreamName": "Incline Push-Up Medium",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up-reverse-grip": {
+    "upstreamName": "Incline Push-Up Reverse Grip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "incline-push-up-wide": {
+    "upstreamName": "Incline Push-Up Wide",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "intermediate-groin-stretch": {
+    "upstreamName": "Intermediate Groin Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "intermediate-hip-flexor-and-quad-stretch": {
+    "upstreamName": "Intermediate Hip Flexor and Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "internal-rotation-with-band": {
+    "upstreamName": "Internal Rotation with Band",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "inverted-row": {
+    "upstreamName": "Inverted Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "inverted-row-with-straps": {
+    "upstreamName": "Inverted Row with Straps",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "iron-cross": {
+    "upstreamName": "Iron Cross",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "iron-crosses-stretch": {
+    "upstreamName": "Iron Crosses (stretch)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "isometric-chest-squeezes": {
+    "upstreamName": "Isometric Chest Squeezes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "isometric-neck-exercise-front-and-back": {
+    "upstreamName": "Isometric Neck Exercise - Front And Back",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "isometric-neck-exercise-sides": {
+    "upstreamName": "Isometric Neck Exercise - Sides",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "isometric-wipers": {
+    "upstreamName": "Isometric Wipers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "it-band-and-glute-stretch": {
+    "upstreamName": "IT Band and Glute Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jackknife-sit-up": {
+    "upstreamName": "Jackknife Sit-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "janda-sit-up": {
+    "upstreamName": "Janda Sit-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jefferson-squats": {
+    "upstreamName": "Jefferson Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jerk-balance": {
+    "upstreamName": "Jerk Balance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jerk-dip-squat": {
+    "upstreamName": "Jerk Dip Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jm-press": {
+    "upstreamName": "JM Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "jogging-treadmill": {
+    "upstreamName": "Jogging, Treadmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "keg-load": {
+    "upstreamName": "Keg Load",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-arnold-press": {
+    "upstreamName": "Kettlebell Arnold Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-dead-clean": {
+    "upstreamName": "Kettlebell Dead Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-figure-8": {
+    "upstreamName": "Kettlebell Figure 8",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-hang-clean": {
+    "upstreamName": "Kettlebell Hang Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-one-legged-deadlift": {
+    "upstreamName": "Kettlebell One-Legged Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-pass-between-the-legs": {
+    "upstreamName": "Kettlebell Pass Between The Legs",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-pirate-ships": {
+    "upstreamName": "Kettlebell Pirate Ships",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-pistol-squat": {
+    "upstreamName": "Kettlebell Pistol Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-seated-press": {
+    "upstreamName": "Kettlebell Seated Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-seesaw-press": {
+    "upstreamName": "Kettlebell Seesaw Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-sumo-high-pull": {
+    "upstreamName": "Kettlebell Sumo High Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-thruster": {
+    "upstreamName": "Kettlebell Thruster",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-turkish-get-up-lunge-style": {
+    "upstreamName": "Kettlebell Turkish Get-Up (Lunge style)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-turkish-get-up-squat-style": {
+    "upstreamName": "Kettlebell Turkish Get-Up (Squat style)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kettlebell-windmill": {
+    "upstreamName": "Kettlebell Windmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kipping-muscle-up": {
+    "upstreamName": "Kipping Muscle Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "knee-across-the-body": {
+    "upstreamName": "Knee Across The Body",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "knee-circles": {
+    "upstreamName": "Knee Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "knee-hip-raise-on-parallel-bars": {
+    "upstreamName": "Knee/Hip Raise On Parallel Bars",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "knee-tuck-jump": {
+    "upstreamName": "Knee Tuck Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-arm-drill": {
+    "upstreamName": "Kneeling Arm Drill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-cable-crunch-with-alternating-oblique-twists": {
+    "upstreamName": "Kneeling Cable Crunch With Alternating Oblique Twists",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-cable-triceps-extension": {
+    "upstreamName": "Kneeling Cable Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-forearm-stretch": {
+    "upstreamName": "Kneeling Forearm Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-high-pulley-row": {
+    "upstreamName": "Kneeling High Pulley Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-hip-flexor": {
+    "upstreamName": "Kneeling Hip Flexor",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-jump-squat": {
+    "upstreamName": "Kneeling Jump Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-single-arm-high-pulley-row": {
+    "upstreamName": "Kneeling Single-Arm High Pulley Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "kneeling-squat": {
+    "upstreamName": "Kneeling Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "landmine-180-s": {
+    "upstreamName": "Landmine 180's",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "landmine-linear-jammer": {
+    "upstreamName": "Landmine Linear Jammer",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lateral-bound": {
+    "upstreamName": "Lateral Bound",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lateral-box-jump": {
+    "upstreamName": "Lateral Box Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lateral-cone-hops": {
+    "upstreamName": "Lateral Cone Hops",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lateral-raise-with-bands": {
+    "upstreamName": "Lateral Raise - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "latissimus-dorsi-smr": {
+    "upstreamName": "Latissimus Dorsi-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-extensions": {
+    "upstreamName": "Leg Extensions",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-lift": {
+    "upstreamName": "Leg Lift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-over-floor-press": {
+    "upstreamName": "Leg-Over Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-press": {
+    "upstreamName": "Leg Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-pull-in": {
+    "upstreamName": "Leg Pull-In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leg-up-hamstring-stretch": {
+    "upstreamName": "Leg-Up Hamstring Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-chest-press": {
+    "upstreamName": "Leverage Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-deadlift": {
+    "upstreamName": "Leverage Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-decline-chest-press": {
+    "upstreamName": "Leverage Decline Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-high-row": {
+    "upstreamName": "Leverage High Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-incline-chest-press": {
+    "upstreamName": "Leverage Incline Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-iso-row": {
+    "upstreamName": "Leverage Iso Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-shoulder-press": {
+    "upstreamName": "Leverage Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "leverage-shrug": {
+    "upstreamName": "Leverage Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "linear-3-part-start-technique": {
+    "upstreamName": "Linear 3-Part Start Technique",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "linear-acceleration-wall-drill": {
+    "upstreamName": "Linear Acceleration Wall Drill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "linear-depth-jump": {
+    "upstreamName": "Linear Depth Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "log-lift": {
+    "upstreamName": "Log Lift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "london-bridges": {
+    "upstreamName": "London Bridges",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "looking-at-ceiling": {
+    "upstreamName": "Looking At Ceiling",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "low-cable-crossover": {
+    "upstreamName": "Low Cable Crossover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "low-cable-triceps-extension": {
+    "upstreamName": "Low Cable Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "low-pulley-row-to-neck": {
+    "upstreamName": "Low Pulley Row To Neck",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lower-back-curl": {
+    "upstreamName": "Lower Back Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lower-back-smr": {
+    "upstreamName": "Lower Back-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lunge-pass-through": {
+    "upstreamName": "Lunge Pass Through",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lunge-sprint": {
+    "upstreamName": "Lunge Sprint",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-bent-leg-groin": {
+    "upstreamName": "Lying Bent Leg Groin",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-cable-curl": {
+    "upstreamName": "Lying Cable Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-cambered-barbell-row": {
+    "upstreamName": "Lying Cambered Barbell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-close-grip-bar-curl-on-high-pulley": {
+    "upstreamName": "Lying Close-Grip Bar Curl On High Pulley",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-close-grip-barbell-triceps-extension-behind-the-head": {
+    "upstreamName": "Lying Close-Grip Barbell Triceps Extension Behind The Head",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-close-grip-barbell-triceps-press-to-chin": {
+    "upstreamName": "Lying Close-Grip Barbell Triceps Press To Chin",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-crossover": {
+    "upstreamName": "Lying Crossover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-dumbbell-tricep-extension": {
+    "upstreamName": "Lying Dumbbell Tricep Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-face-down-plate-neck-resistance": {
+    "upstreamName": "Lying Face Down Plate Neck Resistance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-face-up-plate-neck-resistance": {
+    "upstreamName": "Lying Face Up Plate Neck Resistance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-glute": {
+    "upstreamName": "Lying Glute",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-hamstring": {
+    "upstreamName": "Lying Hamstring",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-high-bench-barbell-curl": {
+    "upstreamName": "Lying High Bench Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-leg-curls": {
+    "upstreamName": "Lying Leg Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-machine-squat": {
+    "upstreamName": "Lying Machine Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-one-arm-lateral-raise": {
+    "upstreamName": "Lying One-Arm Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-prone-quadriceps": {
+    "upstreamName": "Lying Prone Quadriceps",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-rear-delt-raise": {
+    "upstreamName": "Lying Rear Delt Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-supine-dumbbell-curl": {
+    "upstreamName": "Lying Supine Dumbbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-t-bar-row": {
+    "upstreamName": "Lying T-Bar Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "lying-triceps-press": {
+    "upstreamName": "Lying Triceps Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "machine-bench-press": {
+    "upstreamName": "Machine Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "machine-bicep-curl": {
+    "upstreamName": "Machine Bicep Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "machine-preacher-curls": {
+    "upstreamName": "Machine Preacher Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "machine-shoulder-military-press": {
+    "upstreamName": "Machine Shoulder (Military) Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "machine-triceps-extension": {
+    "upstreamName": "Machine Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "medicine-ball-chest-pass": {
+    "upstreamName": "Medicine Ball Chest Pass",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "medicine-ball-full-twist": {
+    "upstreamName": "Medicine Ball Full Twist",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "medicine-ball-scoop-throw": {
+    "upstreamName": "Medicine Ball Scoop Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "middle-back-shrug": {
+    "upstreamName": "Middle Back Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "middle-back-stretch": {
+    "upstreamName": "Middle Back Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "mixed-grip-chin": {
+    "upstreamName": "Mixed Grip Chin",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "monster-walk": {
+    "upstreamName": "Monster Walk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "mountain-climbers": {
+    "upstreamName": "Mountain Climbers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "moving-claw-series": {
+    "upstreamName": "Moving Claw Series",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "muscle-snatch": {
+    "upstreamName": "Muscle Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "muscle-up": {
+    "upstreamName": "Muscle Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "narrow-stance-hack-squats": {
+    "upstreamName": "Narrow Stance Hack Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "narrow-stance-leg-press": {
+    "upstreamName": "Narrow Stance Leg Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "narrow-stance-squats": {
+    "upstreamName": "Narrow Stance Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "natural-glute-ham-raise": {
+    "upstreamName": "Natural Glute Ham Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "neck-press": {
+    "upstreamName": "Neck Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "neck-smr": {
+    "upstreamName": "Neck-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "oblique-crunches": {
+    "upstreamName": "Oblique Crunches",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "oblique-crunches-on-the-floor": {
+    "upstreamName": "Oblique Crunches - On The Floor",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "olympic-squat": {
+    "upstreamName": "Olympic Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "on-your-back-quad-stretch": {
+    "upstreamName": "On-Your-Back Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "on-your-side-quad-stretch": {
+    "upstreamName": "On Your Side Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-against-wall": {
+    "upstreamName": "One Arm Against Wall",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-chin-up": {
+    "upstreamName": "One Arm Chin-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-dumbbell-bench-press": {
+    "upstreamName": "One Arm Dumbbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-dumbbell-preacher-curl": {
+    "upstreamName": "One Arm Dumbbell Preacher Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-dumbbell-row": {
+    "upstreamName": "One-Arm Dumbbell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-flat-bench-dumbbell-flye": {
+    "upstreamName": "One-Arm Flat Bench Dumbbell Flye",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-floor-press": {
+    "upstreamName": "One Arm Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-high-pulley-cable-side-bends": {
+    "upstreamName": "One-Arm High-Pulley Cable Side Bends",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-incline-lateral-raise": {
+    "upstreamName": "One-Arm Incline Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-clean": {
+    "upstreamName": "One-Arm Kettlebell Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-clean-and-jerk": {
+    "upstreamName": "One-Arm Kettlebell Clean and Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-floor-press": {
+    "upstreamName": "One-Arm Kettlebell Floor Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-jerk": {
+    "upstreamName": "One-Arm Kettlebell Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-military-press-to-the-side": {
+    "upstreamName": "One-Arm Kettlebell Military Press To The Side",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-para-press": {
+    "upstreamName": "One-Arm Kettlebell Para Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-push-press": {
+    "upstreamName": "One-Arm Kettlebell Push Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-row": {
+    "upstreamName": "One-Arm Kettlebell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-snatch": {
+    "upstreamName": "One-Arm Kettlebell Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-split-jerk": {
+    "upstreamName": "One-Arm Kettlebell Split Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-split-snatch": {
+    "upstreamName": "One-Arm Kettlebell Split Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-kettlebell-swings": {
+    "upstreamName": "One-Arm Kettlebell Swings",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-lat-pulldown": {
+    "upstreamName": "One Arm Lat Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-long-bar-row": {
+    "upstreamName": "One-Arm Long Bar Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-medicine-ball-slam": {
+    "upstreamName": "One-Arm Medicine Ball Slam",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-open-palm-kettlebell-clean": {
+    "upstreamName": "One-Arm Open Palm Kettlebell Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-overhead-kettlebell-squats": {
+    "upstreamName": "One-Arm Overhead Kettlebell Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-pronated-dumbbell-triceps-extension": {
+    "upstreamName": "One Arm Pronated Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-side-deadlift": {
+    "upstreamName": "One-Arm Side Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-side-laterals": {
+    "upstreamName": "One-Arm Side Laterals",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-arm-supinated-dumbbell-triceps-extension": {
+    "upstreamName": "One Arm Supinated Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-half-locust": {
+    "upstreamName": "One Half Locust",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-handed-hang": {
+    "upstreamName": "One Handed Hang",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-knee-to-chest": {
+    "upstreamName": "One Knee To Chest",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-leg-barbell-squat": {
+    "upstreamName": "One Leg Barbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "one-legged-cable-kickback": {
+    "upstreamName": "One-Legged Cable Kickback",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "open-palm-kettlebell-clean": {
+    "upstreamName": "Open Palm Kettlebell Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "otis-up": {
+    "upstreamName": "Otis-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-cable-curl": {
+    "upstreamName": "Overhead Cable Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-lat": {
+    "upstreamName": "Overhead Lat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-slam": {
+    "upstreamName": "Overhead Slam",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-squat": {
+    "upstreamName": "Overhead Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-stretch": {
+    "upstreamName": "Overhead Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "overhead-triceps": {
+    "upstreamName": "Overhead Triceps",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pallof-press": {
+    "upstreamName": "Pallof Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pallof-press-with-rotation": {
+    "upstreamName": "Pallof Press With Rotation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "palms-down-dumbbell-wrist-curl-over-a-bench": {
+    "upstreamName": "Palms-Down Dumbbell Wrist Curl Over A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "palms-down-wrist-curl-over-a-bench": {
+    "upstreamName": "Palms-Down Wrist Curl Over A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "palms-up-barbell-wrist-curl-over-a-bench": {
+    "upstreamName": "Palms-Up Barbell Wrist Curl Over A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "palms-up-dumbbell-wrist-curl-over-a-bench": {
+    "upstreamName": "Palms-Up Dumbbell Wrist Curl Over A Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "parallel-bar-dip": {
+    "upstreamName": "Parallel Bar Dip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pelvic-tilt-into-bridge": {
+    "upstreamName": "Pelvic Tilt Into Bridge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "peroneals-smr": {
+    "upstreamName": "Peroneals-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "peroneals-stretch": {
+    "upstreamName": "Peroneals Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "physioball-hip-bridge": {
+    "upstreamName": "Physioball Hip Bridge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pin-presses": {
+    "upstreamName": "Pin Presses",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "piriformis-smr": {
+    "upstreamName": "Piriformis-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plank": {
+    "upstreamName": "Plank",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plate-pinch": {
+    "upstreamName": "Plate Pinch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plate-twist": {
+    "upstreamName": "Plate Twist",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "platform-hamstring-slides": {
+    "upstreamName": "Platform Hamstring Slides",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plie-dumbbell-squat": {
+    "upstreamName": "Plie Dumbbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plyo-kettlebell-pushups": {
+    "upstreamName": "Plyo Kettlebell Pushups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "plyo-push-up": {
+    "upstreamName": "Plyo Push-up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "posterior-tibialis-stretch": {
+    "upstreamName": "Posterior Tibialis Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-clean": {
+    "upstreamName": "Power Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-clean-from-blocks": {
+    "upstreamName": "Power Clean from Blocks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-jerk": {
+    "upstreamName": "Power Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-partials": {
+    "upstreamName": "Power Partials",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-snatch": {
+    "upstreamName": "Power Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-snatch-from-blocks": {
+    "upstreamName": "Power Snatch from Blocks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "power-stairs": {
+    "upstreamName": "Power Stairs",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "preacher-curl": {
+    "upstreamName": "Preacher Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "preacher-hammer-dumbbell-curl": {
+    "upstreamName": "Preacher Hammer Dumbbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "press-sit-up": {
+    "upstreamName": "Press Sit-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "prone-manual-hamstring": {
+    "upstreamName": "Prone Manual Hamstring",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "prowler-sprint": {
+    "upstreamName": "Prowler Sprint",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pull-through": {
+    "upstreamName": "Pull Through",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pullups": {
+    "upstreamName": "Pullups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-press": {
+    "upstreamName": "Push Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-press-behind-the-neck": {
+    "upstreamName": "Push Press - Behind the Neck",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-up-to-side-plank": {
+    "upstreamName": "Push Up to Side Plank",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-up-wide": {
+    "upstreamName": "Push-Up Wide",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-ups-close-triceps-position": {
+    "upstreamName": "Push-Ups - Close Triceps Position",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-ups-with-feet-elevated": {
+    "upstreamName": "Push-Ups With Feet Elevated",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "push-ups-with-feet-on-an-exercise-ball": {
+    "upstreamName": "Push-Ups With Feet On An Exercise Ball",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pushups": {
+    "upstreamName": "Pushups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pushups-close-and-wide-hand-positions": {
+    "upstreamName": "Pushups (Close and Wide Hand Positions)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "pyramid": {
+    "upstreamName": "Pyramid",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "quad-stretch": {
+    "upstreamName": "Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "quadriceps-smr": {
+    "upstreamName": "Quadriceps-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "quick-leap": {
+    "upstreamName": "Quick Leap",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rack-delivery": {
+    "upstreamName": "Rack Delivery",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rack-pull-with-bands": {
+    "upstreamName": "Rack Pull with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rack-pulls": {
+    "upstreamName": "Rack Pulls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rear-leg-raises": {
+    "upstreamName": "Rear Leg Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "recumbent-bike": {
+    "upstreamName": "Recumbent Bike",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "return-push-from-stance": {
+    "upstreamName": "Return Push from Stance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-band-bench-press": {
+    "upstreamName": "Reverse Band Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-band-box-squat": {
+    "upstreamName": "Reverse Band Box Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-band-deadlift": {
+    "upstreamName": "Reverse Band Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-band-power-squat": {
+    "upstreamName": "Reverse Band Power Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-band-sumo-deadlift": {
+    "upstreamName": "Reverse Band Sumo Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-barbell-curl": {
+    "upstreamName": "Reverse Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-barbell-preacher-curls": {
+    "upstreamName": "Reverse Barbell Preacher Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-cable-curl": {
+    "upstreamName": "Reverse Cable Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-crunch": {
+    "upstreamName": "Reverse Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-flyes": {
+    "upstreamName": "Reverse Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-flyes-with-external-rotation": {
+    "upstreamName": "Reverse Flyes With External Rotation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-grip-bent-over-rows": {
+    "upstreamName": "Reverse Grip Bent-Over Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-grip-triceps-pushdown": {
+    "upstreamName": "Reverse Grip Triceps Pushdown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-hyperextension": {
+    "upstreamName": "Reverse Hyperextension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-machine-flyes": {
+    "upstreamName": "Reverse Machine Flyes",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-plate-curls": {
+    "upstreamName": "Reverse Plate Curls",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "reverse-triceps-bench-press": {
+    "upstreamName": "Reverse Triceps Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rhomboids-smr": {
+    "upstreamName": "Rhomboids-SMR",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rickshaw-carry": {
+    "upstreamName": "Rickshaw Carry",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rickshaw-deadlift": {
+    "upstreamName": "Rickshaw Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "ring-dips": {
+    "upstreamName": "Ring Dips",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rocket-jump": {
+    "upstreamName": "Rocket Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rocking-standing-calf-raise": {
+    "upstreamName": "Rocking Standing Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rocky-pull-ups-pulldowns": {
+    "upstreamName": "Rocky Pull-Ups/Pulldowns",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "romanian-deadlift": {
+    "upstreamName": "Romanian Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "romanian-deadlift-from-deficit": {
+    "upstreamName": "Romanian Deadlift from Deficit",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rope-climb": {
+    "upstreamName": "Rope Climb",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rope-crunch": {
+    "upstreamName": "Rope Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rope-jumping": {
+    "upstreamName": "Rope Jumping",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rope-straight-arm-pulldown": {
+    "upstreamName": "Rope Straight-Arm Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "round-the-world-shoulder-stretch": {
+    "upstreamName": "Round The World Shoulder Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "rowing-stationary": {
+    "upstreamName": "Rowing, Stationary",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "runner-s-stretch": {
+    "upstreamName": "Runner's Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "running-treadmill": {
+    "upstreamName": "Running, Treadmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "russian-twist": {
+    "upstreamName": "Russian Twist",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sandbag-load": {
+    "upstreamName": "Sandbag Load",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "scapular-pull-up": {
+    "upstreamName": "Scapular Pull-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "scissor-kick": {
+    "upstreamName": "Scissor Kick",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "scissors-jump": {
+    "upstreamName": "Scissors Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-band-hamstring-curl": {
+    "upstreamName": "Seated Band Hamstring Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-barbell-military-press": {
+    "upstreamName": "Seated Barbell Military Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-barbell-twist": {
+    "upstreamName": "Seated Barbell Twist",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-bent-over-one-arm-dumbbell-triceps-extension": {
+    "upstreamName": "Seated Bent-Over One-Arm Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-bent-over-rear-delt-raise": {
+    "upstreamName": "Seated Bent-Over Rear Delt Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-bent-over-two-arm-dumbbell-triceps-extension": {
+    "upstreamName": "Seated Bent-Over Two-Arm Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-biceps": {
+    "upstreamName": "Seated Biceps",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-cable-rows": {
+    "upstreamName": "Seated Cable Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-cable-shoulder-press": {
+    "upstreamName": "Seated Cable Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-calf-raise": {
+    "upstreamName": "Seated Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-calf-stretch": {
+    "upstreamName": "Seated Calf Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-close-grip-concentration-barbell-curl": {
+    "upstreamName": "Seated Close-Grip Concentration Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-dumbbell-curl": {
+    "upstreamName": "Seated Dumbbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-dumbbell-inner-biceps-curl": {
+    "upstreamName": "Seated Dumbbell Inner Biceps Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-dumbbell-palms-down-wrist-curl": {
+    "upstreamName": "Seated Dumbbell Palms-Down Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-dumbbell-palms-up-wrist-curl": {
+    "upstreamName": "Seated Dumbbell Palms-Up Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-dumbbell-press": {
+    "upstreamName": "Seated Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-flat-bench-leg-pull-in": {
+    "upstreamName": "Seated Flat Bench Leg Pull-In",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-floor-hamstring-stretch": {
+    "upstreamName": "Seated Floor Hamstring Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-front-deltoid": {
+    "upstreamName": "Seated Front Deltoid",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-glute": {
+    "upstreamName": "Seated Glute",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-good-mornings": {
+    "upstreamName": "Seated Good Mornings",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-hamstring": {
+    "upstreamName": "Seated Hamstring",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-hamstring-and-calf-stretch": {
+    "upstreamName": "Seated Hamstring and Calf Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-head-harness-neck-resistance": {
+    "upstreamName": "Seated Head Harness Neck Resistance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-leg-curl": {
+    "upstreamName": "Seated Leg Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-leg-tucks": {
+    "upstreamName": "Seated Leg Tucks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-one-arm-cable-pulley-rows": {
+    "upstreamName": "Seated One-arm Cable Pulley Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-one-arm-dumbbell-palms-down-wrist-curl": {
+    "upstreamName": "Seated One-Arm Dumbbell Palms-Down Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-one-arm-dumbbell-palms-up-wrist-curl": {
+    "upstreamName": "Seated One-Arm Dumbbell Palms-Up Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-overhead-stretch": {
+    "upstreamName": "Seated Overhead Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-palm-up-barbell-wrist-curl": {
+    "upstreamName": "Seated Palm-Up Barbell Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-palms-down-barbell-wrist-curl": {
+    "upstreamName": "Seated Palms-Down Barbell Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-side-lateral-raise": {
+    "upstreamName": "Seated Side Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-triceps-press": {
+    "upstreamName": "Seated Triceps Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "seated-two-arm-palms-up-low-pulley-wrist-curl": {
+    "upstreamName": "Seated Two-Arm Palms-Up Low-Pulley Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "see-saw-press-alternating-side-press": {
+    "upstreamName": "See-Saw Press (Alternating Side Press)",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "shotgun-row": {
+    "upstreamName": "Shotgun Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "shoulder-circles": {
+    "upstreamName": "Shoulder Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "shoulder-press-with-bands": {
+    "upstreamName": "Shoulder Press - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "shoulder-raise": {
+    "upstreamName": "Shoulder Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "shoulder-stretch": {
+    "upstreamName": "Shoulder Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-bridge": {
+    "upstreamName": "Side Bridge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-hop-sprint": {
+    "upstreamName": "Side Hop-Sprint",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-jackknife": {
+    "upstreamName": "Side Jackknife",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-lateral-raise": {
+    "upstreamName": "Side Lateral Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-laterals-to-front-raise": {
+    "upstreamName": "Side Laterals to Front Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-leg-raises": {
+    "upstreamName": "Side Leg Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-lying-floor-stretch": {
+    "upstreamName": "Side-Lying Floor Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-lying-groin-stretch": {
+    "upstreamName": "Side Lying Groin Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-neck-stretch": {
+    "upstreamName": "Side Neck Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-standing-long-jump": {
+    "upstreamName": "Side Standing Long Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-to-side-box-shuffle": {
+    "upstreamName": "Side to Side Box Shuffle",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-to-side-chins": {
+    "upstreamName": "Side To Side Chins",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "side-wrist-pull": {
+    "upstreamName": "Side Wrist Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-arm-cable-crossover": {
+    "upstreamName": "Single-Arm Cable Crossover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-arm-linear-jammer": {
+    "upstreamName": "Single-Arm Linear Jammer",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-arm-push-up": {
+    "upstreamName": "Single-Arm Push-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-cone-sprint-drill": {
+    "upstreamName": "Single-Cone Sprint Drill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-dumbbell-raise": {
+    "upstreamName": "Single Dumbbell Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-butt-kick": {
+    "upstreamName": "Single Leg Butt Kick",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-glute-bridge": {
+    "upstreamName": "Single Leg Glute Bridge",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-high-box-squat": {
+    "upstreamName": "Single-Leg High Box Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-hop-progression": {
+    "upstreamName": "Single-Leg Hop Progression",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-lateral-hop": {
+    "upstreamName": "Single-Leg Lateral Hop",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-leg-extension": {
+    "upstreamName": "Single-Leg Leg Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-push-off": {
+    "upstreamName": "Single Leg Push-off",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "single-leg-stride-jump": {
+    "upstreamName": "Single-Leg Stride Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sit-squats": {
+    "upstreamName": "Sit Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sit-up": {
+    "upstreamName": "Sit-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "skating": {
+    "upstreamName": "Skating",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-drag-harness": {
+    "upstreamName": "Sled Drag - Harness",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-overhead-backward-walk": {
+    "upstreamName": "Sled Overhead Backward Walk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-overhead-triceps-extension": {
+    "upstreamName": "Sled Overhead Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-push": {
+    "upstreamName": "Sled Push",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-reverse-flye": {
+    "upstreamName": "Sled Reverse Flye",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sled-row": {
+    "upstreamName": "Sled Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sledgehammer-swings": {
+    "upstreamName": "Sledgehammer Swings",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-incline-shoulder-raise": {
+    "upstreamName": "Smith Incline Shoulder Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-behind-the-back-shrug": {
+    "upstreamName": "Smith Machine Behind the Back Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-bench-press": {
+    "upstreamName": "Smith Machine Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-bent-over-row": {
+    "upstreamName": "Smith Machine Bent Over Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-calf-raise": {
+    "upstreamName": "Smith Machine Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-close-grip-bench-press": {
+    "upstreamName": "Smith Machine Close-Grip Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-decline-press": {
+    "upstreamName": "Smith Machine Decline Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-hang-power-clean": {
+    "upstreamName": "Smith Machine Hang Power Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-hip-raise": {
+    "upstreamName": "Smith Machine Hip Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-incline-bench-press": {
+    "upstreamName": "Smith Machine Incline Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-leg-press": {
+    "upstreamName": "Smith Machine Leg Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-one-arm-upright-row": {
+    "upstreamName": "Smith Machine One-Arm Upright Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-overhead-shoulder-press": {
+    "upstreamName": "Smith Machine Overhead Shoulder Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-pistol-squat": {
+    "upstreamName": "Smith Machine Pistol Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-reverse-calf-raises": {
+    "upstreamName": "Smith Machine Reverse Calf Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-squat": {
+    "upstreamName": "Smith Machine Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-stiff-legged-deadlift": {
+    "upstreamName": "Smith Machine Stiff-Legged Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-machine-upright-row": {
+    "upstreamName": "Smith Machine Upright Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "smith-single-leg-split-squat": {
+    "upstreamName": "Smith Single-Leg Split Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch": {
+    "upstreamName": "Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch-balance": {
+    "upstreamName": "Snatch Balance",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch-deadlift": {
+    "upstreamName": "Snatch Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch-from-blocks": {
+    "upstreamName": "Snatch from Blocks",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch-pull": {
+    "upstreamName": "Snatch Pull",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "snatch-shrug": {
+    "upstreamName": "Snatch Shrug",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "speed-band-overhead-triceps": {
+    "upstreamName": "Speed Band Overhead Triceps",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "speed-box-squat": {
+    "upstreamName": "Speed Box Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "speed-squats": {
+    "upstreamName": "Speed Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "spell-caster": {
+    "upstreamName": "Spell Caster",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "spider-crawl": {
+    "upstreamName": "Spider Crawl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "spider-curl": {
+    "upstreamName": "Spider Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "spinal-stretch": {
+    "upstreamName": "Spinal Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-clean": {
+    "upstreamName": "Split Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-jerk": {
+    "upstreamName": "Split Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-jump": {
+    "upstreamName": "Split Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-snatch": {
+    "upstreamName": "Split Snatch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-squat-with-dumbbells": {
+    "upstreamName": "Split Squat with Dumbbells",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "split-squats": {
+    "upstreamName": "Split Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "squat-jerk": {
+    "upstreamName": "Squat Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "squat-with-bands": {
+    "upstreamName": "Squat with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "squat-with-chains": {
+    "upstreamName": "Squat with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "squat-with-plate-movers": {
+    "upstreamName": "Squat with Plate Movers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "squats-with-bands": {
+    "upstreamName": "Squats - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stairmaster": {
+    "upstreamName": "Stairmaster",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-alternating-dumbbell-press": {
+    "upstreamName": "Standing Alternating Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-barbell-calf-raise": {
+    "upstreamName": "Standing Barbell Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-barbell-press-behind-neck": {
+    "upstreamName": "Standing Barbell Press Behind Neck",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-bent-over-one-arm-dumbbell-triceps-extension": {
+    "upstreamName": "Standing Bent-Over One-Arm Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-bent-over-two-arm-dumbbell-triceps-extension": {
+    "upstreamName": "Standing Bent-Over Two-Arm Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-biceps-cable-curl": {
+    "upstreamName": "Standing Biceps Cable Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-biceps-stretch": {
+    "upstreamName": "Standing Biceps Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-bradford-press": {
+    "upstreamName": "Standing Bradford Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-cable-chest-press": {
+    "upstreamName": "Standing Cable Chest Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-cable-lift": {
+    "upstreamName": "Standing Cable Lift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-cable-wood-chop": {
+    "upstreamName": "Standing Cable Wood Chop",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-calf-raises": {
+    "upstreamName": "Standing Calf Raises",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-concentration-curl": {
+    "upstreamName": "Standing Concentration Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-calf-raise": {
+    "upstreamName": "Standing Dumbbell Calf Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-press": {
+    "upstreamName": "Standing Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-reverse-curl": {
+    "upstreamName": "Standing Dumbbell Reverse Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-straight-arm-front-delt-raise-above-head": {
+    "upstreamName": "Standing Dumbbell Straight-Arm Front Delt Raise Above Head",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-triceps-extension": {
+    "upstreamName": "Standing Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-dumbbell-upright-row": {
+    "upstreamName": "Standing Dumbbell Upright Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-elevated-quad-stretch": {
+    "upstreamName": "Standing Elevated Quad Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-front-barbell-raise-over-head": {
+    "upstreamName": "Standing Front Barbell Raise Over Head",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-gastrocnemius-calf-stretch": {
+    "upstreamName": "Standing Gastrocnemius Calf Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-hamstring-and-calf-stretch": {
+    "upstreamName": "Standing Hamstring and Calf Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-hip-circles": {
+    "upstreamName": "Standing Hip Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-hip-flexors": {
+    "upstreamName": "Standing Hip Flexors",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-inner-biceps-curl": {
+    "upstreamName": "Standing Inner-Biceps Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-lateral-stretch": {
+    "upstreamName": "Standing Lateral Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-leg-curl": {
+    "upstreamName": "Standing Leg Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-long-jump": {
+    "upstreamName": "Standing Long Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-low-pulley-deltoid-raise": {
+    "upstreamName": "Standing Low-Pulley Deltoid Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-low-pulley-one-arm-triceps-extension": {
+    "upstreamName": "Standing Low-Pulley One-Arm Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-military-press": {
+    "upstreamName": "Standing Military Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-olympic-plate-hand-squeeze": {
+    "upstreamName": "Standing Olympic Plate Hand Squeeze",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-one-arm-cable-curl": {
+    "upstreamName": "Standing One-Arm Cable Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-one-arm-dumbbell-curl-over-incline-bench": {
+    "upstreamName": "Standing One-Arm Dumbbell Curl Over Incline Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-one-arm-dumbbell-triceps-extension": {
+    "upstreamName": "Standing One-Arm Dumbbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-overhead-barbell-triceps-extension": {
+    "upstreamName": "Standing Overhead Barbell Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-palm-in-one-arm-dumbbell-press": {
+    "upstreamName": "Standing Palm-In One-Arm Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-palms-in-dumbbell-press": {
+    "upstreamName": "Standing Palms-In Dumbbell Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-palms-up-barbell-behind-the-back-wrist-curl": {
+    "upstreamName": "Standing Palms-Up Barbell Behind The Back Wrist Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-pelvic-tilt": {
+    "upstreamName": "Standing Pelvic Tilt",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-rope-crunch": {
+    "upstreamName": "Standing Rope Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-soleus-and-achilles-stretch": {
+    "upstreamName": "Standing Soleus And Achilles Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-toe-touches": {
+    "upstreamName": "Standing Toe Touches",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-towel-triceps-extension": {
+    "upstreamName": "Standing Towel Triceps Extension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "standing-two-arm-overhead-throw": {
+    "upstreamName": "Standing Two-Arm Overhead Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "star-jump": {
+    "upstreamName": "Star Jump",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "step-mill": {
+    "upstreamName": "Step Mill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "step-up-with-knee-raise": {
+    "upstreamName": "Step-up with Knee Raise",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stiff-leg-barbell-good-morning": {
+    "upstreamName": "Stiff Leg Barbell Good Morning",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stiff-legged-barbell-deadlift": {
+    "upstreamName": "Stiff-Legged Barbell Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stiff-legged-dumbbell-deadlift": {
+    "upstreamName": "Stiff-Legged Dumbbell Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stomach-vacuum": {
+    "upstreamName": "Stomach Vacuum",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "straight-arm-dumbbell-pullover": {
+    "upstreamName": "Straight-Arm Dumbbell Pullover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "straight-arm-pulldown": {
+    "upstreamName": "Straight-Arm Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "straight-bar-bench-mid-rows": {
+    "upstreamName": "Straight Bar Bench Mid Rows",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "straight-raises-on-incline-bench": {
+    "upstreamName": "Straight Raises on Incline Bench",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "stride-jump-crossover": {
+    "upstreamName": "Stride Jump Crossover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sumo-deadlift": {
+    "upstreamName": "Sumo Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sumo-deadlift-with-bands": {
+    "upstreamName": "Sumo Deadlift with Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "sumo-deadlift-with-chains": {
+    "upstreamName": "Sumo Deadlift with Chains",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "superman": {
+    "upstreamName": "Superman",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "supine-chest-throw": {
+    "upstreamName": "Supine Chest Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "supine-one-arm-overhead-throw": {
+    "upstreamName": "Supine One-Arm Overhead Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "supine-two-arm-overhead-throw": {
+    "upstreamName": "Supine Two-Arm Overhead Throw",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "suspended-fallout": {
+    "upstreamName": "Suspended Fallout",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "suspended-push-up": {
+    "upstreamName": "Suspended Push-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "suspended-reverse-crunch": {
+    "upstreamName": "Suspended Reverse Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "suspended-row": {
+    "upstreamName": "Suspended Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "suspended-split-squat": {
+    "upstreamName": "Suspended Split Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "svend-press": {
+    "upstreamName": "Svend Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "t-bar-row-with-handle": {
+    "upstreamName": "T-Bar Row with Handle",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "tate-press": {
+    "upstreamName": "Tate Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "the-straddle": {
+    "upstreamName": "The Straddle",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "thigh-abductor": {
+    "upstreamName": "Thigh Abductor",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "thigh-adductor": {
+    "upstreamName": "Thigh Adductor",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "tire-flip": {
+    "upstreamName": "Tire Flip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "toe-touchers": {
+    "upstreamName": "Toe Touchers",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "torso-rotation": {
+    "upstreamName": "Torso Rotation",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "trail-running-walking": {
+    "upstreamName": "Trail Running/Walking",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "trap-bar-deadlift": {
+    "upstreamName": "Trap Bar Deadlift",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "tricep-dumbbell-kickback": {
+    "upstreamName": "Tricep Dumbbell Kickback",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "tricep-side-stretch": {
+    "upstreamName": "Tricep Side Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "triceps-overhead-extension-with-rope": {
+    "upstreamName": "Triceps Overhead Extension with Rope",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "triceps-pushdown": {
+    "upstreamName": "Triceps Pushdown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "triceps-pushdown-rope-attachment": {
+    "upstreamName": "Triceps Pushdown - Rope Attachment",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "triceps-pushdown-v-bar-attachment": {
+    "upstreamName": "Triceps Pushdown - V-Bar Attachment",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "triceps-stretch": {
+    "upstreamName": "Triceps Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "tuck-crunch": {
+    "upstreamName": "Tuck Crunch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "two-arm-dumbbell-preacher-curl": {
+    "upstreamName": "Two-Arm Dumbbell Preacher Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "two-arm-kettlebell-clean": {
+    "upstreamName": "Two-Arm Kettlebell Clean",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "two-arm-kettlebell-jerk": {
+    "upstreamName": "Two-Arm Kettlebell Jerk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "two-arm-kettlebell-military-press": {
+    "upstreamName": "Two-Arm Kettlebell Military Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "two-arm-kettlebell-row": {
+    "upstreamName": "Two-Arm Kettlebell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "underhand-cable-pulldowns": {
+    "upstreamName": "Underhand Cable Pulldowns",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upper-back-leg-grab": {
+    "upstreamName": "Upper Back-Leg Grab",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upper-back-stretch": {
+    "upstreamName": "Upper Back Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upright-barbell-row": {
+    "upstreamName": "Upright Barbell Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upright-cable-row": {
+    "upstreamName": "Upright Cable Row",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upright-row-with-bands": {
+    "upstreamName": "Upright Row - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "upward-stretch": {
+    "upstreamName": "Upward Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "v-bar-pulldown": {
+    "upstreamName": "V-Bar Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "v-bar-pullup": {
+    "upstreamName": "V-Bar Pullup",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "vertical-swing": {
+    "upstreamName": "Vertical Swing",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "walking-treadmill": {
+    "upstreamName": "Walking, Treadmill",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-ball-hyperextension": {
+    "upstreamName": "Weighted Ball Hyperextension",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-ball-side-bend": {
+    "upstreamName": "Weighted Ball Side Bend",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-bench-dip": {
+    "upstreamName": "Weighted Bench Dip",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-crunches": {
+    "upstreamName": "Weighted Crunches",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-jump-squat": {
+    "upstreamName": "Weighted Jump Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-pull-ups": {
+    "upstreamName": "Weighted Pull Ups",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-sissy-squat": {
+    "upstreamName": "Weighted Sissy Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-sit-ups-with-bands": {
+    "upstreamName": "Weighted Sit-Ups - With Bands",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "weighted-squat": {
+    "upstreamName": "Weighted Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-barbell-bench-press": {
+    "upstreamName": "Wide-Grip Barbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-decline-barbell-bench-press": {
+    "upstreamName": "Wide-Grip Decline Barbell Bench Press",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-decline-barbell-pullover": {
+    "upstreamName": "Wide-Grip Decline Barbell Pullover",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-lat-pulldown": {
+    "upstreamName": "Wide-Grip Lat Pulldown",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-pulldown-behind-the-neck": {
+    "upstreamName": "Wide-Grip Pulldown Behind The Neck",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-rear-pull-up": {
+    "upstreamName": "Wide-Grip Rear Pull-Up",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-grip-standing-barbell-curl": {
+    "upstreamName": "Wide-Grip Standing Barbell Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-stance-barbell-squat": {
+    "upstreamName": "Wide Stance Barbell Squat",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wide-stance-stiff-legs": {
+    "upstreamName": "Wide Stance Stiff Legs",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wind-sprints": {
+    "upstreamName": "Wind Sprints",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "windmills": {
+    "upstreamName": "Windmills",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "world-s-greatest-stretch": {
+    "upstreamName": "World's Greatest Stretch",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wrist-circles": {
+    "upstreamName": "Wrist Circles",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wrist-roller": {
+    "upstreamName": "Wrist Roller",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "wrist-rotations-with-straight-bar": {
+    "upstreamName": "Wrist Rotations with Straight Bar",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "yoke-walk": {
+    "upstreamName": "Yoke Walk",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "zercher-squats": {
+    "upstreamName": "Zercher Squats",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "zottman-curl": {
+    "upstreamName": "Zottman Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  },
+  "zottman-preacher-curl": {
+    "upstreamName": "Zottman Preacher Curl",
+    "firstSeen": "2026-08-11",
+    "aliases": []
+  }
+}
