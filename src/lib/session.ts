@@ -255,3 +255,36 @@ export async function previousBestKg(
   }
   return best
 }
+
+/* --- progress ------------------------------------------------------------ */
+
+export function movementProgress(m: SessionMovement): { done: number; total: number } {
+  return { done: m.sets.filter((s) => s.done).length, total: m.sets.length }
+}
+
+export function movementComplete(m: SessionMovement): boolean {
+  const { done, total } = movementProgress(m)
+  return total > 0 && done === total
+}
+
+export function sessionProgress(session: Session): { done: number; total: number } {
+  let done = 0
+  let total = 0
+  for (const m of session.movements) {
+    total += m.sets.length
+    done += m.sets.filter((s) => s.done).length
+  }
+  return { done, total }
+}
+
+/** Index of the movement to focus: the first with sets still to log. */
+export function firstIncomplete(session: Session): number | null {
+  const i = session.movements.findIndex((m) => !movementComplete(m))
+  return i === -1 ? null : i
+}
+
+/** Index of the next set to log within a movement, or null if none remain. */
+export function nextSetIndex(m: SessionMovement): number | null {
+  const i = m.sets.findIndex((s) => !s.done)
+  return i === -1 ? null : i
+}

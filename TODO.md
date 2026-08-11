@@ -88,6 +88,10 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [ ] Tänään: training-day / rest-day states (needs programme scheduling first)
 - [x] Start session from routine or ad hoc
 - [x] Live view: previous performance inline, set-by-set entry
+- [x] Accordion: one movement expanded, rest folded to a line, auto-advance on completion
+- [x] Logged sets collapse to a log line, reopenable to fix a mistyped load
+- [x] Next set outlined; session progress rail
+- [x] Rest phase reveals what's next and upcoming targets
 - [x] Set row checkmark → complete + rest timer + haptic
 - [x] Pre-fill from last session; unchanged set is one tap
 - [x] First-session empty state: `Ei aiempaa tietoa`, blank loads, no invented weights
@@ -142,3 +146,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — First app slice built: Vite + React + TS + PWA, Dexie with the seed/override split, Liikekirjasto with search and filters, per-movement editor with per-field reset, Joukkokäännös bulk rename, and overrides export/import. Verified in headless Chrome: 68 movements render from IndexedDB, all filters work, edits round-trip, and an offline reload still renders the full library with edits intact. No Supabase yet — local-first means IndexedDB is the source of truth anyway.
 - 2026-08-11 — Id ledger added, pinning all 873 ids so upstream renames can't orphan logged history. Upstream has no stable id of its own (name-derived), so renames are resolved by hand via `aliases`. Tested end-to-end: simulated renaming "Barbell Squat" → "Back Squat (Barbell)", confirmed the orphan+mint report, resolved via alias, verified the id held at `barbell-squat` with the new `nameEn`.
 - 2026-08-11 — Training loop built: Tänään, session logging, numeric pad with plate calculator, and summary. 7 Finnish starter routines seeded with movement ids validated at build time. Sessions copy their plan at start so template edits cannot rewrite history. Verified end to end in headless Chrome including a session started, logged, reloaded, and finished entirely offline (3 sets, 1 200 kg). Deferred: programme scheduling, exotic set types, RPE, notes UI, template editing, configurable bar weight.
+- 2026-08-11 — Session view reworked after measuring it: 92 buttons and 1.9 screens of scroll for a one-set decision. Now an accordion — one movement expanded, others folded to a line, logged sets collapsed to the log vernacular, next set outlined, and the rest period used to reveal what's coming. 23 controls, one screen. Also fixed `setsLine` to show reps alone for bodyweight work instead of `– × 8`.

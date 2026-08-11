@@ -32,11 +32,15 @@ export function shortDate(at: number): string {
   return `${WEEKDAYS[d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.`
 }
 
-/** Sets as a lifter writes them: 80 × 8, 8, 7 */
+/** Sets as a lifter writes them: 80 kg × 8, 8, 7 */
 export function setsLine(sets: { kg: number | null; reps: number | null }[]): string {
   if (!sets.length) return ''
+  const reps = sets.map((s) => s.reps ?? '–').join(', ')
+
+  // Bodyweight work carries no load, so reps alone are the honest record.
+  if (sets.every((s) => s.kg === null)) return reps
+
   const kg = sets[0].kg
-  const uniform = sets.every((s) => s.kg === kg)
-  if (uniform && kg !== null) return `${kg} kg × ${sets.map((s) => s.reps ?? '–').join(', ')}`
-  return sets.map((s) => `${s.kg ?? '–'}×${s.reps ?? '–'}`).join('  ')
+  if (sets.every((s) => s.kg === kg)) return `${kg} kg × ${reps}`
+  return sets.map((s) => `${s.kg ?? '–'} × ${s.reps ?? '–'}`).join('  ·  ')
 }

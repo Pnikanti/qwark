@@ -71,31 +71,47 @@ Sync state is visible here: a quiet indicator when writes are still queued.
 
 ### Treeni käynnissä
 
-The screen that matters. Per movement:
+The screen that matters. **One movement is expanded; everything else is a single line.**
+
+The first build rendered every movement in full. Measured on a five-movement routine that was 92 buttons and 1.9 screens of scroll before a single set was logged — for an activity where exactly one set is live. The column header alone rendered five times. Density has to follow attention: the next set, then how much of this movement is left, then distantly what is coming.
 
 ```
-Penkkipunnerrus                              ⋯
-────────────────────────────────────────────────
-Edellinen: 80 kg × 8, 8, 7
-
-  Sarja      kg        Toistot
-    W       [40]        [10]        ✓
-    1       [80]         [8]        ✓
-    2       [80]         [8]        ✓
-    3       [80]         [ ]        ○
-  + Lisää sarja
-────────────────────────────────────────────────
-        Lisää liike   ·   Lopeta treeni
+JALKAPÄIVÄ                              ⋯
+3 / 16 sarjaa · 12 min
+▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+────────────────────────────────────────
+✓  Jalkakyykky          100 kg × 8, 8, 8
+────────────────────────────────────────
+▏ Romanialainen maastaveto           1/3
+▏ Edellinen: 90 kg × 8, 8, 7
+▏ ✓ 90 kg × 8                  Muokkaa
+▏
+▏  Sarja      kg        Toistoa
+▏    2      [ 90 ]      [  8  ]   ×  ✓     ← next set outlined
+▏    3      [ 90 ]      [  8  ]   ×  ✓
+▏  + Lisää sarja
+────────────────────────────────────────
+   Jalkaprässi              0/3 · 3 × 10
+   Reiden koukistus istuen   0/3 · 3 × 12
+   Pohkeen nosto seisten     0/4 · 4 × 12
+────────────────────────────────────────
+ PALAUTUS   2:14                  OHITA
+ Seuraava: Sarja 2 · 90 kg × 8
 ```
 
-- **Previous performance inline** at the top of each movement — the comparison is the habit loop.
-- **One checkmark per set**, which completes the set, starts the rest timer, and fires a haptic. Single control, three effects.
-- Tapping a kg field opens a **custom numeric pad** with 2.5 kg steppers and a **plate calculator** — never the OS keyboard.
-- Warmup sets shown as `W`, excluded from volume and 1RM math.
-- Set type (warmup / drop / failure) via long-press on the set row.
-- Rest timer is a sticky bottom bar, dismissible, and fires a notification if the app is backgrounded.
-- Tap targets ≥48 px throughout — this is used mid-set with sweaty hands.
-- Every completed set writes to IndexedDB immediately, so a PWA reload mid-workout loses nothing.
+- **One movement expanded**, marked with a cobalt rule. It **auto-advances** when the last set of a movement is logged, and any collapsed line is one tap away — no penalty for jumping when a machine is occupied.
+- **Logged sets collapse** into the log vernacular (`90 kg × 8`) rather than staying as interactive rows, so the screen shrinks as the session progresses. Tapping that line reopens them, because a mistyped load has to be fixable.
+- **The next set is outlined** in accent — the one thing you are about to touch.
+- **Previous performance inline**, per movement. The comparison is the habit loop.
+- **One checkmark per set**: completes it, starts the rest timer, fires a haptic. One control, three effects.
+- Tapping a kg field opens a **custom numeric pad** with plate-pair steppers and a **plate calculator** — never the OS keyboard.
+- Warmup sets take the marker `L` instead of a number, and are excluded from volume and 1RM. Tap the marker to switch.
+- **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement, and collapsed rows reveal their targets. It all folds away again once you resume, so nothing shifts while you are logging.
+- Destructive actions appear only in the expanded movement, never five times over.
+- Tap targets ≥48 px — this is used mid-set with sweaty hands.
+- Every change writes to IndexedDB immediately, so a PWA reload mid-workout loses nothing.
+
+Result: 23 controls and one screen, against 92 and 1.9.
 
 ### Liikkeen valinta
 
