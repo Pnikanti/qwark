@@ -1,28 +1,41 @@
 import { useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { BodyPlan } from '../components/BodyPlan'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import { listMovements, needsReview } from '../lib/movements'
 import type { EffectiveMovement } from '../types'
 
 interface Props {
   onEdit: (id: string) => void
-  onBulkTranslate: () => void
-  onExport: () => void
+  onBulkRename: () => void
+  onOverrides: () => void
 }
 
-export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
+/** Groups the sorted list under its initial letter — the axis you actually scan. */
+function byInitial(movements: EffectiveMovement[]) {
+  const groups: { letter: string; items: EffectiveMovement[] }[] = []
+  for (const m of movements) {
+    const letter = (m.nameFi ?? m.nameEn).charAt(0).toUpperCase()
+    const last = groups.at(-1)
+    if (last?.letter === letter) last.items.push(m)
+    else groups.push({ letter, items: [m] })
+  }
+  return groups
+}
+
+export function Library({ onEdit, onBulkRename, onOverrides }: Props) {
   const movements = useLiveQuery(listMovements, [])
   const [query, setQuery] = useState('')
   const [muscle, setMuscle] = useState('')
   const [equipment, setEquipment] = useState('')
   const [reviewOnly, setReviewOnly] = useState(false)
-  const [showHidden, setShowHidden] = useState(false)
+  const [withHidden, setWithHidden] = useState(false)
 
   const visible = useMemo(() => {
     if (!movements) return []
     const q = query.trim().toLowerCase()
     return movements
-      .filter((m) => (showHidden ? true : !m.hidden))
+      .filter((m) => (withHidden ? true : !m.hidden))
       .filter((m) =>
         q
           ? (m.nameFi ?? '').toLowerCase().includes(q) ||
@@ -39,32 +52,32 @@ export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
       .sort((a, b) =>
         (a.nameFi ?? a.nameEn).localeCompare(b.nameFi ?? b.nameEn, 'fi'),
       )
-  }, [movements, query, muscle, equipment, reviewOnly, showHidden])
+  }, [movements, query, muscle, equipment, reviewOnly, withHidden])
 
-  const editedCount = movements?.filter((m) => m.edited.size > 0).length ?? 0
-  const reviewCount = movements?.filter(needsReview).length ?? 0
+  if (!movements) return <p className="blank note">{fi.loading}</p>
 
-  if (!movements) return <p className="note">{fi.loading}</p>
+  const editedCount = movements.filter((m) => m.edited.size > 0).length
+  const reviewCount = movements.filter(needsReview).length
+  const groups = byInitial(visible)
 
   return (
     <>
-      <div className="topbar">
-        <h1>
-          {fi.library}
-          <br />
-          <span className="sub">
-            {editedCount > 0 ? fi.overrideCount(editedCount) : fi.noOverrides}
-          </span>
-        </h1>
-        <button className="small" onClick={onBulkTranslate}>
-          {fi.bulkTranslate}
-        </button>
-        <button className="small" onClick={onExport}>
-          {fi.export}
-        </button>
-      </div>
+      <header className="masthead">
+        <h1 className="t-title">{fi.library}</h1>
+        <span className="t-data">
+          {fi.movementCount(visible.length)} · {fi.editedCount(editedCount)}
+        </span>
+        <div className="masthead-actions">
+          <button className="btn" onClick={onBulkRename}>
+            {fi.bulkRename}
+          </button>
+          <button className="btn" onClick={onOverrides}>
+            {fi.overrides}
+          </button>
+        </div>
+      </header>
 
-      <div className="filters">
+      <div className="controls">
         <input
           className="wide"
           type="search"
@@ -72,7 +85,11 @@ export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <select value={muscle} onChange={(e) => setMuscle(e.target.value)}>
+        <select
+          value={muscle}
+          onChange={(e) => setMuscle(e.target.value)}
+          aria-label={fi.primaryMuscles}
+        >
           <option value="">{fi.allMuscles}</option>
           {Object.keys(tax.muscles)
             .sort((a, b) => muscleFi(a).localeCompare(muscleFi(b), 'fi'))
@@ -82,7 +99,11 @@ export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
               </option>
             ))}
         </select>
-        <select value={equipment} onChange={(e) => setEquipment(e.target.value)}>
+        <select
+          value={equipment}
+          onChange={(e) => setEquipment(e.target.value)}
+          aria-label={fi.equipment}
+        >
           <option value="">{fi.allEquipment}</option>
           {Object.keys(tax.equipment)
             .sort((a, b) => equipmentFi(a).localeCompare(equipmentFi(b), 'fi'))
@@ -92,34 +113,41 @@ export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
               </option>
             ))}
         </select>
+        <div className="toggles wide">
+          <button
+            className="toggle marked"
+            aria-pressed={reviewOnly}
+            onClick={() => setReviewOnly((v) => !v)}
+          >
+            {fi.needsReview} {reviewCount}
+          </button>
+          <button
+            className="toggle"
+            aria-pressed={withHidden}
+            onClick={() => setWithHidden((v) => !v)}
+          >
+            {fi.showHidden}
+          </button>
+        </div>
       </div>
-
-      <div className="chips">
-        <button
-          className="chip"
-          aria-pressed={reviewOnly}
-          onClick={() => setReviewOnly((v) => !v)}
-        >
-          {fi.needsReview} ({reviewCount})
-        </button>
-        <button
-          className="chip"
-          aria-pressed={showHidden}
-          onClick={() => setShowHidden((v) => !v)}
-        >
-          {fi.showHidden}
-        </button>
-      </div>
-
-      <p className="count">{fi.results(visible.length)}</p>
 
       {visible.length === 0 ? (
-        <p className="note">{fi.noResults}</p>
+        <div className="blank">
+          <span className="t-data">{fi.noResults}</span>
+          <p className="note">{fi.noResultsHint}</p>
+        </div>
       ) : (
-        <ul className="list">
-          {visible.map((m) => (
-            <li key={m.id}>
-              <MovementRow movement={m} onClick={() => onEdit(m.id)} />
+        <ul className="ledger">
+          {groups.map((group, gi) => (
+            <li key={group.letter} style={{ animationDelay: `${Math.min(gi, 8) * 22}ms` }}>
+              <h2 className="section-mark">{group.letter}</h2>
+              <ul className="ledger">
+                {group.items.map((m) => (
+                  <li key={m.id}>
+                    <Entry movement={m} onClick={() => onEdit(m.id)} />
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
@@ -128,33 +156,34 @@ export function Library({ onEdit, onBulkTranslate, onExport }: Props) {
   )
 }
 
-function MovementRow({
+function Entry({
   movement: m,
   onClick,
 }: {
   movement: EffectiveMovement
   onClick: () => void
 }) {
-  const muscles = m.primaryMuscles.map(muscleFi).join(', ')
+  const detail = [
+    m.primaryMuscles.map(muscleFi).join(' · '),
+    equipmentFi(m.equipment),
+    m.nameFi ? m.nameEn : null,
+  ]
+    .filter(Boolean)
+    .join('  ·  ')
+
   return (
-    <button
-      className={`row${m.hidden ? ' is-hidden' : ''}`}
-      onClick={onClick}
-      aria-label={`${fi.edit}: ${m.nameFi ?? m.nameEn}`}
-    >
+    <button className={`entry${m.hidden ? ' dimmed' : ''}`} onClick={onClick}>
+      <BodyPlan primary={m.primaryMuscles} secondary={m.secondaryMuscles} size={42} />
       <span className="grow">
-        <span className={`name${m.nameFi ? '' : ' untranslated'}`}>
+        <span className={`t-name${m.nameFi ? '' : ' draft'}`}>
           {m.nameFi ?? m.nameEn}
         </span>
-        <br />
-        <span className="meta">
-          {[muscles, equipmentFi(m.equipment), m.nameFi ? m.nameEn : null]
-            .filter(Boolean)
-            .join(' · ')}
-        </span>
+        <span className="t-data">{detail}</span>
       </span>
-      {needsReview(m) && <span className="tag warn">{fi.missing}</span>}
-      {m.edited.size > 0 && <span className="dot" title={fi.edited} />}
+      <span className="rail">
+        {needsReview(m) && <span className="flagtag">{fi.incomplete}</span>}
+        {m.edited.size > 0 && <span className="pip" title={fi.edited} />}
+      </span>
     </button>
   )
 }

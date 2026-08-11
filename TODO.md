@@ -34,6 +34,9 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] IndexedDB layer (Dexie) as the source of truth for reads
 - [x] Finnish string table (`src/i18n.ts`)
 - [x] Design tokens, light + dark, ≥48 px targets (`src/styles.css`)
+- [x] Visual direction "concrete and cobalt": plate palette, width-axis type, self-hosted Archivo
+- [x] `BodyPlan` glyph — schematic muscle diagram from the seed data
+- [ ] Reuse `BodyPlan` for weekly volume per muscle group on the progress screen
 - [ ] Supabase project, auth, row-level security
 - [ ] Data model: workout template, program, session, logged set, body metric
 - [ ] Eager library sync at first login, blocking with progress + retry
@@ -131,5 +134,6 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Images dropped from v1, which removed the whole licensing problem. free-exercise-db (public domain) is now the sole source, metadata only. Built `scripts/build-movements.py` → 873 normalised movements, 68 curated with draft Finnish names, Finnish taxonomy. Everkinetic demoted to a deferred image option.
 - 2026-08-11 — Admin editing specced: immutable seed + override layer keyed by movement id, merged at read time, so library updates never clobber edits. `id` is canonical and frozen; both `nameFi` and `nameEn` are user-facing and editable. Build script now merges `data/overrides.json`, closing the app → repo loop.
 - 2026-08-11 — Repo initialised and pushed to github.com:Pnikanti/qwark.
+- 2026-08-11 — Visual identity established before more screens inherit the generic default: "concrete and cobalt" (see SPEC.md). Palette derived from IWF plate colours, typography uses Archivo's width axis semantically, layout is a hairline ledger with alphabet section markers, and the signature is a schematic body-plan glyph driven by the seed's muscle data. Fonts self-hosted so offline still renders them. Finnish numeral cases fixed.
 - 2026-08-11 — First app slice built: Vite + React + TS + PWA, Dexie with the seed/override split, Liikekirjasto with search and filters, per-movement editor with per-field reset, Joukkokäännös bulk rename, and overrides export/import. Verified in headless Chrome: 68 movements render from IndexedDB, all filters work, edits round-trip, and an offline reload still renders the full library with edits intact. No Supabase yet — local-first means IndexedDB is the source of truth anyway.
 - 2026-08-11 — Id ledger added, pinning all 873 ids so upstream renames can't orphan logged history. Upstream has no stable id of its own (name-derived), so renames are resolved by hand via `aliases`. Tested end-to-end: simulated renaming "Barbell Squat" → "Back Squat (Barbell)", confirmed the orphan+mint report, resolved via alias, verified the id held at `barbell-squat` with the new `nameEn`.

@@ -158,6 +158,19 @@ When these arrive, AI calls go through Supabase edge functions so keys stay serv
 
 ---
 
+## Visual direction — "concrete and cobalt"
+
+Tokens live in `src/styles.css`. The point of writing this down is that the session screens must inherit it rather than invent a second language.
+
+- **Palette from the plates.** Cool concrete greys and chalk ink, with one cobalt accent lifted from the 20 kg competition disc — the standard plate on the standard bar. Plate yellow (15 kg) marks attention: edited fields and incomplete metadata, nothing else. The full IWF disc set is tokenised (`--plate-25` … `--plate-5`) and reserved for the plate calculator.
+- **Width is the typographic axis**, not serif versus sans. One family — Archivo variable, self-hosted because the app must work offline — with width carrying the role: expanded 800 uppercase for titles and section markers (stencilled, like rack markings), regular for names and prose, condensed uppercase and tracked for metadata and data. When loads arrive they take the condensed tabular cut and become the largest thing on the screen.
+- **A ledger, not cards.** Rows are flush to the container and separated by hairlines, with no floating card chrome. `border-radius` stays at 2px throughout.
+- **Structure encodes content.** The library breaks into alphabet markers because the list is sorted by Finnish name and that is the axis you scan. Instruction steps are numbered because a lift is a sequence. Nothing is numbered decoratively.
+- **The body plan is the signature.** `src/components/BodyPlan.tsx` draws a schematic figure per movement, primaries in cobalt and secondaries ghosted, built from `primaryMuscles` / `secondaryMuscles`. Lists show one figure, auto-picked by which side the movement works — front for a press, back for a row. The editor shows both. It reuses directly for weekly volume per muscle group on the progress screen.
+- **Restraint.** No gradients, no shadows, two colours beyond the greys. Motion is a short staggered list reveal and state changes only, and `prefers-reduced-motion` disables it. Tap targets stay at 48px.
+
+Finnish numerals govern case — "1 liike" but "68 liikettä". `src/i18n.ts` handles it; getting it wrong is what makes an interface read as machine-translated.
+
 ## Principles
 
 - Fast path first: the most common action is never more than two taps from launch.

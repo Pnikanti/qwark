@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
 import { fi } from './i18n'
-import { BulkTranslate } from './screens/BulkTranslate'
-import { ExportOverrides } from './screens/ExportOverrides'
+import { BulkRename } from './screens/BulkRename'
 import { Library } from './screens/Library'
 import { MovementEdit } from './screens/MovementEdit'
+import { Overrides } from './screens/Overrides'
 
 type View =
   | { name: 'library' }
   | { name: 'edit'; id: string }
-  | { name: 'bulk' }
-  | { name: 'export' }
+  | { name: 'rename' }
+  | { name: 'overrides' }
 
 export function App() {
   const [ready, setReady] = useState(false)
@@ -29,21 +29,21 @@ export function App() {
   return (
     <div className="app">
       {error ? (
-        <p className="note">{error}</p>
+        <p className="blank note">{error}</p>
       ) : !ready ? (
-        <p className="note">{fi.loading}</p>
+        <p className="blank note">{fi.loading}</p>
       ) : view.name === 'library' ? (
         <Library
           onEdit={(id) => setView({ name: 'edit', id })}
-          onBulkTranslate={() => setView({ name: 'bulk' })}
-          onExport={() => setView({ name: 'export' })}
+          onBulkRename={() => setView({ name: 'rename' })}
+          onOverrides={() => setView({ name: 'overrides' })}
         />
       ) : view.name === 'edit' ? (
         <MovementEdit id={view.id} onBack={library} />
-      ) : view.name === 'bulk' ? (
-        <BulkTranslate onBack={library} />
+      ) : view.name === 'rename' ? (
+        <BulkRename onBack={library} />
       ) : (
-        <ExportOverrides onBack={library} />
+        <Overrides onBack={library} />
       )}
     </div>
   )

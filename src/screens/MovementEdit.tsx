@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { BodyPlan } from '../components/BodyPlan'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import { getMovement, patchMovement, resetField } from '../lib/movements'
 import type { EffectiveMovement, Patchable } from '../types'
@@ -9,21 +11,36 @@ const LEVEL = ['beginner', 'intermediate', 'expert']
 
 export function MovementEdit({ id, onBack }: { id: string; onBack: () => void }) {
   const movement = useLiveQuery(() => getMovement(id), [id])
-  if (!movement) return <p className="note">{fi.loading}</p>
+  const [musclesOpen, setMusclesOpen] = useState(false)
+  if (!movement) return <p className="blank note">{fi.loading}</p>
 
   const set = <K extends keyof Patchable>(field: K, value: Patchable[K]) =>
     patchMovement(id, { [field]: value } as Partial<Patchable>)
 
   return (
     <>
-      <div className="topbar">
-        <button className="ghost small" onClick={onBack}>
+      <header className="masthead">
+        <button className="back" onClick={onBack}>
           ← {fi.back}
         </button>
-        <h1>{fi.editMovement}</h1>
+        <h1 className="t-title">{movement.nameFi ?? movement.nameEn}</h1>
+        <span className="t-data">
+          {movement.nameFi ? movement.nameEn : fi.nameFi + ' ' + fi.incomplete.toLowerCase()}
+        </span>
+      </header>
+
+      <div className="panel">
+        <BodyPlan
+          className="large"
+          primary={movement.primaryMuscles}
+          secondary={movement.secondaryMuscles}
+          size={132}
+          view="both"
+          title={movement.primaryMuscles.map(muscleFi).join(', ')}
+        />
       </div>
 
-      <div className="card">
+      <div className="panel">
         <Field movement={movement} field="nameFi" label={fi.nameFi}>
           <input
             value={movement.nameFi ?? ''}
@@ -31,90 +48,135 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
             onChange={(e) => set('nameFi', e.target.value.trim() || null)}
           />
         </Field>
-
         <Field movement={movement} field="nameEn" label={fi.nameEn}>
           <input
             value={movement.nameEn}
             onChange={(e) => set('nameEn', e.target.value)}
           />
         </Field>
+      </div>
 
-        <Field movement={movement} field="primaryMuscles" label={fi.primaryMuscles}>
-          <MusclePicker
-            selected={movement.primaryMuscles}
-            onChange={(next) => set('primaryMuscles', next)}
-          />
-        </Field>
+      {/* The glyph above already shows which muscles are set, so the pickers stay
+          folded away until you actually want to change them. */}
+      <div className="panel">
+        <div className="field-label">
+          <span className="t-data">{fi.muscles}</span>
+          {(movement.edited.has('primaryMuscles') ||
+            movement.edited.has('secondaryMuscles')) && (
+            <span className="edited-note">
+              <span className="pip" />
+              {fi.edited}
+            </span>
+          )}
+          <button
+            className="revert"
+            aria-expanded={musclesOpen}
+            onClick={() => setMusclesOpen((v) => !v)}
+          >
+            {musclesOpen ? fi.close : fi.change}
+          </button>
+        </div>
 
-        <Field movement={movement} field="secondaryMuscles" label={fi.secondaryMuscles}>
-          <MusclePicker
-            selected={movement.secondaryMuscles}
-            onChange={(next) => set('secondaryMuscles', next)}
-          />
-        </Field>
+        {musclesOpen ? (
+          <>
+            <Field movement={movement} field="primaryMuscles" label={fi.primaryMuscles}>
+              <MusclePicker
+                selected={movement.primaryMuscles}
+                onChange={(next) => set('primaryMuscles', next)}
+              />
+            </Field>
+            <Field
+              movement={movement}
+              field="secondaryMuscles"
+              label={fi.secondaryMuscles}
+            >
+              <MusclePicker
+                selected={movement.secondaryMuscles}
+                onChange={(next) => set('secondaryMuscles', next)}
+              />
+            </Field>
+          </>
+        ) : (
+          <dl className="summary">
+            <dt className="t-data">{fi.primaryMuscles}</dt>
+            <dd>{movement.primaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
+            <dt className="t-data">{fi.secondaryMuscles}</dt>
+            <dd>{movement.secondaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
+          </dl>
+        )}
+      </div>
 
+      <div className="panel">
         <Field movement={movement} field="equipment" label={fi.equipment}>
           <select
             value={movement.equipment ?? ''}
             onChange={(e) => set('equipment', e.target.value || null)}
           >
-            <option value="">—</option>
-            {Object.keys(tax.equipment).map((key) => (
-              <option key={key} value={key}>
-                {equipmentFi(key)}
-              </option>
-            ))}
+            <option value="">–</option>
+            {Object.keys(tax.equipment)
+              .sort((a, b) => equipmentFi(a).localeCompare(equipmentFi(b), 'fi'))
+              .map((key) => (
+                <option key={key} value={key}>
+                  {equipmentFi(key)}
+                </option>
+              ))}
           </select>
         </Field>
-
         <Field movement={movement} field="mechanic" label={fi.mechanic}>
           <Choice
             options={MECHANIC}
+            labels={fi.mechanicValue}
             value={movement.mechanic}
             onChange={(v) => set('mechanic', v)}
           />
         </Field>
-
         <Field movement={movement} field="force" label={fi.force}>
           <Choice
             options={FORCE}
+            labels={fi.forceValue}
             value={movement.force}
             onChange={(v) => set('force', v)}
           />
         </Field>
-
         <Field movement={movement} field="level" label={fi.level}>
           <Choice
             options={LEVEL}
+            labels={fi.levelValue}
             value={movement.level}
             onChange={(v) => set('level', v)}
           />
         </Field>
       </div>
 
-      <div className="card">
-        <div className="field">
-          <label htmlFor="hidden-toggle">{fi.hideMovement}</label>
-          <button
-            id="hidden-toggle"
-            className="chip"
-            aria-pressed={Boolean(movement.hidden)}
-            onClick={() => set('hidden', !movement.hidden)}
-          >
-            {movement.hidden ? fi.hidden : '—'}
-          </button>
-          <p className="note" style={{ marginTop: 'var(--s-2)' }}>
-            {fi.hiddenNote}
-          </p>
+      <div className="panel">
+        <Field movement={movement} field="hidden" label={fi.visibility}>
+          <div className="chipset">
+            <button
+              className="toggle"
+              aria-pressed={Boolean(movement.hidden)}
+              onClick={() => set('hidden', !movement.hidden)}
+            >
+              {movement.hidden ? fi.hidden : fi.visible}
+            </button>
+          </div>
+        </Field>
+        <p className="note">{fi.hiddenNote}</p>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <span className="t-data">{fi.identity}</span>
         </div>
         <p className="note">
-          {fi.idNote} <code>{movement.id}</code>
+          <code>{movement.id}</code> — {fi.identityNote}
         </p>
       </div>
 
       {movement.instructions.length > 0 && (
-        <div className="card">
-          <label>{fi.instructions}</label>
+        <div className="panel">
+          <div className="panel-head">
+            <span className="t-data">{fi.instructions}</span>
+          </div>
           <ol className="steps">
             {movement.instructions.map((step, i) => (
               <li key={i}>{step}</li>
@@ -126,7 +188,7 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
   )
 }
 
-/** Wraps a control with its label, an edited marker, and a per-field reset. */
+/** Label, edited marker, and per-field revert around any control. */
 function Field({
   movement,
   field,
@@ -141,22 +203,20 @@ function Field({
   const edited = movement.edited.has(field)
   return (
     <div className="field">
-      <label>
-        {label}
+      <div className="field-label">
+        <span className="t-data">{label}</span>
         {edited && (
-          <span className="flag">
-            <span className="dot" />
-            {fi.edited}
-            <button
-              className="link"
-              onClick={() => resetField(movement.id, field)}
-              style={{ marginLeft: 'var(--s-2)' }}
-            >
-              {fi.resetField}
+          <>
+            <span className="edited-note">
+              <span className="pip" />
+              {fi.edited}
+            </span>
+            <button className="revert" onClick={() => resetField(movement.id, field)}>
+              {fi.revert}
             </button>
-          </span>
+          </>
         )}
-      </label>
+      </div>
       {children}
     </div>
   )
@@ -164,23 +224,25 @@ function Field({
 
 function Choice({
   options,
+  labels,
   value,
   onChange,
 }: {
   options: string[]
+  labels: Record<string, string>
   value: string | null
   onChange: (v: string | null) => void
 }) {
   return (
-    <div className="multi">
+    <div className="chipset">
       {options.map((option) => (
         <button
           key={option}
-          className="chip"
+          className="toggle"
           aria-pressed={value === option}
           onClick={() => onChange(value === option ? null : option)}
         >
-          {option}
+          {labels[option] ?? option}
         </button>
       ))}
     </div>
@@ -201,13 +263,13 @@ function MusclePicker({
         : [...selected, key].sort(),
     )
   return (
-    <div className="multi">
+    <div className="chipset">
       {Object.keys(tax.muscles)
         .sort((a, b) => muscleFi(a).localeCompare(muscleFi(b), 'fi'))
         .map((key) => (
           <button
             key={key}
-            className="chip"
+            className="toggle"
             aria-pressed={selected.includes(key)}
             onClick={() => toggle(key)}
           >

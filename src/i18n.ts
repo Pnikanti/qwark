@@ -3,7 +3,11 @@ import type { Taxonomy } from './types'
 
 export const tax = taxonomy as Taxonomy
 
-/** UI copy lives here so English can be added later without touching components. */
+/**
+ * UI copy. Finnish numerals govern case: 1 takes the nominative singular,
+ * everything else the partitive — "1 liike" but "68 liikettä". Getting this
+ * wrong is the fastest way to make an interface read as machine-translated.
+ */
 export const fi = {
   appName: 'Qwark',
 
@@ -12,49 +16,66 @@ export const fi = {
   allMuscles: 'Kaikki lihasryhmät',
   allEquipment: 'Kaikki välineet',
   needsReview: 'Tarkistettavat',
-  showHidden: 'Näytä piilotetut',
-  results: (n: number) => `${n} liikettä`,
-  noResults: 'Ei tuloksia',
-  loading: 'Ladataan…',
+  showHidden: 'Piilotetut',
+  movementCount: (n: number) => (n === 1 ? '1 liike' : `${n} liikettä`),
+  editedCount: (n: number) =>
+    n === 0 ? 'ei muokkauksia' : n === 1 ? '1 muokattu' : `${n} muokattua`,
+  noResults: 'Ei osumia',
+  noResultsHint: 'Kokeile toista hakusanaa tai poista rajaukset.',
+  loading: 'Ladataan',
 
-  edit: 'Muokkaa',
-  editMovement: 'Liikkeen muokkaus',
-  bulkTranslate: 'Joukkokäännös',
+  editMovement: 'Muokkaa liikettä',
+  bulkRename: 'Nimeä sarjassa',
+  overrides: 'Muokkaukset',
   back: 'Takaisin',
   done: 'Valmis',
 
-  nameFi: 'Nimi (FI)',
-  nameEn: 'Nimi (EN)',
+  nameFi: 'Nimi suomeksi',
+  nameEn: 'Nimi englanniksi',
+  muscles: 'Lihasryhmät',
+  change: 'Muuta',
+  close: 'Sulje',
   primaryMuscles: 'Ensisijaiset lihakset',
   secondaryMuscles: 'Toissijaiset lihakset',
-  equipment: 'Välineet',
+  equipment: 'Väline',
   mechanic: 'Tyyppi',
   force: 'Suunta',
-  level: 'Taso',
-  instructions: 'Suoritusohje',
+  level: 'Vaativuus',
+  instructions: 'Suoritus',
+  identity: 'Tunniste',
 
-  edited: 'muokattu',
-  resetField: 'Palauta alkuperäinen',
+  mechanicValue: { compound: 'Moninivel', isolation: 'Eristävä' } as Record<string, string>,
+  forceValue: { push: 'Työntö', pull: 'Veto', static: 'Staattinen' } as Record<string, string>,
+  levelValue: {
+    beginner: 'Aloittaja',
+    intermediate: 'Kokenut',
+    expert: 'Edistynyt',
+  } as Record<string, string>,
+
+  edited: 'Muokattu',
+  revert: 'Palauta',
   hidden: 'Piilotettu',
-  hideMovement: 'Piilota liike',
-  hiddenNote: 'Piilotettu liike ei näy valinnassa, mutta historia säilyy.',
-  idNote: 'Tunniste on pysyvä eikä muutu nimen mukana.',
+  visible: 'Näkyvissä',
+  visibility: 'Näkyvyys',
+  hiddenNote: 'Piilotettu liike ei näy liikevalinnassa. Historia säilyy ennallaan.',
+  identityNote: 'Tunniste pysyy samana, vaikka nimi vaihtuu. Kirjatut sarjat viittaavat siihen.',
+  incomplete: 'Puuttuu',
 
-  missing: 'puuttuu',
-  translated: (done: number, total: number) => `${done} / ${total} käännetty`,
-  untranslatedOnly: 'Vain kääntämättömät',
+  renameProgress: (done: number, total: number) => `${done} / ${total} nimetty`,
+  untranslatedOnly: 'Vain nimeämättömät',
 
-  export: 'Vie',
-  import: 'Tuo',
-  exportHint: 'Tallenna tiedostona data/overrides.json ja aja skripti uudelleen.',
-  copy: 'Kopioi',
+  exportFile: 'Lataa tiedosto',
+  importFile: 'Tuo tiedosto',
+  copyJson: 'Kopioi',
   copied: 'Kopioitu',
-  imported: (n: number) => `${n} muutosta tuotu`,
-  importUnknown: (ids: string[]) => `Tuntemattomat tunnisteet: ${ids.join(', ')}`,
+  exportHint:
+    'Tallenna tiedostoksi data/overrides.json ja aja npm run data, niin muutokset siirtyvät seuraavaan koontiin.',
+  imported: (n: number) => (n === 1 ? '1 muutos tuotu' : `${n} muutosta tuotu`),
+  importUnknown: (ids: string[]) => `Tuntematon tunniste: ${ids.join(', ')}`,
   noOverrides: 'Ei muokkauksia',
-  overrideCount: (n: number) => `${n} muokattua liikettä`,
+  noOverridesHint: 'Muokkaa liikkeen nimeä tai tietoja, niin muutos näkyy täällä.',
 } as const
 
 export const muscleFi = (key: string): string => tax.muscles[key] ?? key
 export const equipmentFi = (key: string | null): string =>
-  key ? (tax.equipment[key] ?? key) : '—'
+  key ? (tax.equipment[key] ?? key) : '–'

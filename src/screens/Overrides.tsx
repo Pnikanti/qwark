@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { fi } from '../i18n'
 import { exportOverrides, importOverrides } from '../lib/movements'
 
-/** Round-trips data/overrides.json, the same file scripts/build-movements.py reads. */
-export function ExportOverrides({ onBack }: { onBack: () => void }) {
+/** Round-trips data/overrides.json — the file scripts/build-movements.py reads. */
+export function Overrides({ onBack }: { onBack: () => void }) {
   const [json, setJson] = useState('')
   const [status, setStatus] = useState<string | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
@@ -23,7 +23,7 @@ export function ExportOverrides({ onBack }: { onBack: () => void }) {
     URL.revokeObjectURL(url)
   }
 
-  const onFile = async (file: File) => {
+  const receive = async (file: File) => {
     try {
       const result = await importOverrides(await file.text())
       setStatus(
@@ -42,32 +42,33 @@ export function ExportOverrides({ onBack }: { onBack: () => void }) {
 
   return (
     <>
-      <div className="topbar">
-        <button className="ghost small" onClick={onBack}>
+      <header className="masthead">
+        <button className="back" onClick={onBack}>
           ← {fi.back}
         </button>
-        <h1>{fi.export}</h1>
-      </div>
+        <h1 className="t-title">{fi.overrides}</h1>
+        <span className="t-data">{fi.editedCount(count)}</span>
+      </header>
 
-      <div className="card">
-        <p className="count">
-          {count > 0 ? fi.overrideCount(count) : fi.noOverrides}
-        </p>
+      <div className="panel">
         <p className="note">{fi.exportHint}</p>
-        <div className="actions">
-          <button className="primary" onClick={download} disabled={count === 0}>
-            {fi.export} overrides.json
+        <div className="row-actions">
+          <button className="btn solid btn-tall" onClick={download} disabled={!count}>
+            {fi.exportFile}
           </button>
           <button
+            className="btn btn-tall"
+            disabled={!count}
             onClick={async () => {
               await navigator.clipboard.writeText(json)
               setStatus(fi.copied)
             }}
-            disabled={count === 0}
           >
-            {fi.copy}
+            {fi.copyJson}
           </button>
-          <button onClick={() => fileInput.current?.click()}>{fi.import}</button>
+          <button className="btn btn-tall" onClick={() => fileInput.current?.click()}>
+            {fi.importFile}
+          </button>
           <input
             ref={fileInput}
             type="file"
@@ -75,21 +76,26 @@ export function ExportOverrides({ onBack }: { onBack: () => void }) {
             hidden
             onChange={(e) => {
               const file = e.target.files?.[0]
-              if (file) onFile(file)
+              if (file) receive(file)
               e.target.value = ''
             }}
           />
         </div>
         {status && (
-          <p className="note" style={{ marginTop: 'var(--s-3)' }}>
+          <p className="note" style={{ marginTop: 12 }}>
             {status}
           </p>
         )}
       </div>
 
-      {count > 0 && (
-        <div className="card">
-          <textarea readOnly value={json} rows={16} spellCheck={false} />
+      {count > 0 ? (
+        <div className="panel">
+          <textarea readOnly value={json} spellCheck={false} aria-label={fi.overrides} />
+        </div>
+      ) : (
+        <div className="blank">
+          <span className="t-data">{fi.noOverrides}</span>
+          <p className="note">{fi.noOverridesHint}</p>
         </div>
       )}
     </>
