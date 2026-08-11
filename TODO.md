@@ -38,11 +38,11 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] `BodyPlan` glyph — schematic muscle diagram from the seed data
 - [ ] Reuse `BodyPlan` for weekly volume per muscle group on the progress screen
 - [ ] Supabase project, auth, row-level security
-- [ ] Data model: workout template, program, session, logged set, body metric
+- [x] Data model: template, session, logged set (programme + body metric still open)
 - [ ] Eager library sync at first login, blocking with progress + retry
 - [ ] Write queue + background sync + visible sync state
-- [ ] Numeric pad component: 2.5 kg steppers, plate calculator
-- [ ] Navigation shell — nutrition tab slot reserved but hidden
+- [x] Numeric pad component: 2.5 kg steppers, plate calculator, keypad
+- [x] Navigation shell — Tänään / Liikekirjasto tabs, hidden during a session
 
 ## 2 — Exercise library
 
@@ -72,36 +72,40 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 
 ## 3 — Planning
 
-- [ ] Workout builder: movements, sets, target reps, target load, rest
-- [ ] Set types: warmup, working, superset, circuit, drop, AMRAP, time-based
-- [ ] Save as reusable template (incl. `Tallenna pohjaksi` from a finished ad hoc session)
-- [ ] Seed 3–4 starter templates in Finnish (PPL, ylä/ala, 5×5)
-- [ ] Template preview screen before committing
-- [ ] Multi-week program structure and scheduling
+- [x] Seed starter templates in Finnish — 7 routines in 3 groups (PPL, ylä/ala, 5×5), movement ids validated at build time
+- [x] Save as reusable routine from a finished ad hoc session
+- [x] Editing a template cannot rewrite logged history — sessions copy their plan at start
+- [x] Set types: warmup and working (tap the set marker to switch)
+- [ ] Set types: superset, circuit, drop, AMRAP, time-based
+- [ ] Template editor — routines can be created from a session but not yet edited
+- [ ] Routine preview before starting
+- [ ] Multi-week programme structure and scheduling
 - [ ] Substitution picker ("no barbell available")
-- [ ] Editing a template must not rewrite already-logged history
 
 ## 4 — Session logging
 
-- [ ] Tänään screen with all five states (in-progress, first run, training day, rest day, no program)
-- [ ] Start session from template or ad hoc
-- [ ] Live view: current movement, previous performance inline, set-by-set entry
-- [ ] Set row checkmark → complete + rest timer + haptic
-- [ ] Pre-fill from last session; unchanged set is one tap
-- [ ] First-session empty state: `Ei aiempaa tietoa`, blank loads, no invented weights
-- [ ] Movement picker: seed recents with common compounds on first run
-- [ ] Rest timer with background notification
+- [x] Tänään: in-progress resume banner, first run, and has-history states
+- [ ] Tänään: training-day / rest-day states (needs programme scheduling first)
+- [x] Start session from routine or ad hoc
+- [x] Live view: previous performance inline, set-by-set entry
+- [x] Set row checkmark → complete + rest timer + haptic
+- [x] Pre-fill from last session; unchanged set is one tap
+- [x] First-session empty state: `Ei aiempaa tietoa`, blank loads, no invented weights
+- [x] Movement picker: leads with common compounds when there are no recents
+- [x] Rest timer countdown, skippable
+- [ ] Rest timer background notification (in-app countdown only so far)
+- [x] Persist to IndexedDB on every change; resume banner with elapsed time
+- [x] Discard sessions that finish with zero completed sets
+- [x] Summary: duration, volume, per-movement recap, records, estimated 1RM
+- [x] Fully exercisable with the network off — verified end to end, not assumed
 - [ ] Optional RPE / RIR per set
-- [ ] Per-movement notes carried forward
-- [ ] Persist session to IndexedDB on every set; resume banner with elapsed time + discard
-- [ ] Discard sessions that finish with zero completed sets
-- [ ] Summary screen: duration, volume, per-movement recap, records
-- [ ] Fully exercisable with the network off — verified, not assumed
+- [ ] Per-movement notes — stored and shown in the summary, but nothing writes them yet
+- [ ] Configurable bar weight and disc inventory (hardcoded 20 kg bar + standard discs)
 
 ## 5 — Progress
 
 - [ ] Per-movement history: estimated 1RM, volume, best sets
-- [ ] Weekly volume per muscle group
+- [ ] Weekly volume per muscle group (reuse `BodyPlan`)
 - [ ] Body weight + measurements, smoothed
 - [ ] Rule-based progression targets for next session
 
@@ -137,3 +141,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Visual identity established before more screens inherit the generic default: "concrete and cobalt" (see SPEC.md). Palette derived from IWF plate colours, typography uses Archivo's width axis semantically, layout is a hairline ledger with alphabet section markers, and the signature is a schematic body-plan glyph driven by the seed's muscle data. Fonts self-hosted so offline still renders them. Finnish numeral cases fixed.
 - 2026-08-11 — First app slice built: Vite + React + TS + PWA, Dexie with the seed/override split, Liikekirjasto with search and filters, per-movement editor with per-field reset, Joukkokäännös bulk rename, and overrides export/import. Verified in headless Chrome: 68 movements render from IndexedDB, all filters work, edits round-trip, and an offline reload still renders the full library with edits intact. No Supabase yet — local-first means IndexedDB is the source of truth anyway.
 - 2026-08-11 — Id ledger added, pinning all 873 ids so upstream renames can't orphan logged history. Upstream has no stable id of its own (name-derived), so renames are resolved by hand via `aliases`. Tested end-to-end: simulated renaming "Barbell Squat" → "Back Squat (Barbell)", confirmed the orphan+mint report, resolved via alias, verified the id held at `barbell-squat` with the new `nameEn`.
+- 2026-08-11 — Training loop built: Tänään, session logging, numeric pad with plate calculator, and summary. 7 Finnish starter routines seeded with movement ids validated at build time. Sessions copy their plan at start so template edits cannot rewrite history. Verified end to end in headless Chrome including a session started, logged, reloaded, and finished entirely offline (3 sets, 1 200 kg). Deferred: programme scheduling, exotic set types, RPE, notes UI, template editing, configurable bar weight.

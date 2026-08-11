@@ -15,6 +15,7 @@ Reads:  data/overrides.json        optional admin edits, merged over the seed
 Emits:  data/movements.all.json    all 873 movements, normalised
         data/movements.seed.json   curated gym set with Finnish names
         data/taxonomy.json         muscle + equipment labels in Finnish
+        data/templates.seed.json   starter routines, movement ids validated
         data/id-ledger.json        updated with any newly minted ids
 
 Finnish names are DRAFTS pending review by a native speaker. Corrections belong
@@ -191,6 +192,93 @@ CURATED = [
 ]
 
 
+# Starter routines, so the first session has structure without a setup wizard.
+# (movement id, sets, target reps). Ids are validated against the seed below.
+TEMPLATES = [
+    {
+        "id": "tyontopaiva",
+        "group": "Työntö / Veto / Jalat",
+        "name": "Työntöpäivä",
+        "items": [
+            ("barbell-bench-press-medium-grip", 3, 8, 150),
+            ("standing-military-press", 3, 8, 150),
+            ("barbell-incline-bench-press-medium-grip", 3, 10, 120),
+            ("side-lateral-raise", 3, 12, 90),
+            ("triceps-pushdown", 3, 12, 90),
+        ],
+    },
+    {
+        "id": "vetopaiva",
+        "group": "Työntö / Veto / Jalat",
+        "name": "Vetopäivä",
+        "items": [
+            ("barbell-deadlift", 3, 5, 210),
+            ("bent-over-barbell-row", 3, 8, 150),
+            ("pullups", 3, 8, 150),
+            ("seated-cable-rows", 3, 10, 120),
+            ("barbell-curl", 3, 12, 90),
+        ],
+    },
+    {
+        "id": "jalkapaiva",
+        "group": "Työntö / Veto / Jalat",
+        "name": "Jalkapäivä",
+        "items": [
+            ("barbell-squat", 3, 8, 210),
+            ("romanian-deadlift", 3, 8, 150),
+            ("leg-press", 3, 10, 150),
+            ("seated-leg-curl", 3, 12, 90),
+            ("standing-calf-raises", 4, 12, 90),
+        ],
+    },
+    {
+        "id": "ylakroppa",
+        "group": "Ylä / Ala",
+        "name": "Yläkroppa",
+        "items": [
+            ("barbell-bench-press-medium-grip", 3, 8, 150),
+            ("bent-over-barbell-row", 3, 8, 150),
+            ("standing-military-press", 3, 10, 120),
+            ("wide-grip-lat-pulldown", 3, 10, 120),
+            ("dumbbell-bicep-curl", 3, 12, 90),
+            ("triceps-pushdown", 3, 12, 90),
+        ],
+    },
+    {
+        "id": "alakroppa",
+        "group": "Ylä / Ala",
+        "name": "Alakroppa",
+        "items": [
+            ("barbell-squat", 3, 8, 210),
+            ("romanian-deadlift", 3, 8, 150),
+            ("barbell-lunge", 3, 10, 120),
+            ("leg-extensions", 3, 12, 90),
+            ("standing-calf-raises", 4, 12, 90),
+        ],
+    },
+    {
+        "id": "viisi-viisi-a",
+        "group": "5×5",
+        "name": "5×5 A",
+        "items": [
+            ("barbell-squat", 5, 5, 180),
+            ("barbell-bench-press-medium-grip", 5, 5, 180),
+            ("bent-over-barbell-row", 5, 5, 180),
+        ],
+    },
+    {
+        "id": "viisi-viisi-b",
+        "group": "5×5",
+        "name": "5×5 B",
+        "items": [
+            ("barbell-squat", 5, 5, 180),
+            ("standing-military-press", 5, 5, 180),
+            ("barbell-deadlift", 1, 5, 180),
+        ],
+    },
+]
+
+
 def slug(name: str) -> str:
     s = name.lower()
     s = re.sub(r"[^a-z0-9]+", "-", s)
@@ -361,6 +449,46 @@ def main() -> int:
     (DATA / "movements.seed.json").write_text(
         json.dumps(seed, ensure_ascii=False, indent=2) + "\n"
     )
+    # Starter routines. Every movement id must exist in the seed, or the first-run
+    # flow would offer a routine the library cannot resolve.
+    seed_ids = {m["id"] for m in seed}
+    bad = [
+        (t["name"], mid)
+        for t in TEMPLATES
+        for mid, *_ in t["items"]
+        if mid not in seed_ids
+    ]
+    if bad:
+        print("ERROR: templates reference movements not in the seed:")
+        for name, mid in bad:
+            print(f"    {name}: {mid}")
+        return 1
+
+    (DATA / "templates.seed.json").write_text(
+        json.dumps(
+            [
+                {
+                    "id": t["id"],
+                    "group": t["group"],
+                    "name": t["name"],
+                    "items": [
+                        {
+                            "movementId": mid,
+                            "sets": sets,
+                            "targetReps": reps,
+                            "restSeconds": rest,
+                        }
+                        for mid, sets, reps, rest in t["items"]
+                    ],
+                }
+                for t in TEMPLATES
+            ],
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n"
+    )
+
     (DATA / "taxonomy.json").write_text(
         json.dumps(
             {"muscles": MUSCLES_FI, "equipment": EQUIPMENT_FI},
@@ -374,6 +502,7 @@ def main() -> int:
     print(f"movements.all.json   {len(all_out)} movements")
     print(f"movements.seed.json  {len(seed)} movements, Finnish names (draft)")
     print(f"taxonomy.json        {len(MUSCLES_FI)} muscles, {len(EQUIPMENT_FI)} equipment")
+    print(f"templates.seed.json  {len(TEMPLATES)} routines, {sum(len(t['items']) for t in TEMPLATES)} entries")
     if overrides:
         print(
             f"overrides.json       {len(overrides)} patches "

@@ -1,0 +1,243 @@
+[
+  {
+    "id": "tyontopaiva",
+    "group": "Työntö / Veto / Jalat",
+    "name": "Työntöpäivä",
+    "items": [
+      {
+        "movementId": "barbell-bench-press-medium-grip",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "standing-military-press",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "barbell-incline-bench-press-medium-grip",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 120
+      },
+      {
+        "movementId": "side-lateral-raise",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      },
+      {
+        "movementId": "triceps-pushdown",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      }
+    ]
+  },
+  {
+    "id": "vetopaiva",
+    "group": "Työntö / Veto / Jalat",
+    "name": "Vetopäivä",
+    "items": [
+      {
+        "movementId": "barbell-deadlift",
+        "sets": 3,
+        "targetReps": 5,
+        "restSeconds": 210
+      },
+      {
+        "movementId": "bent-over-barbell-row",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "pullups",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "seated-cable-rows",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 120
+      },
+      {
+        "movementId": "barbell-curl",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      }
+    ]
+  },
+  {
+    "id": "jalkapaiva",
+    "group": "Työntö / Veto / Jalat",
+    "name": "Jalkapäivä",
+    "items": [
+      {
+        "movementId": "barbell-squat",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 210
+      },
+      {
+        "movementId": "romanian-deadlift",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "leg-press",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "seated-leg-curl",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      },
+      {
+        "movementId": "standing-calf-raises",
+        "sets": 4,
+        "targetReps": 12,
+        "restSeconds": 90
+      }
+    ]
+  },
+  {
+    "id": "ylakroppa",
+    "group": "Ylä / Ala",
+    "name": "Yläkroppa",
+    "items": [
+      {
+        "movementId": "barbell-bench-press-medium-grip",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "bent-over-barbell-row",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "standing-military-press",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 120
+      },
+      {
+        "movementId": "wide-grip-lat-pulldown",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 120
+      },
+      {
+        "movementId": "dumbbell-bicep-curl",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      },
+      {
+        "movementId": "triceps-pushdown",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      }
+    ]
+  },
+  {
+    "id": "alakroppa",
+    "group": "Ylä / Ala",
+    "name": "Alakroppa",
+    "items": [
+      {
+        "movementId": "barbell-squat",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 210
+      },
+      {
+        "movementId": "romanian-deadlift",
+        "sets": 3,
+        "targetReps": 8,
+        "restSeconds": 150
+      },
+      {
+        "movementId": "barbell-lunge",
+        "sets": 3,
+        "targetReps": 10,
+        "restSeconds": 120
+      },
+      {
+        "movementId": "leg-extensions",
+        "sets": 3,
+        "targetReps": 12,
+        "restSeconds": 90
+      },
+      {
+        "movementId": "standing-calf-raises",
+        "sets": 4,
+        "targetReps": 12,
+        "restSeconds": 90
+      }
+    ]
+  },
+  {
+    "id": "viisi-viisi-a",
+    "group": "5×5",
+    "name": "5×5 A",
+    "items": [
+      {
+        "movementId": "barbell-squat",
+        "sets": 5,
+        "targetReps": 5,
+        "restSeconds": 180
+      },
+      {
+        "movementId": "barbell-bench-press-medium-grip",
+        "sets": 5,
+        "targetReps": 5,
+        "restSeconds": 180
+      },
+      {
+        "movementId": "bent-over-barbell-row",
+        "sets": 5,
+        "targetReps": 5,
+        "restSeconds": 180
+      }
+    ]
+  },
+  {
+    "id": "viisi-viisi-b",
+    "group": "5×5",
+    "name": "5×5 B",
+    "items": [
+      {
+        "movementId": "barbell-squat",
+        "sets": 5,
+        "targetReps": 5,
+        "restSeconds": 180
+      },
+      {
+        "movementId": "standing-military-press",
+        "sets": 5,
+        "targetReps": 5,
+        "restSeconds": 180
+      },
+      {
+        "movementId": "barbell-deadlift",
+        "sets": 1,
+        "targetReps": 5,
+        "restSeconds": 180
+      }
+    ]
+  }
+]

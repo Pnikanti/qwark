@@ -5,17 +5,27 @@ import { BulkRename } from './screens/BulkRename'
 import { Library } from './screens/Library'
 import { MovementEdit } from './screens/MovementEdit'
 import { Overrides } from './screens/Overrides'
+import { SessionScreen } from './screens/SessionScreen'
+import { SessionSummary } from './screens/SessionSummary'
+import { Today } from './screens/Today'
 
 type View =
+  | { name: 'today' }
+  | { name: 'session'; id: string }
+  | { name: 'summary'; id: string }
   | { name: 'library' }
   | { name: 'edit'; id: string }
   | { name: 'rename' }
   | { name: 'overrides' }
 
+/** Tänään and the library are the two roots; everything else is pushed on top. */
+const ROOTS = ['today', 'library'] as const
+
 export function App() {
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [view, setView] = useState<View>({ name: 'library' })
+  const [view, setView] = useState<View>({ name: 'today' })
+  const [notice, setNotice] = useState<string | null>(null)
 
   useEffect(() => {
     ensureSeeded().then(
@@ -24,7 +34,9 @@ export function App() {
     )
   }, [])
 
+  const today = () => setView({ name: 'today' })
   const library = () => setView({ name: 'library' })
+  const inSession = view.name === 'session'
 
   return (
     <div className="app">
@@ -32,18 +44,63 @@ export function App() {
         <p className="blank note">{error}</p>
       ) : !ready ? (
         <p className="blank note">{fi.loading}</p>
-      ) : view.name === 'library' ? (
-        <Library
-          onEdit={(id) => setView({ name: 'edit', id })}
-          onBulkRename={() => setView({ name: 'rename' })}
-          onOverrides={() => setView({ name: 'overrides' })}
-        />
-      ) : view.name === 'edit' ? (
-        <MovementEdit id={view.id} onBack={library} />
-      ) : view.name === 'rename' ? (
-        <BulkRename onBack={library} />
       ) : (
-        <Overrides onBack={library} />
+        <>
+          {notice && view.name === 'today' && (
+            <p className="panel note">{notice}</p>
+          )}
+
+          {view.name === 'today' ? (
+            <Today
+              onOpenSession={(id) => setView({ name: 'session', id })}
+              onOpenLibrary={library}
+              onOpenSummary={(id) => setView({ name: 'summary', id })}
+            />
+          ) : view.name === 'session' ? (
+            <SessionScreen
+              id={view.id}
+              onFinished={(id) => {
+                setNotice(null)
+                setView({ name: 'summary', id })
+              }}
+              onDiscarded={() => {
+                setNotice(fi.discarded)
+                today()
+              }}
+            />
+          ) : view.name === 'summary' ? (
+            <SessionSummary id={view.id} onDone={today} />
+          ) : view.name === 'library' ? (
+            <Library
+              onEdit={(id) => setView({ name: 'edit', id })}
+              onBulkRename={() => setView({ name: 'rename' })}
+              onOverrides={() => setView({ name: 'overrides' })}
+            />
+          ) : view.name === 'edit' ? (
+            <MovementEdit id={view.id} onBack={library} />
+          ) : view.name === 'rename' ? (
+            <BulkRename onBack={library} />
+          ) : (
+            <Overrides onBack={library} />
+          )}
+
+          {/* Editing is deliberately unreachable while a session is live: a
+              mis-tap mid-set would be costly. */}
+          {!inSession && (
+            <nav className="tabs">
+              {ROOTS.map((root) => (
+                <button
+                  key={root}
+                  className="tab"
+                  aria-current={view.name === root ? 'page' : undefined}
+                  onClick={() => (root === 'today' ? today() : library())}
+                >
+                  {root === 'today' ? fi.today : fi.library}
+                </button>
+              ))}
+            </nav>
+          )}
+        </>
       )}
     </div>
   )

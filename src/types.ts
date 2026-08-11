@@ -63,3 +63,57 @@ export interface Taxonomy {
   muscles: Record<string, string>
   equipment: Record<string, string>
 }
+
+/* --- training ------------------------------------------------------------ */
+
+export type SetKind = 'warmup' | 'working'
+
+export interface TemplateItem {
+  movementId: string
+  sets: number
+  targetReps: number | null
+  restSeconds: number | null
+}
+
+export interface Template {
+  id: string
+  /** Groups routines into a programme on Tänään, e.g. "Työntö / Veto / Jalat". */
+  group: string | null
+  name: string
+  items: TemplateItem[]
+  /** Seeded routines are replaceable on re-seed; saved ones are the user's. */
+  seeded: boolean
+  createdAt: number
+}
+
+export interface LoggedSet {
+  kind: SetKind
+  kg: number | null
+  reps: number | null
+  done: boolean
+  completedAt: number | null
+}
+
+export interface SessionMovement {
+  movementId: string
+  targetReps: number | null
+  restSeconds: number | null
+  sets: LoggedSet[]
+  note: string | null
+}
+
+/**
+ * A session copies its plan from the template at start, so editing the template
+ * afterwards cannot rewrite what was actually done. Movement *names* still
+ * resolve live through movementId — the id is canonical, so a rename is meant
+ * to show up in history.
+ */
+export interface Session {
+  id: string
+  templateId: string | null
+  /** Snapshot: renaming a routine must not relabel past sessions. */
+  templateName: string | null
+  startedAt: number
+  finishedAt: number | null
+  movements: SessionMovement[]
+}
