@@ -57,6 +57,17 @@ export async function previousPerformance(
   return null
 }
 
+/** The note last left on this movement, so a cue carries to the next session. */
+export async function previousNote(movementId: string): Promise<string | null> {
+  const sessions = await db.sessions.orderBy('startedAt').reverse().toArray()
+  for (const s of sessions) {
+    if (s.finishedAt === null) continue
+    const note = s.movements.find((m) => m.movementId === movementId)?.note
+    if (note) return note
+  }
+  return null
+}
+
 /* --- starting ------------------------------------------------------------ */
 
 /**
@@ -80,8 +91,10 @@ export async function startSession(template?: Template): Promise<string> {
     })),
   }
 
-  // Pre-fill loads and reps from the last time each movement was trained.
+  // Pre-fill loads, reps and any standing cue from the last time this movement
+  // was trained.
   for (const m of session.movements) {
+    m.note = await previousNote(m.movementId)
     const prev = await previousPerformance(m.movementId)
     if (!prev) continue
     m.sets = m.sets.map((s, i) => {
@@ -109,17 +122,25 @@ async function mutate(
   })
 }
 
-export const addMovement = (sessionId: string, movementId: string) =>
-  mutate(sessionId, (s) => {
+/** Returns the new entry's uid so the caller can focus what was just added. */
+export async function addMovement(
+  sessionId: string,
+  movementId: string,
+): Promise<string> {
+  const uid = id()
+  const note = await previousNote(movementId)
+  await mutate(sessionId, (s) => {
     s.movements.push({
-      uid: id(),
+      uid,
       movementId,
       targetReps: null,
       restSeconds: null,
-      note: null,
+      note,
       sets: [emptySet()],
     })
   })
+  return uid
+}
 
 /**
  * Move a movement. `session.movements` order is the stored order, so persisting

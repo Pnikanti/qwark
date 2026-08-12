@@ -55,7 +55,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Schema in the app matching the seed shape; load into IndexedDB
 - [x] `overrides` table; effective movement = seed merged with override at read time
 - [x] Search and filter by muscle group / equipment (searches both `nameFi` and `nameEn`)
-- [ ] Custom user-created exercises (covers the abductor / adductor / neck gaps)
+- [x] Custom user-created movements — own table, survives re-seeding, edited in place so custom ids never reach overrides.json
 - [>] Movement images — deferred, no images in v1
 
 ### Admin editing
@@ -67,7 +67,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Hide as an override, never a delete (history must still resolve)
 - [x] Joukkokäännös — bulk `nameEn` → `nameFi` list, keyboard-tabbable
 - [x] Export overrides as `data/overrides.json`; import to restore
-- [ ] Editing unreachable from the live session screen (no session screen yet)
+- [x] Editing unreachable from the live session screen
 - [ ] Native-speaker review of the 68 draft Finnish names (via Joukkokäännös)
 
 ## 3 — Planning
@@ -107,8 +107,8 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Summary: duration, volume, per-movement recap, records, estimated 1RM
 - [x] Fully exercisable with the network off — verified end to end, not assumed
 - [ ] Optional RPE / RIR per set
-- [ ] Per-movement notes — stored and shown in the summary, but nothing writes them yet
-- [ ] Configurable bar weight and disc inventory (hardcoded 20 kg bar + standard discs)
+- [x] Per-movement notes, folded away until used, carried forward to the next session
+- [x] Configurable bar weight and disc inventory (Asetukset)
 
 ## 5 — Progress
 
@@ -153,3 +153,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Session view reworked after measuring it: 92 buttons and 1.9 screens of scroll for a one-set decision. Now an accordion — one movement expanded, others folded to a line, logged sets collapsed to the log vernacular, next set outlined, and the rest period used to reveal what's coming. 23 controls, one screen. Also fixed `setsLine` to show reps alone for bodyweight work instead of `– × 8`.
 - 2026-08-11 — Session movements are reorderable by dragging a grip, persisted as the array order. Required giving each entry a stable `uid` (Dexie v3 backfills it) because the active movement was tracked by index, which a reorder breaks — and a session can hold the same movement twice. Pointer Events rather than HTML5 drag-and-drop, which never fires from touch. `Lisää liike` moved to the foot of the list where the append happens; `Lopeta treeni` now alone in the header.
 - 2026-08-12 — Status messages became toasts (`src/lib/toast.tsx`): module store so handlers can raise one without hook plumbing, mounted outside the screen switch so a toast survives the navigation that raised it. Fixed a regression from the previous commit — gating the append button on `movements.length > 0` left an empty ad hoc session with no way to add a movement.
+- 2026-08-12 — Gym-blocking gaps closed. Bar weight and disc inventory are configurable in Asetukset; the plate breakdown, the pad's steppers and the smallest progression step all derive from them (verified: 100 kg on a 15 kg bar with no 1.25s → 25+15+2.5 per side, steppers ±5/±10). Per-movement notes are writable, folded away until used, and carry forward to the next session. Custom movements live in their own table because `ensureSeeded()` clears `movements` — verified they survive a forced re-seed. They are edited in place rather than through overrides, so custom ids never leak into overrides.json where the build script would flag them as unknown. Deleting one is refused while any session or routine references it; hide instead.

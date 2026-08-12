@@ -74,6 +74,27 @@ export const fi = {
   importUnknown: (ids: string[]) => `Tuntematon tunniste: ${ids.join(', ')}`,
   noOverrides: 'Ei muokkauksia',
   noOverridesHint: 'Muokkaa liikkeen nimeä tai tietoja, niin muutos näkyy täällä.',
+  /* --- settings --- */
+  settings: 'Asetukset',
+  gymSetup: 'Salin välineet',
+  barWeight: 'Tangon paino',
+  availableDiscs: 'Käytettävissä olevat levyt (kg)',
+  smallestStep: (kg: number) => `Pienin muutos: ${kg} kg (kevyin levypari).`,
+  needOneDisc: 'Vähintään yksi levykoko tarvitaan.',
+  restoreDefaults: 'Palauta oletukset',
+  restoredDefaults: 'Oletukset palautettu',
+
+  /* --- own movements --- */
+  newMovement: 'Uusi liike',
+  newMovementPlaceholder: 'Esim. Reisiloitonnus laitteessa',
+  create: 'Luo',
+  createMovement: 'Luo oma liike',
+  movementCreated: (name: string) => `Liike "${name}" luotu`,
+  ownMovement: 'Oma',
+  deleteMovement: 'Poista liike',
+  movementDeleted: 'Liike poistettu',
+  movementInUse: 'Liike on käytössä historiassa. Piilota se sen sijaan.',
+
   /* --- training --- */
   today: 'Tänään',
   startEmpty: 'Aloita tyhjä treeni',
@@ -126,7 +147,7 @@ export const fi = {
   discarded: 'Treeni hylättiin, koska yhtään sarjaa ei merkitty tehdyksi.',
   perSide: 'Per puoli',
   barOnly: 'Pelkkä tanko',
-  plateHintBelowBar: `Alle tangon painon (${20} kg)`,
+  plateHintBelowBar: (barKg: number) => `Alle tangon painon (${barKg} kg)`,
   snapToBar: (rem: number) => `Pyöristä (${rem} kg ei mahdu)`,
   decimal: 'Desimaalipilkku',
   deleteDigit: 'Poista numero',

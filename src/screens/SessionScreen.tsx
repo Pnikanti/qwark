@@ -20,6 +20,7 @@ import {
   removeMovement,
   removeSet,
   reorderMovements,
+  setMovementNote,
   sessionProgress,
   toggleSetDone,
 } from '../lib/session'
@@ -182,6 +183,7 @@ export function SessionScreen({
                 onAddSet={() => addSet(id, mIndex)}
                 onRemoveSet={(sIndex) => removeSet(id, mIndex, sIndex)}
                 onToggleKind={(sIndex, kind) => patchSet(id, mIndex, sIndex, { kind })}
+                onNote={(note) => setMovementNote(id, mIndex, note)}
                 onRemove={() => removeMovement(id, mIndex)}
               />
             ) : (
@@ -243,9 +245,11 @@ export function SessionScreen({
         <MovementPicker
           movements={movements}
           onPick={async (movementId) => {
-            await addMovement(id, movementId)
+            // You add a movement in order to log it now, so focus follows.
+            const uid = await addMovement(id, movementId)
             setPicking(false)
-            setChosenUid(null)
+            setChosenUid(uid)
+            setShowLogged(false)
           }}
           onClose={() => setPicking(false)}
         />
@@ -341,6 +345,7 @@ function ActiveMovement({
   onAddSet,
   onRemoveSet,
   onToggleKind,
+  onNote,
   onRemove,
 }: {
   movement: SessionMovement
@@ -349,6 +354,7 @@ function ActiveMovement({
   showLogged: boolean
   onToggleLogged: () => void
   handleProps: GripProps
+  onNote: (note: string) => void
   onOpenPad: (sIndex: number, mode: PadMode) => void
   onComplete: (sIndex: number) => void
   onAddSet: () => void
@@ -432,7 +438,60 @@ function ActiveMovement({
           {fi.addSet}
         </button>
       </div>
+
+      <Note value={m.note} onChange={onNote} />
     </section>
+  )
+}
+
+/**
+ * Folded away unless there is something to say — notes matter but they are not
+ * what you came to this screen for. Carried forward from the last session, so a
+ * standing cue keeps showing up.
+ */
+function Note({
+  value,
+  onChange,
+}: {
+  value: string | null
+  onChange: (note: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [draft, setDraft] = useState(value ?? '')
+
+  if (!open && !value)
+    return (
+      <button className="revert note-add" onClick={() => setOpen(true)}>
+        + {fi.note}
+      </button>
+    )
+
+  if (!open)
+    return (
+      <button className="noteline" onClick={() => setOpen(true)}>
+        <span className="grow">{value}</span>
+        <span className="t-data">{fi.editLogged}</span>
+      </button>
+    )
+
+  return (
+    <div className="field note-field">
+      <div className="field-label">
+        <span className="t-data">{fi.note}</span>
+      </div>
+      <textarea
+        className="note-input"
+        autoFocus
+        rows={2}
+        value={draft}
+        placeholder={fi.notePlaceholder}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => {
+          onChange(draft)
+          setOpen(false)
+        }}
+      />
+    </div>
   )
 }
 

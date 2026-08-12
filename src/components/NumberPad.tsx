@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fi } from '../i18n'
-import { BAR_KG, STEP_KG, discToken, platesFor, snapToBar } from '../lib/plates'
+import { discToken, platesFor, snapToBar, stepKg } from '../lib/plates'
+import { useGym } from '../lib/settings'
 
 export type PadMode = 'kg' | 'reps'
 
@@ -22,6 +23,7 @@ export function NumberPad({
   onCommit: (value: number | null) => void
   onClose: () => void
 }) {
+  const gym = useGym()
   const [draft, setDraft] = useState<string>(value === null ? '' : String(value))
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export function NumberPad({
   })
 
   const numeric = draft === '' ? null : Number(draft.replace(',', '.'))
-  const step = mode === 'kg' ? STEP_KG : 1
+  const step = mode === 'kg' ? stepKg(gym) : 1
 
   const commit = () => {
     onCommit(numeric !== null && Number.isFinite(numeric) ? numeric : null)
@@ -42,7 +44,7 @@ export function NumberPad({
   }
 
   const bump = (delta: number) => {
-    const base = numeric ?? (mode === 'kg' ? BAR_KG : 0)
+    const base = numeric ?? (mode === 'kg' ? gym.barKg : 0)
     const next = Math.max(0, Math.round((base + delta) * 100) / 100)
     setDraft(String(next))
   }
@@ -53,7 +55,7 @@ export function NumberPad({
     setDraft((d) => (d === '0' ? key : d + key))
   }
 
-  const load = mode === 'kg' && numeric !== null ? platesFor(numeric) : null
+  const load = mode === 'kg' && numeric !== null ? platesFor(numeric, gym) : null
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -79,7 +81,7 @@ export function NumberPad({
         {mode === 'kg' && (
           <div className="plates" aria-live="polite">
             {load === null ? (
-              <span className="t-data">{fi.plateHintBelowBar}</span>
+              <span className="t-data">{fi.plateHintBelowBar(gym.barKg)}</span>
             ) : (
               <>
                 <span className="t-data">{fi.perSide}</span>
@@ -97,7 +99,7 @@ export function NumberPad({
                   ))
                 )}
                 {load.remainder > 0 && (
-                  <button className="revert" onClick={() => setDraft(String(snapToBar(numeric!)))}>
+                  <button className="revert" onClick={() => setDraft(String(snapToBar(numeric!, gym)))}>
                     {fi.snapToBar(load.remainder)}
                   </button>
                 )}

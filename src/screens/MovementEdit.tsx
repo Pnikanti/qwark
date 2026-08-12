@@ -2,7 +2,13 @@ import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
-import { getMovement, patchMovement, resetField } from '../lib/movements'
+import {
+  deleteMovement,
+  getMovement,
+  patchMovement,
+  resetField,
+} from '../lib/movements'
+import { toast } from '../lib/toast'
 import type { EffectiveMovement, Patchable } from '../types'
 
 const MECHANIC = ['compound', 'isolation']
@@ -162,6 +168,31 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
         </Field>
         <p className="note">{fi.hiddenNote}</p>
       </div>
+
+      {'custom' in movement && (
+        <div className="panel">
+          <div className="panel-head">
+            <span className="t-data">{fi.ownMovement}</span>
+          </div>
+          <div className="row-actions">
+            <button
+              className="btn"
+              onClick={async () => {
+                const { deleted } = await deleteMovement(id)
+                if (deleted) {
+                  toast(fi.movementDeleted)
+                  onBack()
+                } else {
+                  // Deleting a referenced movement would orphan logged sets.
+                  toast(fi.movementInUse, { tone: 'warn' })
+                }
+              }}
+            >
+              {fi.deleteMovement}
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="panel">
         <div className="panel-head">

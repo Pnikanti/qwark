@@ -121,3 +121,23 @@ export interface Session {
   finishedAt: number | null
   movements: SessionMovement[]
 }
+
+/* --- gym setup ----------------------------------------------------------- */
+
+/**
+ * What the gym actually has. The plate calculator, the pad's steppers, and the
+ * smallest progression step all derive from this, so a wrong value here makes
+ * the app confidently misleading rather than merely imprecise.
+ */
+export interface GymSettings {
+  barKg: number
+  /** Disc sizes available, in kg. Order does not matter; sorted on read. */
+  discs: number[]
+}
+
+/**
+ * A movement the user created. Kept in its own table because ensureSeeded()
+ * clears and repopulates `movements` — anything user-authored in there would be
+ * destroyed by the next seed bump.
+ */
+export type CustomMovement = Movement & { custom: true }

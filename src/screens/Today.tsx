@@ -16,10 +16,16 @@ import type { EffectiveMovement, Template } from '../types'
 interface Props {
   onOpenSession: (id: string) => void
   onOpenLibrary: () => void
+  onOpenSettings: () => void
   onOpenSummary: (id: string) => void
 }
 
-export function Today({ onOpenSession, onOpenLibrary, onOpenSummary }: Props) {
+export function Today({
+  onOpenSession,
+  onOpenLibrary,
+  onOpenSettings,
+  onOpenSummary,
+}: Props) {
   const data = useLiveQuery(async () => ({
     active: await activeSession(),
     templates: await listTemplates(),
@@ -53,6 +59,9 @@ export function Today({ onOpenSession, onOpenLibrary, onOpenSummary }: Props) {
         <div className="masthead-actions">
           <button className="btn" onClick={onOpenLibrary}>
             {fi.library}
+          </button>
+          <button className="btn" onClick={onOpenSettings}>
+            {fi.settings}
           </button>
         </div>
       </header>

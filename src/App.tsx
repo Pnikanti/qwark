@@ -6,6 +6,7 @@ import { BulkRename } from './screens/BulkRename'
 import { Library } from './screens/Library'
 import { MovementEdit } from './screens/MovementEdit'
 import { Overrides } from './screens/Overrides'
+import { Settings } from './screens/Settings'
 import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
 import { Today } from './screens/Today'
@@ -18,6 +19,7 @@ type View =
   | { name: 'edit'; id: string }
   | { name: 'rename' }
   | { name: 'overrides' }
+  | { name: 'settings' }
 
 /** Tänään and the library are the two roots; everything else is pushed on top. */
 const ROOTS = ['today', 'library'] as const
@@ -50,6 +52,7 @@ export function App() {
             <Today
               onOpenSession={(id) => setView({ name: 'session', id })}
               onOpenLibrary={library}
+              onOpenSettings={() => setView({ name: 'settings' })}
               onOpenSummary={(id) => setView({ name: 'summary', id })}
             />
           ) : view.name === 'session' ? (
@@ -73,6 +76,8 @@ export function App() {
             <MovementEdit id={view.id} onBack={library} />
           ) : view.name === 'rename' ? (
             <BulkRename onBack={library} />
+          ) : view.name === 'settings' ? (
+            <Settings onBack={today} />
           ) : (
             <Overrides onBack={library} />
           )}

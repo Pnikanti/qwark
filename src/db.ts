@@ -1,7 +1,13 @@
 import Dexie, { type Table } from 'dexie'
 import movementSeed from '../data/movements.seed.json'
 import templateSeed from '../data/templates.seed.json'
-import type { Movement, MovementOverride, Session, Template } from './types'
+import type {
+  CustomMovement,
+  Movement,
+  MovementOverride,
+  Session,
+  Template,
+} from './types'
 
 /** Bump when data/movements.seed.json changes so the library re-seeds. */
 const MOVEMENT_SEED_VERSION = 1
@@ -18,6 +24,8 @@ class QwarkDB extends Dexie {
   movements!: Table<Movement, string>
   /** Admin edits, one row per patched movement. Survives re-seeding. */
   overrides!: Table<MovementOverride, string>
+  /** User-authored movements. Untouched by seeding, unlike `movements`. */
+  customMovements!: Table<CustomMovement, string>
   templates!: Table<Template, string>
   sessions!: Table<Session, string>
   meta!: Table<Meta, string>
@@ -49,6 +57,9 @@ class QwarkDB extends Dexie {
           })
         }),
     )
+    this.version(4).stores({
+      customMovements: 'id, nameFi, nameEn, equipment, *primaryMuscles',
+    })
   }
 }
 

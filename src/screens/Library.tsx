@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { NewMovement } from '../components/NewMovement'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import { listMovements, needsReview } from '../lib/movements'
 import type { EffectiveMovement } from '../types'
@@ -30,6 +31,7 @@ export function Library({ onEdit, onBulkRename, onOverrides }: Props) {
   const [equipment, setEquipment] = useState('')
   const [reviewOnly, setReviewOnly] = useState(false)
   const [withHidden, setWithHidden] = useState(false)
+  const [creating, setCreating] = useState(false)
 
   const visible = useMemo(() => {
     if (!movements) return []
@@ -62,6 +64,15 @@ export function Library({ onEdit, onBulkRename, onOverrides }: Props) {
 
   return (
     <>
+      {creating && (
+        <NewMovement
+          onCreated={(created) => {
+            setCreating(false)
+            onEdit(created)
+          }}
+          onClose={() => setCreating(false)}
+        />
+      )}
       <header className="masthead">
         <h1 className="t-title">{fi.library}</h1>
         <span className="t-data">
@@ -73,6 +84,9 @@ export function Library({ onEdit, onBulkRename, onOverrides }: Props) {
           </button>
           <button className="btn" onClick={onOverrides}>
             {fi.overrides}
+          </button>
+          <button className="btn" onClick={() => setCreating(true)}>
+            + {fi.newMovement}
           </button>
         </div>
       </header>
@@ -181,7 +195,8 @@ function Entry({
         <span className="t-data">{detail}</span>
       </span>
       <span className="rail">
-        {needsReview(m) && <span className="flagtag">{fi.incomplete}</span>}
+        {'custom' in m && <span className="flagtag own">{fi.ownMovement}</span>}
+      {needsReview(m) && <span className="flagtag">{fi.incomplete}</span>}
         {m.edited.size > 0 && <span className="pip" title={fi.edited} />}
       </span>
     </button>

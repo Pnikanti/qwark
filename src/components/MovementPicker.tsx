@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { BodyPlan } from './BodyPlan'
+import { NewMovement } from './NewMovement'
 import { equipmentFi, fi, muscleFi } from '../i18n'
 import type { EffectiveMovement } from '../types'
 
@@ -26,6 +27,7 @@ export function MovementPicker({
   onClose: () => void
 }) {
   const [query, setQuery] = useState('')
+  const [creating, setCreating] = useState(false)
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -72,6 +74,9 @@ export function MovementPicker({
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
+        {creating && (
+          <NewMovement onCreated={onPick} onClose={() => setCreating(false)} />
+        )}
         <ul className="ledger scroller">
           {rows.map((m) => (
             <li key={m.id}>
@@ -88,6 +93,11 @@ export function MovementPicker({
             </li>
           ))}
           {rows.length === 0 && <li className="blank note">{fi.noResults}</li>}
+          <li className="picker-create">
+            <button className="btn btn-tall" onClick={() => setCreating(true)}>
+              + {fi.createMovement}
+            </button>
+          </li>
         </ul>
       </div>
     </div>

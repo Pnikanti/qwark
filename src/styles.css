@@ -1412,3 +1412,68 @@ select {
     animation: none;
   }
 }
+
+/* --- notes, settings, own movements -------------------------------------- */
+
+.note-add {
+  display: block;
+  margin-top: 12px;
+}
+
+.noteline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--mark);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-mid);
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.noteline .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.note-field {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.note-input {
+  min-height: 64px;
+  font-variation-settings: 'wdth' 100;
+  font-size: 0.95rem;
+}
+
+.bar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.bar-custom {
+  max-width: 140px;
+}
+
+.flagtag.own {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.picker-create {
+  padding: 12px var(--gutter);
+  border-top: 1px solid var(--line);
+}
+
+.picker-create .btn {
+  width: 100%;
+}
