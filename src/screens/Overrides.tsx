@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { fi } from '../i18n'
 import { exportOverrides, importOverrides } from '../lib/movements'
+import { toast } from '../lib/toast'
 
 /** Round-trips data/overrides.json — the file scripts/build-movements.py reads. */
 export function Overrides({ onBack }: { onBack: () => void }) {
   const [json, setJson] = useState('')
-  const [status, setStatus] = useState<string | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -26,17 +26,12 @@ export function Overrides({ onBack }: { onBack: () => void }) {
   const receive = async (file: File) => {
     try {
       const result = await importOverrides(await file.text())
-      setStatus(
-        [
-          fi.imported(result.applied),
-          result.unknown.length ? fi.importUnknown(result.unknown) : null,
-        ]
-          .filter(Boolean)
-          .join(' · '),
-      )
+      toast(fi.imported(result.applied))
+      if (result.unknown.length)
+        toast(fi.importUnknown(result.unknown), { tone: 'warn' })
       setJson(await exportOverrides())
     } catch (err) {
-      setStatus(String(err))
+      toast(String(err), { tone: 'warn' })
     }
   }
 
@@ -61,7 +56,7 @@ export function Overrides({ onBack }: { onBack: () => void }) {
             disabled={!count}
             onClick={async () => {
               await navigator.clipboard.writeText(json)
-              setStatus(fi.copied)
+              toast(fi.copied)
             }}
           >
             {fi.copyJson}
@@ -81,11 +76,6 @@ export function Overrides({ onBack }: { onBack: () => void }) {
             }}
           />
         </div>
-        {status && (
-          <p className="note" style={{ marginTop: 12 }}>
-            {status}
-          </p>
-        )}
       </div>
 
       {count > 0 ? (

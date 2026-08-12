@@ -4,6 +4,7 @@ import { BodyPlan } from '../components/BodyPlan'
 import { fi } from '../i18n'
 import { duration, setsLine, shortDate } from '../lib/format'
 import { listMovements } from '../lib/movements'
+import { toast } from '../lib/toast'
 import {
   bestWorkingSet,
   completedSetCount,
@@ -100,6 +101,7 @@ export function SessionSummary({ id, onDone }: { id: string; onDone: () => void 
               disabled={!name.trim()}
               onClick={async () => {
                 await saveAsTemplate(id, name)
+                toast(fi.templateSaved(name.trim()))
                 setSaved(true)
               }}
             >

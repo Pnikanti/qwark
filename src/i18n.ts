@@ -121,6 +121,8 @@ export const fi = {
   saveAsTemplate: 'Tallenna ohjelmaksi',
   templateName: 'Ohjelman nimi',
   save: 'Tallenna',
+  templateSaved: (name: string) => `Ohjelma "${name}" tallennettu`,
+  dismiss: 'Sulje ilmoitus',
   discarded: 'Treeni hylättiin, koska yhtään sarjaa ei merkitty tehdyksi.',
   perSide: 'Per puoli',
   barOnly: 'Pelkkä tanko',

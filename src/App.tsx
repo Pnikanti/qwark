@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
+import { Toaster, toast } from './lib/toast'
 import { fi } from './i18n'
 import { BulkRename } from './screens/BulkRename'
 import { Library } from './screens/Library'
@@ -25,7 +26,6 @@ export function App() {
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [view, setView] = useState<View>({ name: 'today' })
-  const [notice, setNotice] = useState<string | null>(null)
 
   useEffect(() => {
     ensureSeeded().then(
@@ -46,10 +46,6 @@ export function App() {
         <p className="blank note">{fi.loading}</p>
       ) : (
         <>
-          {notice && view.name === 'today' && (
-            <p className="panel note">{notice}</p>
-          )}
-
           {view.name === 'today' ? (
             <Today
               onOpenSession={(id) => setView({ name: 'session', id })}
@@ -59,12 +55,9 @@ export function App() {
           ) : view.name === 'session' ? (
             <SessionScreen
               id={view.id}
-              onFinished={(id) => {
-                setNotice(null)
-                setView({ name: 'summary', id })
-              }}
+              onFinished={(id) => setView({ name: 'summary', id })}
               onDiscarded={() => {
-                setNotice(fi.discarded)
+                toast(fi.discarded, { tone: 'warn' })
                 today()
               }}
             />
@@ -102,6 +95,7 @@ export function App() {
           )}
         </>
       )}
+      <Toaster />
     </div>
   )
 }

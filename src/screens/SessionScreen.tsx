@@ -154,7 +154,6 @@ export function SessionScreen({
 
       {session.movements.length === 0 && (
         <div className="blank">
-          <span className="t-data">{fi.addMovement}</span>
           <p className="note">{fi.emptySessionHint}</p>
         </div>
       )}
@@ -199,15 +198,14 @@ export function SessionScreen({
         ))}
       </ul>
 
-      {/* Appending a movement belongs where the append happens, matching
-          "Lisää sarja" at the foot of the expanded movement. */}
-      {session.movements.length > 0 && (
-        <div className="append">
-          <button className="btn btn-tall" onClick={() => setPicking(true)}>
-            + {fi.addMovement}
-          </button>
-        </div>
-      )}
+      {/* Appending belongs where the append happens, matching "Lisää sarja" at
+          the foot of the expanded movement. Always rendered — an empty ad hoc
+          session would otherwise have no way to add anything. */}
+      <div className="append">
+        <button className="btn btn-tall" onClick={() => setPicking(true)}>
+          + {fi.addMovement}
+        </button>
+      </div>
 
       {resting && (
         <div className="restbar">
