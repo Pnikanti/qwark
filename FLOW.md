@@ -117,6 +117,7 @@ JALKAPÄIVÄ                              ⋯
 - Tapping a load opens the **custom numeric pad** with plate-pair steppers and a plate calculator, sized from your gym settings. Never the OS keyboard.
 - **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement and collapsed rows reveal their targets, then it folds away again.
 - Tap targets ≥48 px — used mid-set with sweaty hands.
+- **A set needs both values before it can be logged.** `0` counts — it means bodyweight, deliberately recorded — but blank means never entered, and there is nothing to log. The tick stays disabled and names what is missing.
 - Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
 
 Result: 14 controls on one screen, against 23 for the row grid and 92 before the accordion.

@@ -1,5 +1,5 @@
 import { db } from '../db'
-import { snapToBar, stepKg } from './plates'
+import { snapLoad, stepKg } from './plates'
 import type { GymSettings, LoggedSet } from '../types'
 
 export type ProgressionKind = 'first' | 'increase' | 'hold' | 'deload'
@@ -81,19 +81,25 @@ export async function progressionFor(
   }
 
   const last = history[0]
-  const reps = targetReps ?? last.targetReps
+  // A movement logged ad hoc has no declared target, so the honest default is
+  // the reps actually performed last time.
+  const reps = targetReps ?? last.targetReps ?? (last.sets.at(-1)?.reps ?? null)
   const uniform = uniformLoad(last)
   const load = uniform ?? maxLoad(last)
 
-  // Bodyweight: nothing to load, so nothing to propose.
+  // Never entered a load: nothing to go on.
   if (load === null) return { kind: 'hold', kg: null, reps, fromKg: null }
+
+  // An explicit 0 means bodyweight. Progress there is more reps, not more kilos —
+  // adding a plate pair would be proposing a weight belt on the user's behalf.
+  if (load === 0) return { kind: 'hold', kg: 0, reps, fromKg: 0 }
 
   const met = uniform === null ? null : metTarget(last)
 
   if (met === true) {
     return {
       kind: 'increase',
-      kg: snapToBar(load + stepKg(gym), gym),
+      kg: snapLoad(load + stepKg(gym), gym),
       reps,
       fromKg: load,
     }
@@ -106,7 +112,7 @@ export async function progressionFor(
       uniformLoad(before) === load &&
       metTarget(before) === false
     if (repeated) {
-      return { kind: 'deload', kg: snapToBar(load * 0.9, gym), reps, fromKg: load }
+      return { kind: 'deload', kg: snapLoad(load * 0.9, gym), reps, fromKg: load }
     }
   }
 

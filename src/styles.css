@@ -1594,3 +1594,13 @@ select {
 .extra {
   color: var(--accent);
 }
+
+.draft-missing {
+  margin: 7px 0 0;
+  color: var(--mark);
+}
+
+.tick.big:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

@@ -40,7 +40,25 @@ export function platesFor(totalKg: number, gym: GymSettings): PlateLoad | null {
   }
 }
 
-/** Round to a load this bar and these discs can hold. */
+/**
+ * Nearest load this gym can make, for any implement.
+ *
+ * Above the bar, loads sit on the bar's grid. Below it — dumbbells, cables,
+ * machines — they sit on the plate-pair grid instead. `snapToBar` clamps
+ * everything lighter than the bar *up to* the bar, which is right when you are
+ * loading a barbell and very wrong for a 10 kg dumbbell curl.
+ */
+export function snapLoad(totalKg: number, gym: GymSettings): number {
+  if (totalKg <= 0) return 0
+  const step = stepKg(gym)
+  if (totalKg >= gym.barKg) {
+    const steps = Math.round((totalKg - gym.barKg) / step)
+    return Math.round((gym.barKg + steps * step) * 100) / 100
+  }
+  return Math.round(Math.max(0, Math.round(totalKg / step) * step) * 100) / 100
+}
+
+/** Round to a load a *barbell* can hold. Used by the pad's plate calculator. */
 export function snapToBar(totalKg: number, gym: GymSettings): number {
   if (totalKg <= gym.barKg) return gym.barKg
   const step = stepKg(gym)

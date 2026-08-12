@@ -582,6 +582,16 @@ function Draft({
   onReps: () => void
   onCommit: () => void
 }) {
+  // 0 is a value; null is not. A set with either field unset has nothing in it.
+  const missing =
+    set.kg === null && set.reps === null
+      ? fi.needBoth
+      : set.kg === null
+        ? fi.needWeight
+        : set.reps === null
+          ? fi.needReps
+          : null
+
   return (
     <div className="draft">
       <div className="chipset draft-kind">
@@ -608,10 +618,17 @@ function Draft({
           <span className="cell-value">{set.reps ?? '–'}</span>
           <span className="cell-unit t-data">{fi.reps}</span>
         </button>
-        <button className="tick big" onClick={onCommit} aria-label={fi.logSet}>
+        <button
+          className="tick big"
+          onClick={onCommit}
+          disabled={missing !== null}
+          aria-label={fi.logSet}
+        >
           ✓
         </button>
       </div>
+
+      {missing && <p className="draft-missing t-data">{missing}</p>}
     </div>
   )
 }

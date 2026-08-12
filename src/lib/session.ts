@@ -145,15 +145,18 @@ export async function addMovement(
 ): Promise<string> {
   const uid = id()
   const note = await previousNote(movementId)
+  // Pre-fill from history exactly as a templated movement does — adding one
+  // mid-session should not mean typing everything again.
+  const next = await progressionFor(movementId, null, await readGym(), sessionId)
   await mutate(sessionId, (s) => {
     s.movements.push({
       uid,
       movementId,
-      targetReps: null,
+      targetReps: next.reps,
       plannedSets: null,
       restSeconds: null,
       note,
-      sets: [emptySet()],
+      sets: [{ ...emptySet(), kg: next.kg, reps: next.reps }],
     })
   })
   return uid
@@ -212,6 +215,11 @@ export async function commitSet(sessionId: string, mIndex: number): Promise<void
   const draft = movement.sets.at(-1)
   if (!draft || draft.done) return
 
+  // Both values must have been set. 0 counts — it means bodyweight, deliberately
+  // recorded — but null means never entered, and there is nothing to log.
+  const reps = draft.reps ?? movement.targetReps
+  if (draft.kg === null || reps === null) return
+
   const nextRung =
     draft.kind === 'warmup'
       ? (await previousWarmups(movement.movementId))[warmupsDone(movement).length + 1]
@@ -223,7 +231,7 @@ export async function commitSet(sessionId: string, mIndex: number): Promise<void
     if (!set || set.done) return
     set.done = true
     set.completedAt = Date.now()
-    if (set.reps === null) set.reps = m.targetReps
+    set.reps = reps
 
     m.sets.push({
       ...emptySet(set.kind),

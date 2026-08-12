@@ -42,8 +42,9 @@ export function setsLine(sets: { kg: number | null; reps: number | null }[]): st
   if (!sets.length) return ''
   const reps = sets.map((s) => s.reps ?? '–').join(', ')
 
-  // Bodyweight work carries no load, so reps alone are the honest record.
-  if (sets.every((s) => s.kg === null)) return reps
+  // Bodyweight work carries no external load — an explicit 0 or a blank both
+  // mean the same thing here, and reps alone are the honest record.
+  if (sets.every((s) => s.kg === null || s.kg === 0)) return reps
 
   const kg = sets[0].kg
   if (sets.every((s) => s.kg === kg)) return `${kgLabel(kg!)} kg × ${reps}`
