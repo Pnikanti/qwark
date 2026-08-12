@@ -1117,6 +1117,7 @@ select {
   height: 2px;
   margin-top: 10px;
   background: var(--sunk);
+  overflow: hidden;
 }
 
 .rail-track span {
@@ -1587,4 +1588,9 @@ select {
   display: inline-block;
   min-width: 82px;
   color: var(--ink-dim);
+}
+
+/* Sets beyond the plan, reported alongside it rather than inflating it. */
+.extra {
+  color: var(--accent);
 }

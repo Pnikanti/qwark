@@ -106,7 +106,8 @@ JALKAPÄIVÄ                              ⋯
  Seuraava: Sarja 3 · 92,5 kg × 8
 ```
 
-- **One movement expanded**, marked with a cobalt rule. It **auto-advances** when the plan is met, and any collapsed line is one tap away — no penalty for jumping when a machine is occupied.
+- **One movement expanded**, marked with a cobalt rule. It **auto-advances** on the transition into completion — once only, so returning to add an extra set does not bounce you away again. Any collapsed line is one tap away, so an occupied machine costs nothing.
+- **Work beyond the plan is additive, never inflated.** A sixth set on a five-set movement reads `5/5 +1` and the input says `Lisäsarja 1`. `6/5` would state one confusing thing where there are two true ones, and it made the session rail exceed its own track.
 - **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh input carrying the same load, because mid-session "same again" is the honest default.
 - **Warmups are first-class and do not consume planned sets.** The kind is chosen *before* logging, so a warmup is never a working row that got reclassified. They are excluded from the count, from volume, and from 1RM — three warmups must not "finish" a three-set movement. A familiar ramp replays itself from last session's warmups.
 - **The kind is never changed for you.** Guessing that a ramp has finished would silently mislabel a set.

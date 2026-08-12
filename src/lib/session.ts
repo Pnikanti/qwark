@@ -397,24 +397,47 @@ export function warmupsDone(m: SessionMovement): LoggedSet[] {
   return m.sets.filter((s) => s.done && s.kind === 'warmup')
 }
 
-export function movementProgress(m: SessionMovement): { done: number; total: number } {
-  const done = workingDone(m)
-  return { done, total: m.plannedSets ?? done }
+/**
+ * Progress against the plan, with anything beyond it reported separately. A
+ * sixth set on a five-set movement is "5/5 +1", not "6/5" — the plan is met and
+ * you did extra, which are two facts rather than one confusing ratio. It also
+ * keeps the session rail from exceeding its track.
+ */
+export function movementProgress(m: SessionMovement): {
+  done: number
+  total: number | null
+  extra: number
+} {
+  const logged = workingDone(m)
+  if (m.plannedSets === null) return { done: logged, total: null, extra: 0 }
+  return {
+    done: Math.min(logged, m.plannedSets),
+    total: m.plannedSets,
+    extra: Math.max(0, logged - m.plannedSets),
+  }
 }
 
 export function movementComplete(m: SessionMovement): boolean {
   return m.plannedSets !== null && workingDone(m) >= m.plannedSets
 }
 
-export function sessionProgress(session: Session): { done: number; total: number } {
+export function sessionProgress(session: Session): {
+  done: number
+  total: number
+  extra: number
+} {
   let done = 0
   let total = 0
+  let extra = 0
   for (const m of session.movements) {
     const p = movementProgress(m)
     done += p.done
-    total += p.total
+    // A movement with no plan contributes its own logged sets, so the ratio
+    // stays meaningful rather than counting work against nothing.
+    total += p.total ?? p.done
+    extra += p.extra
   }
-  return { done, total }
+  return { done, total, extra }
 }
 
 /** Index of the movement to focus: the first with sets still to log. */

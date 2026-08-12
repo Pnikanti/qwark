@@ -115,6 +115,8 @@ export const fi = {
   set: 'Sarja',
   setOf: (n: number, total: number) => (total > 0 ? `Sarja ${n} / ${total}` : `Sarja ${n}`),
   warmupNumber: (n: number) => `Lämmittely ${n}`,
+  extraSet: (n: number) => `Lisäsarja ${n}`,
+  plusExtra: (n: number) => `+${n}`,
   warmupsLabel: 'Lämmittely',
   workingLabel: 'Työsarjat',
   logSet: 'Merkitse tehdyksi',

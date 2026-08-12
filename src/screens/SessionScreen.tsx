@@ -128,8 +128,10 @@ export function SessionScreen({
 
     // Advance once the plan is met. Warmups never trigger this.
     if (wasWarmup) return
+    // Only on the transition into completion — otherwise every extra set would
+    // bounce you off a movement you deliberately came back to.
     const planned = movement.plannedSets
-    if (planned !== null && workingDone(movement) + 1 >= planned) {
+    if (planned !== null && workingDone(movement) + 1 === planned) {
       const next = session.movements.findIndex(
         (m, i) => i !== mIndex && !movementComplete(m),
       )
@@ -150,8 +152,11 @@ export function SessionScreen({
           <div className="grow">
             <h1 className="t-title">{session.templateName ?? fi.today}</h1>
             <span className="t-data">
-              {fi.setsOf(progress.done, progress.total)} ·{' '}
-              {duration(now - session.startedAt)}
+              {fi.setsOf(progress.done, progress.total)}
+              {progress.extra > 0 && (
+                <span className="extra"> {fi.plusExtra(progress.extra)}</span>
+              )}{' '}
+              · {duration(now - session.startedAt)}
             </span>
           </div>
         </div>
@@ -274,6 +279,14 @@ export function SessionScreen({
   )
 }
 
+/** Label for the set being entered: warmup, planned set, or one beyond the plan. */
+function draftLabelFor(m: SessionMovement, draft: LoggedSet): string {
+  if (draft.kind === 'warmup') return fi.warmupNumber(warmupsDone(m).length + 1)
+  const { done, total, extra } = movementProgress(m)
+  if (total !== null && done >= total) return fi.extraSet(extra + 1)
+  return fi.setOf(done + 1, total ?? 0)
+}
+
 /** What happens when the timer runs out: the next set here, or the next movement. */
 function nextUpLine(
   session: Session,
@@ -285,18 +298,15 @@ function nextUpLine(
     const draft = draftSet(current)
     if (draft) {
       const load = draft.kg ? ` · ${kgLabel(draft.kg)} kg × ${draft.reps ?? '–'}` : ''
-      const label =
-        draft.kind === 'warmup'
-          ? fi.warmupNumber(warmupsDone(current).length + 1)
-          : `${fi.set} ${workingDone(current) + 1}`
-      return `${fi.nextUp}: ${label}${load}`
+      return `${fi.nextUp}: ${draftLabelFor(current, draft)}${load}`
     }
   }
   const upcoming = session.movements.find((m, i) => i !== active && !movementComplete(m))
   if (!upcoming) return fi.allSetsDone
-  return `${fi.nextUp}: ${name(upcoming.movementId)} · ${fi.setCount(
-    movementProgress(upcoming).total,
-  )}`
+  const { total } = movementProgress(upcoming)
+  return `${fi.nextUp}: ${name(upcoming.movementId)}${
+    total === null ? '' : ` · ${fi.setCount(total)}`
+  }`
 }
 
 function CollapsedMovement({
@@ -314,18 +324,20 @@ function CollapsedMovement({
   handleProps: GripProps
   onClick: () => void
 }) {
-  const { done, total } = movementProgress(m)
+  const { done, total, extra } = movementProgress(m)
   const complete = movementComplete(m)
   const logged = m.sets.filter((s) => s.done)
 
   // Resting means there is time to read, so upcoming rows show their target.
+  const count = total === null ? `${done}` : `${done}/${total}`
+  const withExtra = extra > 0 ? `${count} ${fi.plusExtra(extra)}` : count
   const detail = complete
-    ? setsLine(logged)
+    ? `${extra > 0 ? `${fi.plusExtra(extra)} · ` : ''}${setsLine(logged)}`
     : done > 0
-      ? `${done}/${total} · ${setsLine(logged)}`
-      : resting && m.targetReps
-        ? `${done}/${total} · ${total} × ${m.targetReps}`
-        : `${done}/${total}`
+      ? `${withExtra} · ${setsLine(logged)}`
+      : resting && m.targetReps && total !== null
+        ? `${count} · ${total} × ${m.targetReps}`
+        : count
 
   return (
     <div className={`folded${complete ? ' is-done' : ''}${isActive ? ' is-active' : ''}`}>
@@ -389,7 +401,7 @@ function ActiveMovement({
   onSetKind: (kind: SetKind) => void
   onRemove: () => void
 }) {
-  const { done, total } = movementProgress(m)
+  const { done, total, extra } = movementProgress(m)
   const draftAt = draftIndex(m)
   const draft = draftAt === null ? null : m.sets[draftAt]
   const warmups = warmupsDone(m)
@@ -404,7 +416,8 @@ function ActiveMovement({
         <Grip {...handleProps} label={`${fi.reorder}: ${name}`} />
         <h2 className="t-name grow">{name}</h2>
         <span className="t-data">
-          {done}/{total}
+          {total === null ? done : `${done}/${total}`}
+          {extra > 0 && <span className="extra"> {fi.plusExtra(extra)}</span>}
         </span>
         <button
           className="quiet-x"
@@ -478,11 +491,7 @@ function ActiveMovement({
       {draft && draftAt !== null && (
         <Draft
           set={draft}
-          label={
-            draft.kind === 'warmup'
-              ? fi.warmupNumber(warmups.length + 1)
-              : fi.setOf(done + 1, total)
-          }
+          label={draftLabelFor(m, draft)}
           onSetKind={onSetKind}
           onKg={() => onOpenPad(draftAt, 'kg')}
           onReps={() => onOpenPad(draftAt, 'reps')}
