@@ -59,6 +59,22 @@ export async function previousPerformance(
   return null
 }
 
+/**
+ * Last session's warmup ramp for this movement. The counterpart to
+ * previousPerformance, which deliberately looks at working sets only.
+ */
+export async function previousWarmups(movementId: string): Promise<LoggedSet[]> {
+  const sessions = await db.sessions.orderBy('startedAt').reverse().toArray()
+  for (const s of sessions) {
+    if (s.finishedAt === null) continue
+    const m = s.movements.find((x) => x.movementId === movementId)
+    if (!m) continue
+    const warmups = m.sets.filter((x) => x.done && x.kind === 'warmup')
+    if (warmups.length) return warmups
+  }
+  return []
+}
+
 /** The note last left on this movement, so a cue carries to the next session. */
 export async function previousNote(movementId: string): Promise<string | null> {
   const sessions = await db.sessions.orderBy('startedAt').reverse().toArray()
@@ -87,24 +103,20 @@ export async function startSession(template?: Template): Promise<string> {
       uid: id(),
       movementId: item.movementId,
       targetReps: item.targetReps,
+      plannedSets: item.sets,
       restSeconds: item.restSeconds,
       note: null,
-      sets: Array.from({ length: item.sets }, () => emptySet()),
+      sets: [emptySet()],
     })),
   }
 
-  // Pre-fill the proposal for each movement, plus any standing cue. The load is
-  // what progression suggests, not a copy of last time — see progression.ts.
+  // Pre-fill the single draft with the proposal, plus any standing cue. The load
+  // is what progression suggests, not a copy of last time — see progression.ts.
   const gym = await readGym()
   for (const m of session.movements) {
     m.note = await previousNote(m.movementId)
     const next = await progressionFor(m.movementId, m.targetReps, gym)
-    if (next.kg === null && next.reps === null) continue
-    m.sets = m.sets.map((s) => ({
-      ...s,
-      kg: next.kg,
-      reps: next.reps ?? m.targetReps,
-    }))
+    m.sets = [{ ...emptySet(), kg: next.kg, reps: next.reps ?? m.targetReps }]
   }
 
   await db.sessions.put(session)
@@ -138,6 +150,7 @@ export async function addMovement(
       uid,
       movementId,
       targetReps: null,
+      plannedSets: null,
       restSeconds: null,
       note,
       sets: [emptySet()],
@@ -163,16 +176,12 @@ export const removeMovement = (sessionId: string, index: number) =>
     s.movements.splice(index, 1)
   })
 
-export const addSet = (sessionId: string, mIndex: number) =>
-  mutate(sessionId, (s) => {
-    const m = s.movements[mIndex]
-    const last = m.sets.at(-1)
-    m.sets.push({ ...emptySet(), kg: last?.kg ?? null, reps: last?.reps ?? m.targetReps })
-  })
-
+/** Delete a logged set. The draft is not deletable — it is the input. */
 export const removeSet = (sessionId: string, mIndex: number, sIndex: number) =>
   mutate(sessionId, (s) => {
-    s.movements[mIndex].sets.splice(sIndex, 1)
+    const sets = s.movements[mIndex].sets
+    if (!sets[sIndex]?.done) return
+    sets.splice(sIndex, 1)
   })
 
 export const patchSet = (
@@ -185,14 +194,92 @@ export const patchSet = (
     Object.assign(s.movements[mIndex].sets[sIndex], changes)
   })
 
-/** Completing a set is the app's most-repeated action: one tap, three effects. */
-export const toggleSetDone = (sessionId: string, mIndex: number, sIndex: number) =>
-  mutate(sessionId, (s) => {
-    const set = s.movements[mIndex].sets[sIndex]
-    set.done = !set.done
-    set.completedAt = set.done ? Date.now() : null
-    if (set.done && set.reps === null) set.reps = s.movements[mIndex].targetReps
+/**
+ * Log the draft and open a fresh one. The app's most-repeated action.
+ *
+ * The next draft keeps the kind and the load just used, because mid-session the
+ * obvious default is "same again" — re-deriving from history would ignore what
+ * you actually just lifted. A warmup steps to the next rung of last session's
+ * ramp when there is one, so a familiar ramp replays itself.
+ *
+ * The kind is never changed for you. Flipping to Työsarja is the user's call:
+ * guessing that a ramp has finished would silently mislabel a warmup.
+ */
+export async function commitSet(sessionId: string, mIndex: number): Promise<void> {
+  const session = await db.sessions.get(sessionId)
+  if (!session) return
+  const movement = session.movements[mIndex]
+  const draft = movement.sets.at(-1)
+  if (!draft || draft.done) return
+
+  const nextRung =
+    draft.kind === 'warmup'
+      ? (await previousWarmups(movement.movementId))[warmupsDone(movement).length + 1]
+      : undefined
+
+  await mutate(sessionId, (s) => {
+    const m = s.movements[mIndex]
+    const set = m.sets.at(-1)
+    if (!set || set.done) return
+    set.done = true
+    set.completedAt = Date.now()
+    if (set.reps === null) set.reps = m.targetReps
+
+    m.sets.push({
+      ...emptySet(set.kind),
+      kg: nextRung?.kg ?? set.kg,
+      reps: nextRung?.reps ?? set.reps,
+    })
   })
+}
+
+/**
+ * Flip the draft between warmup and working, re-deriving its pre-fill from the
+ * nearest sensible source: what you already did of that kind this session first,
+ * then last session's ramp or the progression proposal.
+ */
+export async function setDraftKind(
+  sessionId: string,
+  mIndex: number,
+  kind: SetKind,
+): Promise<void> {
+  const session = await db.sessions.get(sessionId)
+  if (!session) return
+  const movement = session.movements[mIndex]
+  const sameKindThisSession = movement.sets.filter(
+    (s) => s.done && s.kind === kind,
+  ).at(-1)
+
+  let kg = sameKindThisSession?.kg ?? null
+  let reps = sameKindThisSession?.reps ?? null
+
+  if (!sameKindThisSession) {
+    if (kind === 'warmup') {
+      const rung = (await previousWarmups(movement.movementId))[
+        warmupsDone(movement).length
+      ]
+      kg = rung?.kg ?? null
+      reps = rung?.reps ?? null
+    } else {
+      const gym = await readGym()
+      const working = await progressionFor(
+        movement.movementId,
+        movement.targetReps,
+        gym,
+        sessionId,
+      )
+      kg = working.kg
+      reps = working.reps ?? movement.targetReps
+    }
+  }
+
+  await mutate(sessionId, (s) => {
+    const sets = s.movements[mIndex].sets
+    const draft = sets.at(-1)
+    if (!draft || draft.done) return
+    sets[sets.length - 1] = { ...emptySet(kind), kg, reps }
+  })
+}
 
 export const setMovementNote = (sessionId: string, mIndex: number, note: string) =>
   mutate(sessionId, (s) => {
@@ -297,21 +384,35 @@ export async function previousBestKg(
 
 /* --- progress ------------------------------------------------------------ */
 
+/**
+ * Working sets against the routine's plan. Warmups are logged but excluded — they
+ * are preparation, not the work, and letting them count would mean three warmups
+ * "finished" a three-set movement.
+ */
+export function workingDone(m: SessionMovement): number {
+  return m.sets.filter((s) => s.done && s.kind === 'working').length
+}
+
+export function warmupsDone(m: SessionMovement): LoggedSet[] {
+  return m.sets.filter((s) => s.done && s.kind === 'warmup')
+}
+
 export function movementProgress(m: SessionMovement): { done: number; total: number } {
-  return { done: m.sets.filter((s) => s.done).length, total: m.sets.length }
+  const done = workingDone(m)
+  return { done, total: m.plannedSets ?? done }
 }
 
 export function movementComplete(m: SessionMovement): boolean {
-  const { done, total } = movementProgress(m)
-  return total > 0 && done === total
+  return m.plannedSets !== null && workingDone(m) >= m.plannedSets
 }
 
 export function sessionProgress(session: Session): { done: number; total: number } {
   let done = 0
   let total = 0
   for (const m of session.movements) {
-    total += m.sets.length
-    done += m.sets.filter((s) => s.done).length
+    const p = movementProgress(m)
+    done += p.done
+    total += p.total
   }
   return { done, total }
 }
@@ -322,8 +423,13 @@ export function firstIncomplete(session: Session): number | null {
   return i === -1 ? null : i
 }
 
-/** Index of the next set to log within a movement, or null if none remain. */
-export function nextSetIndex(m: SessionMovement): number | null {
-  const i = m.sets.findIndex((s) => !s.done)
-  return i === -1 ? null : i
+/** The trailing draft — the set being entered. Absent on a finished session. */
+export function draftIndex(m: SessionMovement): number | null {
+  const i = m.sets.length - 1
+  return i >= 0 && !m.sets[i].done ? i : null
+}
+
+export function draftSet(m: SessionMovement): LoggedSet | null {
+  const i = draftIndex(m)
+  return i === null ? null : m.sets[i]
 }

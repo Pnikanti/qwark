@@ -101,7 +101,14 @@ export interface SessionMovement {
   uid: string
   movementId: string
   targetReps: number | null
+  /** Working sets the routine calls for. null for a movement added ad hoc. */
+  plannedSets: number | null
   restSeconds: number | null
+  /**
+   * Completed sets, plus exactly one trailing draft (`done: false`) while the
+   * session is open — the draft is the input the user types into, so it has to
+   * persist like everything else. `finishSession` drops it.
+   */
   sets: LoggedSet[]
   note: string | null
 }

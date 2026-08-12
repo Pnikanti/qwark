@@ -77,41 +77,48 @@ The first build rendered every movement in full. Measured on a five-movement rou
 
 ```
 JALKAPÄIVÄ                              ⋯
-3 / 16 sarjaa · 12 min
+3 / 15 sarjaa · 12 min
 ▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ────────────────────────────────────────
 ✓  Jalkakyykky          100 kg × 8, 8, 8
 ────────────────────────────────────────
 ▏ Romanialainen maastaveto           1/3
 ▏ Edellinen: 90 kg × 8, 8, 7
-▏ ✓ 90 kg × 8                  Muokkaa
+▏ Ehdotus 92,5 kg (+2,5)
 ▏
-▏  Sarja      kg        Toistoa
-▏    2      [ 90 ]      [  8  ]   ×  ✓     ← next set outlined
-▏    3      [ 90 ]      [  8  ]   ×  ✓
-▏  + Lisää sarja
+▏ LÄMMITTELY  50 × 8 · 70 × 5
+▏ TYÖSARJAT   92,5 kg × 8          Muokkaa
+▏
+▏ [ LÄMMITTELY ] [ TYÖSARJA ]
+▏ SARJA 2 / 3
+▏ ┌──────────┐ ┌──────────┐ ┌────┐
+▏ │   92,5   │ │     8    │ │ ✓  │
+▏ │    kg    │ │  toistoa │ │    │
+▏ └──────────┘ └──────────┘ └────┘
+▏ + Muistiinpano
 ────────────────────────────────────────
    Jalkaprässi              0/3 · 3 × 10
-   Reiden koukistus istuen   0/3 · 3 × 12
-   Pohkeen nosto seisten     0/4 · 4 × 12
+   Pohkeen nosto seisten    0/4 · 4 × 12
+────────────────────────────────────────
+   + Lisää liike
 ────────────────────────────────────────
  PALAUTUS   2:14                  OHITA
- Seuraava: Sarja 2 · 90 kg × 8
+ Seuraava: Sarja 3 · 92,5 kg × 8
 ```
 
-- **One movement expanded**, marked with a cobalt rule. It **auto-advances** when the last set of a movement is logged, and any collapsed line is one tap away — no penalty for jumping when a machine is occupied.
-- **Logged sets collapse** into the log vernacular (`90 kg × 8`) rather than staying as interactive rows, so the screen shrinks as the session progresses. Tapping that line reopens them, because a mistyped load has to be fixable.
-- **The next set is outlined** in accent — the one thing you are about to touch.
-- **Previous performance inline**, per movement. The comparison is the habit loop.
-- **One checkmark per set**: completes it, starts the rest timer, fires a haptic. One control, three effects.
-- Tapping a kg field opens a **custom numeric pad** with plate-pair steppers and a **plate calculator** — never the OS keyboard.
-- Warmup sets take the marker `L` instead of a number, and are excluded from volume and 1RM. Tap the marker to switch.
-- **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement, and collapsed rows reveal their targets. It all folds away again once you resume, so nothing shifts while you are logging.
-- Destructive actions appear only in the expanded movement, never five times over.
-- Tap targets ≥48 px — this is used mid-set with sweaty hands.
-- Every change writes to IndexedDB immediately, so a PWA reload mid-workout loses nothing.
+- **One movement expanded**, marked with a cobalt rule. It **auto-advances** when the plan is met, and any collapsed line is one tap away — no penalty for jumping when a machine is occupied.
+- **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh input carrying the same load, because mid-session "same again" is the honest default.
+- **Warmups are first-class and do not consume planned sets.** The kind is chosen *before* logging, so a warmup is never a working row that got reclassified. They are excluded from the count, from volume, and from 1RM — three warmups must not "finish" a three-set movement. A familiar ramp replays itself from last session's warmups.
+- **The kind is never changed for you.** Guessing that a ramp has finished would silently mislabel a set.
+- **Logged work reads as two lines**, warmups and working separately, expandable to edit or delete a set. Logged sets are records: they can be corrected or removed, never un-ticked — that would leave two sets in flight at once.
+- **Previous performance and the proposal** sit above the input. The comparison is the habit loop.
+- **One tick** commits the set, starts the rest timer, and fires a haptic. Warmups skip the timer — you move through them quickly.
+- Tapping a load opens the **custom numeric pad** with plate-pair steppers and a plate calculator, sized from your gym settings. Never the OS keyboard.
+- **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement and collapsed rows reveal their targets, then it folds away again.
+- Tap targets ≥48 px — used mid-set with sweaty hands.
+- Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
 
-Result: 23 controls and one screen, against 92 and 1.9.
+Result: 14 controls on one screen, against 23 for the row grid and 92 before the accordion.
 
 ### Liikkeen valinta
 

@@ -60,6 +60,28 @@ class QwarkDB extends Dexie {
     this.version(4).stores({
       customMovements: 'id, nameFi, nameEn, equipment, *primaryMuscles',
     })
+    /**
+     * Sets used to be pre-created one row per planned set, so the plan was implied
+     * by how many empty rows existed. Now the plan is explicit and `sets` holds
+     * actuals plus a single trailing draft.
+     */
+    this.version(5).upgrade((tx) =>
+      tx
+        .table<Session>('sessions')
+        .toCollection()
+        .modify((session) => {
+          for (const m of session.movements) {
+            if (m.plannedSets === undefined || m.plannedSets === null) {
+              m.plannedSets = m.sets.length || null
+            }
+            if (session.finishedAt !== null) continue
+            // Collapse the pre-created empties down to one draft.
+            const done = m.sets.filter((s) => s.done)
+            const draft = m.sets.find((s) => !s.done)
+            m.sets = draft ? [...done, draft] : done
+          }
+        }),
+    )
   }
 }
 

@@ -20,7 +20,7 @@ export function NumberPad({
   mode: PadMode
   value: number | null
   label: string
-  onCommit: (value: number | null) => void
+  onCommit: (value: number | null) => void | Promise<void>
   onClose: () => void
 }) {
   const gym = useGym()
@@ -38,8 +38,10 @@ export function NumberPad({
   const numeric = draft === '' ? null : Number(draft.replace(',', '.'))
   const step = mode === 'kg' ? stepKg(gym) : 1
 
-  const commit = () => {
-    onCommit(numeric !== null && Number.isFinite(numeric) ? numeric : null)
+  // Await the write before closing: the value must be on disk, not in flight,
+  // before the sheet disappears and the app can be killed.
+  const commit = async () => {
+    await onCommit(numeric !== null && Number.isFinite(numeric) ? numeric : null)
     onClose()
   }
 

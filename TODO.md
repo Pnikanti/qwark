@@ -75,7 +75,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Seed starter templates in Finnish — 7 routines in 3 groups (PPL, ylä/ala, 5×5), movement ids validated at build time
 - [x] Save as reusable routine from a finished ad hoc session
 - [x] Editing a template cannot rewrite logged history — sessions copy their plan at start
-- [x] Set types: warmup and working (tap the set marker to switch)
+- [x] Set types: warmup and working, chosen on the input before logging; warmups tracked without consuming planned sets
 - [ ] Set types: superset, circuit, drop, AMRAP, time-based
 - [ ] Template editor — routines can be created from a session but not yet edited
 - [ ] Routine preview before starting
@@ -89,6 +89,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] Start session from routine or ad hoc
 - [x] Live view: previous performance inline, set-by-set entry
 - [x] Accordion: one movement expanded, rest folded to a line, auto-advance on completion
+- [x] One input per set instead of a row per planned set; `plannedSets` separates plan from actuals
 - [x] Logged sets collapse to a log line, reopenable to fix a mistyped load
 - [x] Next set outlined; session progress rail
 - [x] Rest phase reveals what's next and upcoming targets
@@ -155,3 +156,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-12 — Status messages became toasts (`src/lib/toast.tsx`): module store so handlers can raise one without hook plumbing, mounted outside the screen switch so a toast survives the navigation that raised it. Fixed a regression from the previous commit — gating the append button on `movements.length > 0` left an empty ad hoc session with no way to add a movement.
 - 2026-08-12 — Gym-blocking gaps closed. Bar weight and disc inventory are configurable in Asetukset; the plate breakdown, the pad's steppers and the smallest progression step all derive from them (verified: 100 kg on a 15 kg bar with no 1.25s → 25+15+2.5 per side, steppers ±5/±10). Per-movement notes are writable, folded away until used, and carry forward to the next session. Custom movements live in their own table because `ensureSeeded()` clears `movements` — verified they survive a forced re-seed. They are edited in place rather than through overrides, so custom ids never leak into overrides.json where the build script would flag them as unknown. Deleting one is refused while any session or routine references it; hide instead.
 - 2026-08-12 — Rule-based progression added (`src/lib/progression.ts`): hit every target rep → add one plate pair; miss → hold; miss twice at the same load → back off 10%, snapped to a loadable weight. It pre-fills the set rows and shows why, as a proposal rather than an instruction. Bodyweight and mixed-load sessions can only hold, since there is no single load to advance. Verified all four branches across six chained sessions: 100 → 102,5 → 105 → hold 105 → deload 95 → 97,5. Loads now render with a Finnish decimal comma everywhere.
+- 2026-08-12 — Session view reworked again: the active movement shows one input for the set you are about to do, not a row per planned set. Sets are appended as performed, with a single persisted draft acting as the input, so the plan (`plannedSets`) and the actuals are finally separate — which fixes warmups silently consuming planned sets. Warmup kind is chosen before logging, excluded from the count and volume, and a familiar ramp replays from last session. 14 controls on screen, against 23. Dexie v5 migrates old pre-created rows, verified through the real upgrade path (IDB 40 → 50). Also fixed: `NumberPad` closed without awaiting its write, leaving a window where a typed load could be lost.

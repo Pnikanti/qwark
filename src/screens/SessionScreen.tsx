@@ -10,23 +10,26 @@ import { progressionFor, type Progression } from '../lib/progression'
 import { useGym } from '../lib/settings'
 import {
   addMovement,
-  addSet,
+  commitSet,
+  draftIndex,
+  draftSet,
   finishSession,
   firstIncomplete,
   getSession,
   movementComplete,
   movementProgress,
-  nextSetIndex,
   patchSet,
   previousPerformance,
   removeMovement,
   removeSet,
   reorderMovements,
+  setDraftKind,
   setMovementNote,
   sessionProgress,
-  toggleSetDone,
+  warmupsDone,
+  workingDone,
 } from '../lib/session'
-import type { LoggedSet, Session, SessionMovement } from '../types'
+import type { LoggedSet, Session, SessionMovement, SetKind } from '../types'
 
 interface PadTarget {
   mIndex: number
@@ -109,18 +112,24 @@ export function SessionScreen({
     setShowLogged(false)
   }
 
-  const complete = async (mIndex: number, sIndex: number) => {
+  const commit = async (mIndex: number) => {
     const movement = session.movements[mIndex]
-    const wasDone = movement.sets[sIndex].done
-    await toggleSetDone(id, mIndex, sIndex)
-    if (wasDone) return
+    const draft = movement.sets.at(-1)
+    if (!draft || draft.done) return
+    const wasWarmup = draft.kind === 'warmup'
 
+    await commitSet(id, mIndex)
     navigator.vibrate?.(12)
-    if (movement.restSeconds) setRestUntil(Date.now() + movement.restSeconds * 1000)
 
-    // Advance only when that was the movement's last remaining set.
-    const remaining = movement.sets.filter((s, i) => !s.done && i !== sIndex).length
-    if (remaining === 0) {
+    // Warmups are moved through quickly; a countdown after each would be noise.
+    if (!wasWarmup && movement.restSeconds) {
+      setRestUntil(Date.now() + movement.restSeconds * 1000)
+    }
+
+    // Advance once the plan is met. Warmups never trigger this.
+    if (wasWarmup) return
+    const planned = movement.plannedSets
+    if (planned !== null && workingDone(movement) + 1 >= planned) {
       const next = session.movements.findIndex(
         (m, i) => i !== mIndex && !movementComplete(m),
       )
@@ -187,10 +196,9 @@ export function SessionScreen({
                 onToggleLogged={() => setShowLogged((v) => !v)}
                 handleProps={reorder.handleProps(mIndex)}
                 onOpenPad={(sIndex, mode) => setPad({ mIndex, sIndex, mode })}
-                onComplete={(sIndex) => complete(mIndex, sIndex)}
-                onAddSet={() => addSet(id, mIndex)}
+                onCommit={() => commit(mIndex)}
                 onRemoveSet={(sIndex) => removeSet(id, mIndex, sIndex)}
-                onToggleKind={(sIndex, kind) => patchSet(id, mIndex, sIndex, { kind })}
+                onSetKind={(kind) => setDraftKind(id, mIndex, kind)}
                 onNote={(note) => setMovementNote(id, mIndex, note)}
                 onRemove={() => removeMovement(id, mIndex)}
               />
@@ -273,12 +281,15 @@ function nextUpLine(
   name: (id: string) => string,
 ): string {
   const current = session.movements[active]
-  if (current) {
-    const index = nextSetIndex(current)
-    if (index !== null) {
-      const set = current.sets[index]
-      const load = set.kg ? ` · ${set.kg} kg × ${set.reps ?? current.targetReps ?? '–'}` : ''
-      return `${fi.nextUp}: ${fi.set} ${index + 1}${load}`
+  if (current && !movementComplete(current)) {
+    const draft = draftSet(current)
+    if (draft) {
+      const load = draft.kg ? ` · ${kgLabel(draft.kg)} kg × ${draft.reps ?? '–'}` : ''
+      const label =
+        draft.kind === 'warmup'
+          ? fi.warmupNumber(warmupsDone(current).length + 1)
+          : `${fi.set} ${workingDone(current) + 1}`
+      return `${fi.nextUp}: ${label}${load}`
     }
   }
   const upcoming = session.movements.find((m, i) => i !== active && !movementComplete(m))
@@ -358,10 +369,9 @@ function ActiveMovement({
   onToggleLogged,
   handleProps,
   onOpenPad,
-  onComplete,
-  onAddSet,
+  onCommit,
   onRemoveSet,
-  onToggleKind,
+  onSetKind,
   onNote,
   onRemove,
 }: {
@@ -374,26 +384,19 @@ function ActiveMovement({
   handleProps: GripProps
   onNote: (note: string) => void
   onOpenPad: (sIndex: number, mode: PadMode) => void
-  onComplete: (sIndex: number) => void
-  onAddSet: () => void
+  onCommit: () => void
   onRemoveSet: (sIndex: number) => void
-  onToggleKind: (sIndex: number, kind: 'warmup' | 'working') => void
+  onSetKind: (kind: SetKind) => void
   onRemove: () => void
 }) {
   const { done, total } = movementProgress(m)
-  const next = nextSetIndex(m)
-  const logged = m.sets.filter((s) => s.done)
-
-  // Working-set numbers must be counted across all sets: a warmup takes a row
-  // but not a number.
-  const markers: string[] = []
-  let workingIndex = 0
-  for (const set of m.sets)
-    markers.push(set.kind === 'warmup' ? 'L' : String(++workingIndex))
-
-  const rows = m.sets
+  const draftAt = draftIndex(m)
+  const draft = draftAt === null ? null : m.sets[draftAt]
+  const warmups = warmupsDone(m)
+  const working = m.sets.filter((s) => s.done && s.kind === 'working')
+  const loggedRows = m.sets
     .map((set, sIndex) => ({ set, sIndex }))
-    .filter(({ set }) => showLogged || !set.done)
+    .filter(({ set }) => set.done)
 
   return (
     <section className="active">
@@ -424,45 +427,68 @@ function ActiveMovement({
         </p>
       )}
 
-      {/* Logged sets are history: one line, reopenable to fix a mistyped load. */}
-      {logged.length > 0 && (
-        <button className={`doneline${showLogged ? ' open' : ''}`} onClick={onToggleLogged}>
-          <span aria-hidden="true">✓</span>
-          <span className="grow">{showLogged ? fi.hideLogged : setsLine(logged)}</span>
-          <span className="t-data">{showLogged ? '▲' : fi.editLogged}</span>
+      {/* Logged work is history. Warmups read on their own line so they are
+          visibly tracked without being confused for the work. */}
+      {(warmups.length > 0 || working.length > 0) && !showLogged && (
+        <button className="doneline" onClick={onToggleLogged}>
+          <span className="grow">
+            {warmups.length > 0 && (
+              <span className="logline">
+                <span className="logline-tag t-data">{fi.warmupsLabel}</span>
+                {setsLine(warmups)}
+              </span>
+            )}
+            {working.length > 0 && (
+              <span className="logline">
+                <span className="logline-tag t-data">{fi.workingLabel}</span>
+                {setsLine(working)}
+              </span>
+            )}
+          </span>
+          <span className="t-data">{fi.editLogged}</span>
         </button>
       )}
 
-      {rows.length > 0 && (
-        <div className="setgrid">
-          <span className="t-data">{fi.set}</span>
-          <span className="t-data">kg</span>
-          <span className="t-data">{fi.reps}</span>
-          <span />
-          {rows.map(({ set, sIndex }) => (
-            <SetRow
-              key={sIndex}
-              set={set}
-              marker={markers[sIndex]}
-              targetReps={m.targetReps}
-              isNext={sIndex === next}
-              onMarkerClick={() =>
-                onToggleKind(sIndex, set.kind === 'warmup' ? 'working' : 'warmup')
-              }
-              onKg={() => onOpenPad(sIndex, 'kg')}
-              onReps={() => onOpenPad(sIndex, 'reps')}
-              onDone={() => onComplete(sIndex)}
-              onRemove={() => onRemoveSet(sIndex)}
-            />
-          ))}
-        </div>
+      {showLogged && (
+        <>
+          <button className="doneline open" onClick={onToggleLogged}>
+            <span className="grow t-data">{fi.hideLogged}</span>
+            <span className="t-data">▲</span>
+          </button>
+          <div className="setgrid">
+            <span className="t-data">{fi.set}</span>
+            <span className="t-data">kg</span>
+            <span className="t-data">{fi.reps}</span>
+            <span />
+            {loggedRows.map(({ set, sIndex }) => (
+              <LoggedRow
+                key={sIndex}
+                set={set}
+                marker={markerFor(m, sIndex)}
+                onKg={() => onOpenPad(sIndex, 'kg')}
+                onReps={() => onOpenPad(sIndex, 'reps')}
+                onRemove={() => onRemoveSet(sIndex)}
+              />
+            ))}
+          </div>
+        </>
       )}
 
-      <div className="row-actions">
-        <button className="btn" onClick={onAddSet}>
-          {fi.addSet}
-        </button>
-      </div>
+      {/* The one input: the set about to be done. */}
+      {draft && draftAt !== null && (
+        <Draft
+          set={draft}
+          label={
+            draft.kind === 'warmup'
+              ? fi.warmupNumber(warmups.length + 1)
+              : fi.setOf(done + 1, total)
+          }
+          onSetKind={onSetKind}
+          onKg={() => onOpenPad(draftAt, 'kg')}
+          onReps={() => onOpenPad(draftAt, 'reps')}
+          onCommit={onCommit}
+        />
+      )}
 
       <Note value={m.note} onChange={onNote} />
     </section>
@@ -520,57 +546,95 @@ function Note({
   )
 }
 
-function SetRow({
+/** Working sets are numbered; warmups take an L, and do not consume a number. */
+function markerFor(m: SessionMovement, sIndex: number): string {
+  if (m.sets[sIndex].kind === 'warmup') return 'L'
+  let n = 0
+  for (let i = 0; i <= sIndex; i++) if (m.sets[i].kind === 'working') n++
+  return String(n)
+}
+
+/**
+ * The input. One set at a time, with the kind chosen before logging so a warmup
+ * is a first-class entry rather than a working row that got reclassified.
+ */
+function Draft({
   set,
-  marker,
-  targetReps,
-  isNext,
-  onMarkerClick,
+  label,
+  onSetKind,
   onKg,
   onReps,
-  onDone,
+  onCommit,
+}: {
+  set: LoggedSet
+  label: string
+  onSetKind: (kind: SetKind) => void
+  onKg: () => void
+  onReps: () => void
+  onCommit: () => void
+}) {
+  return (
+    <div className="draft">
+      <div className="chipset draft-kind">
+        {(['warmup', 'working'] as SetKind[]).map((kind) => (
+          <button
+            key={kind}
+            className="toggle"
+            aria-pressed={set.kind === kind}
+            onClick={() => onSetKind(kind)}
+          >
+            {kind === 'warmup' ? fi.warmupsLabel : fi.working}
+          </button>
+        ))}
+      </div>
+
+      <span className="t-data draft-label">{label}</span>
+
+      <div className="draft-row">
+        <button className="cell next" onClick={onKg}>
+          <span className="cell-value">{set.kg === null ? '–' : kgLabel(set.kg)}</span>
+          <span className="cell-unit t-data">kg</span>
+        </button>
+        <button className="cell next" onClick={onReps}>
+          <span className="cell-value">{set.reps ?? '–'}</span>
+          <span className="cell-unit t-data">{fi.reps}</span>
+        </button>
+        <button className="tick big" onClick={onCommit} aria-label={fi.logSet}>
+          ✓
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/** A set already logged: editable, deletable, never un-tickable. */
+function LoggedRow({
+  set,
+  marker,
+  onKg,
+  onReps,
   onRemove,
 }: {
   set: LoggedSet
   marker: string
-  targetReps: number | null
-  isNext: boolean
-  onMarkerClick: () => void
   onKg: () => void
   onReps: () => void
-  onDone: () => void
   onRemove: () => void
 }) {
-  const cell = `cell${set.done ? ' locked' : ''}${isNext ? ' next' : ''}`
   return (
     <>
-      <button
-        className={`marker${set.kind === 'warmup' ? ' warm' : ''}`}
-        onClick={onMarkerClick}
-        aria-label={set.kind === 'warmup' ? fi.warmup : fi.working}
-        title={set.kind === 'warmup' ? fi.warmup : fi.working}
-      >
+      <span className={`marker static${set.kind === 'warmup' ? ' warm' : ''}`}>
         {marker}
-      </button>
-      <button className={cell} onClick={onKg}>
+      </span>
+      <button className="cell locked" onClick={onKg}>
         {set.kg === null ? '–' : kgLabel(set.kg)}
       </button>
-      <button className={cell} onClick={onReps}>
-        {set.reps ?? (targetReps !== null ? <em>{targetReps}</em> : '–')}
+      <button className="cell locked" onClick={onReps}>
+        {set.reps ?? '–'}
       </button>
       <span className="set-actions">
-        {!set.done && (
-          <button className="strip" onClick={onRemove} aria-label={fi.removeSet}>
-            ×
-          </button>
-        )}
-        <button
-          className={`tick${set.done ? ' on' : ''}`}
-          onClick={onDone}
-          aria-pressed={set.done}
-          aria-label={fi.markDone}
-        >
-          ✓
+        <button className="quiet-x" onClick={onRemove} aria-label={fi.removeSet}>
+          ×
         </button>
       </span>
     </>
