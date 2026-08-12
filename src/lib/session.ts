@@ -1,4 +1,6 @@
 import { db } from '../db'
+import { progressionFor } from './progression'
+import { readGym } from './settings'
 import type {
   LoggedSet,
   Session,
@@ -91,16 +93,18 @@ export async function startSession(template?: Template): Promise<string> {
     })),
   }
 
-  // Pre-fill loads, reps and any standing cue from the last time this movement
-  // was trained.
+  // Pre-fill the proposal for each movement, plus any standing cue. The load is
+  // what progression suggests, not a copy of last time — see progression.ts.
+  const gym = await readGym()
   for (const m of session.movements) {
     m.note = await previousNote(m.movementId)
-    const prev = await previousPerformance(m.movementId)
-    if (!prev) continue
-    m.sets = m.sets.map((s, i) => {
-      const from = prev.sets[Math.min(i, prev.sets.length - 1)]
-      return { ...s, kg: from?.kg ?? null, reps: from?.reps ?? m.targetReps }
-    })
+    const next = await progressionFor(m.movementId, m.targetReps, gym)
+    if (next.kg === null && next.reps === null) continue
+    m.sets = m.sets.map((s) => ({
+      ...s,
+      kg: next.kg,
+      reps: next.reps ?? m.targetReps,
+    }))
   }
 
   await db.sessions.put(session)

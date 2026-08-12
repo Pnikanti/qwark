@@ -5,7 +5,9 @@ import { MovementPicker } from '../components/MovementPicker'
 import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
-import { clock, duration, setsLine } from '../lib/format'
+import { clock, duration, kgLabel, setsLine } from '../lib/format'
+import { progressionFor, type Progression } from '../lib/progression'
+import { useGym } from '../lib/settings'
 import {
   addMovement,
   addSet,
@@ -62,15 +64,20 @@ export function SessionScreen({
     return () => clearInterval(t)
   }, [])
 
-  const previous = useLiveQuery(async () => {
+  const gym = useGym()
+
+  const context = useLiveQuery(async () => {
     if (!session) return {}
-    const out: Record<string, string> = {}
+    const out: Record<string, { line: string; next: Progression }> = {}
     for (const m of session.movements) {
       const prev = await previousPerformance(m.movementId, session.id)
-      out[m.movementId] = prev ? setsLine(prev.sets) : ''
+      out[m.movementId] = {
+        line: prev ? setsLine(prev.sets) : '',
+        next: await progressionFor(m.movementId, m.targetReps, gym, session.id),
+      }
     }
     return out
-  }, [session?.movements.length, session?.id])
+  }, [session?.movements.length, session?.id, gym])
 
   const byId = useMemo(
     () => new Map((movements ?? []).map((m) => [m.id, m])),
@@ -174,7 +181,8 @@ export function SessionScreen({
               <ActiveMovement
                 movement={m}
                 name={name(m.movementId)}
-                previousLine={previous?.[m.movementId] ?? ''}
+                previousLine={context?.[m.movementId]?.line ?? ''}
+                proposal={context?.[m.movementId]?.next}
                 showLogged={showLogged}
                 onToggleLogged={() => setShowLogged((v) => !v)}
                 handleProps={reorder.handleProps(mIndex)}
@@ -322,6 +330,14 @@ function CollapsedMovement({
   )
 }
 
+function proposalText(next: Progression): string {
+  const kg = kgLabel(next.kg!)
+  if (next.kind === 'increase')
+    return fi.proposalIncrease(kg, kgLabel(next.kg! - (next.fromKg ?? 0)))
+  if (next.kind === 'deload') return fi.proposalDeload(kg)
+  return fi.proposalHold(kg)
+}
+
 export type GripProps = Omit<React.ComponentProps<'button'>, 'className' | 'children'>
 
 /** Drag handle. Also moves the row with the arrow keys, so it is not mouse-only. */
@@ -337,6 +353,7 @@ function ActiveMovement({
   movement: m,
   name,
   previousLine,
+  proposal,
   showLogged,
   onToggleLogged,
   handleProps,
@@ -351,6 +368,7 @@ function ActiveMovement({
   movement: SessionMovement
   name: string
   previousLine: string
+  proposal: Progression | undefined
   showLogged: boolean
   onToggleLogged: () => void
   handleProps: GripProps
@@ -398,6 +416,13 @@ function ActiveMovement({
       <p className="prev t-data">
         {previousLine ? `${fi.previous}: ${previousLine}` : fi.noPrevious}
       </p>
+
+      {/* A proposal, not an instruction — it pre-fills an editable field. */}
+      {proposal && proposal.kind !== 'first' && proposal.kg !== null && (
+        <p className={`proposal t-data kind-${proposal.kind}`}>
+          {proposalText(proposal)}
+        </p>
+      )}
 
       {/* Logged sets are history: one line, reopenable to fix a mistyped load. */}
       {logged.length > 0 && (
@@ -528,7 +553,7 @@ function SetRow({
         {marker}
       </button>
       <button className={cell} onClick={onKg}>
-        {set.kg ?? '–'}
+        {set.kg === null ? '–' : kgLabel(set.kg)}
       </button>
       <button className={cell} onClick={onReps}>
         {set.reps ?? (targetReps !== null ? <em>{targetReps}</em> : '–')}

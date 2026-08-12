@@ -1415,9 +1415,17 @@ select {
 
 /* --- notes, settings, own movements -------------------------------------- */
 
+/* Adding a note is optional, so it does not get the attention colour. */
 .note-add {
   display: block;
   margin-top: 12px;
+  color: var(--ink-dim);
+  text-decoration: none;
+}
+
+.note-add:hover {
+  color: var(--ink);
+  text-decoration: underline;
 }
 
 .noteline {
@@ -1476,4 +1484,15 @@ select {
 
 .picker-create .btn {
   width: 100%;
+}
+
+/* --- progression proposal ------------------------------------------------ */
+
+.proposal {
+  margin: -6px 0 12px;
+  color: var(--accent);
+}
+
+.proposal.kind-deload {
+  color: var(--mark);
 }

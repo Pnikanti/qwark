@@ -115,7 +115,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [ ] Per-movement history: estimated 1RM, volume, best sets
 - [ ] Weekly volume per muscle group (reuse `BodyPlan`)
 - [ ] Body weight + measurements, smoothed
-- [ ] Rule-based progression targets for next session
+- [x] Rule-based progression targets for next session
 
 ## 6 — Cross-cutting
 
@@ -154,3 +154,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-11 — Session movements are reorderable by dragging a grip, persisted as the array order. Required giving each entry a stable `uid` (Dexie v3 backfills it) because the active movement was tracked by index, which a reorder breaks — and a session can hold the same movement twice. Pointer Events rather than HTML5 drag-and-drop, which never fires from touch. `Lisää liike` moved to the foot of the list where the append happens; `Lopeta treeni` now alone in the header.
 - 2026-08-12 — Status messages became toasts (`src/lib/toast.tsx`): module store so handlers can raise one without hook plumbing, mounted outside the screen switch so a toast survives the navigation that raised it. Fixed a regression from the previous commit — gating the append button on `movements.length > 0` left an empty ad hoc session with no way to add a movement.
 - 2026-08-12 — Gym-blocking gaps closed. Bar weight and disc inventory are configurable in Asetukset; the plate breakdown, the pad's steppers and the smallest progression step all derive from them (verified: 100 kg on a 15 kg bar with no 1.25s → 25+15+2.5 per side, steppers ±5/±10). Per-movement notes are writable, folded away until used, and carry forward to the next session. Custom movements live in their own table because `ensureSeeded()` clears `movements` — verified they survive a forced re-seed. They are edited in place rather than through overrides, so custom ids never leak into overrides.json where the build script would flag them as unknown. Deleting one is refused while any session or routine references it; hide instead.
+- 2026-08-12 — Rule-based progression added (`src/lib/progression.ts`): hit every target rep → add one plate pair; miss → hold; miss twice at the same load → back off 10%, snapped to a loadable weight. It pre-fills the set rows and shows why, as a proposal rather than an instruction. Bodyweight and mixed-load sessions can only hold, since there is no single load to advance. Verified all four branches across six chained sessions: 100 → 102,5 → 105 → hold 105 → deload 95 → 97,5. Loads now render with a Finnish decimal comma everywhere.

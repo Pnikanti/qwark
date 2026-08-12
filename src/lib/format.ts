@@ -32,6 +32,11 @@ export function shortDate(at: number): string {
   return `${WEEKDAYS[d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.`
 }
 
+/** Loads in Finnish: a decimal comma, and no trailing zeroes. */
+export function kgLabel(kg: number): string {
+  return kg.toLocaleString('fi', { maximumFractionDigits: 2 })
+}
+
 /** Sets as a lifter writes them: 80 kg × 8, 8, 7 */
 export function setsLine(sets: { kg: number | null; reps: number | null }[]): string {
   if (!sets.length) return ''
@@ -41,6 +46,8 @@ export function setsLine(sets: { kg: number | null; reps: number | null }[]): st
   if (sets.every((s) => s.kg === null)) return reps
 
   const kg = sets[0].kg
-  if (sets.every((s) => s.kg === kg)) return `${kg} kg × ${reps}`
-  return sets.map((s) => `${s.kg ?? '–'} × ${s.reps ?? '–'}`).join('  ·  ')
+  if (sets.every((s) => s.kg === kg)) return `${kgLabel(kg!)} kg × ${reps}`
+  return sets
+    .map((s) => `${s.kg === null ? '–' : kgLabel(s.kg)} × ${s.reps ?? '–'}`)
+    .join('  ·  ')
 }

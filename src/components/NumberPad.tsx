@@ -74,7 +74,7 @@ export function NumberPad({
         </div>
 
         <div className="readout">
-          <span className="readout-value">{draft || '–'}</span>
+          <span className="readout-value">{draft.replace('.', ',') || '–'}</span>
           <span className="readout-unit t-data">{mode === 'kg' ? 'kg' : fi.reps}</span>
         </div>
 
