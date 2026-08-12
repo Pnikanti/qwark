@@ -6,7 +6,11 @@ import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
 import { clock, duration, kgLabel, setsLine } from '../lib/format'
-import { progressionFor, type Progression } from '../lib/progression'
+import {
+  progressionFor,
+  type Progression,
+  type ProgressionKind,
+} from '../lib/progression'
 import { useGym } from '../lib/settings'
 import {
   addMovement,
@@ -20,16 +24,19 @@ import {
   movementProgress,
   patchSet,
   previousPerformance,
+  previousWarmups,
   removeMovement,
   removeSet,
   reorderMovements,
   setDraftKind,
   setMovementNote,
   sessionProgress,
+  suggestionFor,
   warmupsDone,
   workingDone,
 } from '../lib/session'
 import type { LoggedSet, Session, SessionMovement, SetKind } from '../types'
+import type { Suggestion } from '../lib/session'
 
 interface PadTarget {
   mIndex: number
@@ -71,12 +78,16 @@ export function SessionScreen({
 
   const context = useLiveQuery(async () => {
     if (!session) return {}
-    const out: Record<string, { line: string; next: Progression }> = {}
+    const out: Record<
+      string,
+      { line: string; next: Progression; ramp: LoggedSet[] }
+    > = {}
     for (const m of session.movements) {
       const prev = await previousPerformance(m.movementId, session.id)
       out[m.movementId] = {
         line: prev ? setsLine(prev.sets) : '',
         next: await progressionFor(m.movementId, m.targetReps, gym, session.id),
+        ramp: await previousWarmups(m.movementId),
       }
     }
     return out
@@ -197,6 +208,10 @@ export function SessionScreen({
                 name={name(m.movementId)}
                 previousLine={context?.[m.movementId]?.line ?? ''}
                 proposal={context?.[m.movementId]?.next}
+                ramp={context?.[m.movementId]?.ramp ?? []}
+                onApply={(kg, reps) =>
+                  patchSet(id, mIndex, m.sets.length - 1, { kg, reps })
+                }
                 showLogged={showLogged}
                 onToggleLogged={() => setShowLogged((v) => !v)}
                 handleProps={reorder.handleProps(mIndex)}
@@ -353,11 +368,14 @@ function CollapsedMovement({
   )
 }
 
-function proposalText(next: Progression): string {
-  const kg = kgLabel(next.kg!)
-  if (next.kind === 'increase')
-    return fi.proposalIncrease(kg, kgLabel(next.kg! - (next.fromKg ?? 0)))
-  if (next.kind === 'deload') return fi.proposalDeload(kg)
+/** Where the offered numbers come from, said plainly. */
+function suggestionText(s: Suggestion, proposalKind?: ProgressionKind): string {
+  const kg = kgLabel(s.kg)
+  if (s.source === 'repeat') return fi.suggestRepeat(kg)
+  if (s.source === 'ramp') return fi.suggestRamp(kg, s.reps)
+  if (proposalKind === 'increase' && s.fromKg !== null)
+    return fi.proposalIncrease(kg, kgLabel(s.kg - s.fromKg))
+  if (proposalKind === 'deload') return fi.proposalDeload(kg)
   return fi.proposalHold(kg)
 }
 
@@ -377,6 +395,8 @@ function ActiveMovement({
   name,
   previousLine,
   proposal,
+  ramp,
+  onApply,
   showLogged,
   onToggleLogged,
   handleProps,
@@ -391,6 +411,8 @@ function ActiveMovement({
   name: string
   previousLine: string
   proposal: Progression | undefined
+  ramp: LoggedSet[]
+  onApply: (kg: number, reps: number | null) => void
   showLogged: boolean
   onToggleLogged: () => void
   handleProps: GripProps
@@ -433,12 +455,6 @@ function ActiveMovement({
         {previousLine ? `${fi.previous}: ${previousLine}` : fi.noPrevious}
       </p>
 
-      {/* A proposal, not an instruction — it pre-fills an editable field. */}
-      {proposal && proposal.kind !== 'first' && proposal.kg !== null && (
-        <p className={`proposal t-data kind-${proposal.kind}`}>
-          {proposalText(proposal)}
-        </p>
-      )}
 
       {/* Logged work is history. Warmups read on their own line so they are
           visibly tracked without being confused for the work. */}
@@ -491,6 +507,17 @@ function ActiveMovement({
       {draft && draftAt !== null && (
         <Draft
           set={draft}
+          suggestion={
+            proposal
+              ? suggestionFor(m, draft.kind, ramp, {
+                  kg: proposal.kg,
+                  reps: proposal.reps,
+                  fromKg: proposal.fromKg,
+                })
+              : null
+          }
+          proposalKind={proposal?.kind}
+          onApply={onApply}
           label={draftLabelFor(m, draft)}
           onSetKind={onSetKind}
           onKg={() => onOpenPad(draftAt, 'kg')}
@@ -570,6 +597,9 @@ function markerFor(m: SessionMovement, sIndex: number): string {
 function Draft({
   set,
   label,
+  suggestion,
+  proposalKind,
+  onApply,
   onSetKind,
   onKg,
   onReps,
@@ -577,6 +607,9 @@ function Draft({
 }: {
   set: LoggedSet
   label: string
+  suggestion: Suggestion | null
+  proposalKind?: ProgressionKind
+  onApply: (kg: number, reps: number | null) => void
   onSetKind: (kind: SetKind) => void
   onKg: () => void
   onReps: () => void
@@ -628,7 +661,18 @@ function Draft({
         </button>
       </div>
 
-      {missing && <p className="draft-missing t-data">{missing}</p>}
+      {/* Inferred, never applied on its own — one tap fills the blanks. */}
+      {suggestion && set.kg === null && (
+        <button
+          className={`suggestion t-data kind-${proposalKind ?? 'hold'}`}
+          onClick={() => onApply(suggestion.kg, set.reps ?? suggestion.reps)}
+        >
+          <span className="grow">{suggestionText(suggestion, proposalKind)}</span>
+          <span className="suggestion-apply">{fi.applySuggestion}</span>
+        </button>
+      )}
+
+      {missing && !suggestion && <p className="draft-missing t-data">{missing}</p>}
     </div>
   )
 }

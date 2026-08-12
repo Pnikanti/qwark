@@ -1489,12 +1489,46 @@ select {
 
 /* --- progression proposal ------------------------------------------------ */
 
-.proposal {
-  margin: -6px 0 12px;
+/* The inference: visible, explained, and applied only when tapped. */
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 2px;
+  background: transparent;
   color: var(--accent);
+  font: inherit;
+  font-variation-settings: 'wdth' 70;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
 }
 
-.proposal.kind-deload {
+.suggestion:hover {
+  background: var(--accent-wash);
+}
+
+.suggestion .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestion-apply {
+  flex: none;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.suggestion.kind-deload {
+  border-color: var(--mark);
   color: var(--mark);
 }
 

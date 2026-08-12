@@ -1,6 +1,4 @@
 import { db } from '../db'
-import { progressionFor } from './progression'
-import { readGym } from './settings'
 import type {
   LoggedSet,
   Session,
@@ -106,17 +104,16 @@ export async function startSession(template?: Template): Promise<string> {
       plannedSets: item.sets,
       restSeconds: item.restSeconds,
       note: null,
-      sets: [emptySet()],
+      // Target reps come from the routine, so they fill; the load does not.
+      sets: [{ ...emptySet(), reps: item.targetReps }],
     })),
   }
 
-  // Pre-fill the single draft with the proposal, plus any standing cue. The load
-  // is what progression suggests, not a copy of last time — see progression.ts.
-  const gym = await readGym()
+  // Loads are never pre-filled: the app must not assert a weight nobody lifted.
+  // Target reps do carry over — they come from the routine the user picked, which
+  // is a plan rather than an inference. See suggestionFor for the rest.
   for (const m of session.movements) {
     m.note = await previousNote(m.movementId)
-    const next = await progressionFor(m.movementId, m.targetReps, gym)
-    m.sets = [{ ...emptySet(), kg: next.kg, reps: next.reps ?? m.targetReps }]
   }
 
   await db.sessions.put(session)
@@ -145,18 +142,15 @@ export async function addMovement(
 ): Promise<string> {
   const uid = id()
   const note = await previousNote(movementId)
-  // Pre-fill from history exactly as a templated movement does — adding one
-  // mid-session should not mean typing everything again.
-  const next = await progressionFor(movementId, null, await readGym(), sessionId)
   await mutate(sessionId, (s) => {
     s.movements.push({
       uid,
       movementId,
-      targetReps: next.reps,
+      targetReps: null,
       plannedSets: null,
       restSeconds: null,
       note,
-      sets: [{ ...emptySet(), kg: next.kg, reps: next.reps }],
+      sets: [emptySet()],
     })
   })
   return uid
@@ -220,11 +214,6 @@ export async function commitSet(sessionId: string, mIndex: number): Promise<void
   const reps = draft.reps ?? movement.targetReps
   if (draft.kg === null || reps === null) return
 
-  const nextRung =
-    draft.kind === 'warmup'
-      ? (await previousWarmups(movement.movementId))[warmupsDone(movement).length + 1]
-      : undefined
-
   await mutate(sessionId, (s) => {
     const m = s.movements[mIndex]
     const set = m.sets.at(-1)
@@ -233,60 +222,68 @@ export async function commitSet(sessionId: string, mIndex: number): Promise<void
     set.completedAt = Date.now()
     set.reps = reps
 
+    // Blank again. What you just lifted becomes a suggestion, not a fact the app
+    // records on your behalf.
     m.sets.push({
       ...emptySet(set.kind),
-      kg: nextRung?.kg ?? set.kg,
-      reps: nextRung?.reps ?? set.reps,
+      reps: set.kind === 'working' ? m.targetReps : null,
     })
   })
 }
 
-/**
- * Flip the draft between warmup and working, re-deriving its pre-fill from the
- * nearest sensible source: what you already did of that kind this session first,
- * then last session's ramp or the progression proposal.
- */
-export async function setDraftKind(
-  sessionId: string,
-  mIndex: number,
-  kind: SetKind,
-): Promise<void> {
-  const session = await db.sessions.get(sessionId)
-  if (!session) return
-  const movement = session.movements[mIndex]
-  const sameKindThisSession = movement.sets.filter(
-    (s) => s.done && s.kind === kind,
-  ).at(-1)
-
-  let kg = sameKindThisSession?.kg ?? null
-  let reps = sameKindThisSession?.reps ?? null
-
-  if (!sameKindThisSession) {
-    if (kind === 'warmup') {
-      const rung = (await previousWarmups(movement.movementId))[
-        warmupsDone(movement).length
-      ]
-      kg = rung?.kg ?? null
-      reps = rung?.reps ?? null
-    } else {
-      const gym = await readGym()
-      const working = await progressionFor(
-        movement.movementId,
-        movement.targetReps,
-        gym,
-        sessionId,
-      )
-      kg = working.kg
-      reps = working.reps ?? movement.targetReps
-    }
-  }
-
-  await mutate(sessionId, (s) => {
-    const sets = s.movements[mIndex].sets
-    const draft = sets.at(-1)
+/** Flip the draft between warmup and working. Values stay blank either way. */
+export const setDraftKind = (sessionId: string, mIndex: number, kind: SetKind) =>
+  mutate(sessionId, (s) => {
+    const m = s.movements[mIndex]
+    const draft = m.sets.at(-1)
     if (!draft || draft.done) return
-    sets[sets.length - 1] = { ...emptySet(kind), kg, reps }
+    m.sets[m.sets.length - 1] = {
+      ...emptySet(kind),
+      reps: kind === 'working' ? m.targetReps : null,
+    }
   })
+
+export type SuggestionSource = 'progression' | 'repeat' | 'ramp'
+
+export interface Suggestion {
+  kg: number
+  reps: number | null
+  source: SuggestionSource
+  /** Load this beats, when the suggestion is a progression step. */
+  fromKg: number | null
+}
+
+/**
+ * The inferred values for the set being entered — offered, never applied.
+ *
+ * Within a session the nearest evidence is the last set of the same kind you
+ * actually logged; before that it is last session's warmup ramp, or what
+ * progression proposes. Pure, so the screen can derive it from data it already
+ * holds rather than querying again.
+ */
+export function suggestionFor(
+  m: SessionMovement,
+  kind: SetKind,
+  ramp: LoggedSet[],
+  proposal: { kg: number | null; reps: number | null; fromKg: number | null },
+): Suggestion | null {
+  const lastOfKind = m.sets.filter((s) => s.done && s.kind === kind).at(-1)
+  if (lastOfKind?.kg !== undefined && lastOfKind.kg !== null) {
+    return { kg: lastOfKind.kg, reps: lastOfKind.reps, source: 'repeat', fromKg: null }
+  }
+  if (kind === 'warmup') {
+    const rung = ramp[warmupsDone(m).length]
+    return rung?.kg === null || rung?.kg === undefined
+      ? null
+      : { kg: rung.kg, reps: rung.reps, source: 'ramp', fromKg: null }
+  }
+  if (proposal.kg === null) return null
+  return {
+    kg: proposal.kg,
+    reps: proposal.reps ?? m.targetReps,
+    source: 'progression',
+    fromKg: proposal.fromKg,
+  }
 }
 
 export const setMovementNote = (sessionId: string, mIndex: number, note: string) =>

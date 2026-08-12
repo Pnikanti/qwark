@@ -126,6 +126,10 @@ export const fi = {
   warmup: 'Lämmittely',
   working: 'Työsarja',
   previous: 'Edellinen',
+  applySuggestion: 'Täytä',
+  suggestRepeat: (kg: string) => `Sama kuin edellinen ${kg} kg`,
+  suggestRamp: (kg: string, reps: number | null) =>
+    `Viimeksi lämmittelyssä ${kg} kg${reps ? ` × ${reps}` : ''}`,
   proposalIncrease: (kg: string, delta: string) => `Ehdotus ${kg} kg (+${delta})`,
   proposalHold: (kg: string) => `Ehdotus ${kg} kg — sama kuin viimeksi`,
   proposalDeload: (kg: string) => `Ehdotus ${kg} kg — kevennys`,

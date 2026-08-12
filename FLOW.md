@@ -84,7 +84,6 @@ JALKAPÄIVÄ                              ⋯
 ────────────────────────────────────────
 ▏ Romanialainen maastaveto           1/3
 ▏ Edellinen: 90 kg × 8, 8, 7
-▏ Ehdotus 92,5 kg (+2,5)
 ▏
 ▏ LÄMMITTELY  50 × 8 · 70 × 5
 ▏ TYÖSARJAT   92,5 kg × 8          Muokkaa
@@ -92,9 +91,12 @@ JALKAPÄIVÄ                              ⋯
 ▏ [ LÄMMITTELY ] [ TYÖSARJA ]
 ▏ SARJA 2 / 3
 ▏ ┌──────────┐ ┌──────────┐ ┌────┐
-▏ │   92,5   │ │     8    │ │ ✓  │
+▏ │    –     │ │     8    │ │ ✓  │   ← tick disabled
 ▏ │    kg    │ │  toistoa │ │    │
 ▏ └──────────┘ └──────────┘ └────┘
+▏ ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+▏ ╎ EHDOTUS 92,5 KG (+2,5)  TÄYTÄ ╎
+▏ └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 ▏ + Muistiinpano
 ────────────────────────────────────────
    Jalkaprässi              0/3 · 3 × 10
@@ -108,7 +110,9 @@ JALKAPÄIVÄ                              ⋯
 
 - **One movement expanded**, marked with a cobalt rule. It **auto-advances** on the transition into completion — once only, so returning to add an extra set does not bounce you away again. Any collapsed line is one tap away, so an occupied machine costs nothing.
 - **Work beyond the plan is additive, never inflated.** A sixth set on a five-set movement reads `5/5 +1` and the input says `Lisäsarja 1`. `6/5` would state one confusing thing where there are two true ones, and it made the session rail exceed its own track.
-- **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh input carrying the same load, because mid-session "same again" is the honest default.
+- **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh, blank one.
+- **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
+- **A set needs both values before it can be logged**, so nothing is ever recorded that you did not affirm. `0` counts — it means bodyweight.
 - **Warmups are first-class and do not consume planned sets.** The kind is chosen *before* logging, so a warmup is never a working row that got reclassified. They are excluded from the count, from volume, and from 1RM — three warmups must not "finish" a three-set movement. A familiar ramp replays itself from last session's warmups.
 - **The kind is never changed for you.** Guessing that a ramp has finished would silently mislabel a set.
 - **Logged work reads as two lines**, warmups and working separately, expandable to edit or delete a set. Logged sets are records: they can be corrected or removed, never un-ticked — that would leave two sets in flight at once.
@@ -117,7 +121,6 @@ JALKAPÄIVÄ                              ⋯
 - Tapping a load opens the **custom numeric pad** with plate-pair steppers and a plate calculator, sized from your gym settings. Never the OS keyboard.
 - **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement and collapsed rows reveal their targets, then it folds away again.
 - Tap targets ≥48 px — used mid-set with sweaty hands.
-- **A set needs both values before it can be logged.** `0` counts — it means bodyweight, deliberately recorded — but blank means never entered, and there is nothing to log. The tick stays disabled and names what is missing.
 - Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
 
 Result: 14 controls on one screen, against 23 for the row grid and 92 before the accordion.
