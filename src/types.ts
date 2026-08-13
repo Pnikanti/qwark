@@ -126,7 +126,15 @@ export interface Session {
   templateId: string | null
   /** Snapshot: renaming a routine must not relabel past sessions. */
   templateName: string | null
+  /** Absolute instant, epoch ms — timezone-independent. */
   startedAt: number
+  /**
+   * The local calendar day this session belonged to, `YYYY-MM-DD`, captured when
+   * it started. `startedAt` alone is not enough: bucketing it by the *viewing*
+   * device's midnight moves a late-evening session to another day if you open
+   * the app in a different timezone.
+   */
+  startedLocalDay: string
   finishedAt: number | null
   movements: SessionMovement[]
 }

@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import movementSeed from '../data/movements.seed.json'
 import templateSeed from '../data/templates.seed.json'
+import { localDay } from './lib/format'
 import type {
   CustomMovement,
   Movement,
@@ -80,6 +81,15 @@ class QwarkDB extends Dexie {
             const draft = m.sets.find((s) => !s.done)
             m.sets = draft ? [...done, draft] : done
           }
+        }),
+    )
+    /** Record the local day each session belonged to; see Session.startedLocalDay. */
+    this.version(6).upgrade((tx) =>
+      tx
+        .table<Session>('sessions')
+        .toCollection()
+        .modify((session) => {
+          session.startedLocalDay ??= localDay(session.startedAt)
         }),
     )
   }

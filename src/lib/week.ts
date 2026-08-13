@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { addDays, localDay } from './format'
 import { listMovements } from './movements'
 import { completedSetCount, volumeKg, workingDone } from './session'
 import type { Session } from '../types'
@@ -6,6 +7,8 @@ import type { Session } from '../types'
 export interface WeekDay {
   /** Midnight at the start of this day. */
   at: number
+  /** `YYYY-MM-DD`, the key sessions are bucketed by. */
+  day: string
   weekday: string
   isToday: boolean
   isFuture: boolean
@@ -43,6 +46,10 @@ export function startOfWeek(at: number): number {
   return d.getTime()
 }
 
+export function endOfWeek(at: number): number {
+  return addDays(startOfWeek(at), 7)
+}
+
 /** ISO 8601 week number: week 1 is the one containing the first Thursday. */
 export function isoWeek(at: number): number {
   const d = new Date(at)
@@ -57,30 +64,33 @@ export function isoWeek(at: number): number {
 
 export async function weekOf(at: number): Promise<Week> {
   const start = startOfWeek(at)
-  const end = start + 7 * 86400000
+  // Calendar arithmetic, not milliseconds: a week spanning a DST change is 167 or
+  // 169 hours, and adding 7 × 86 400 000 would drop a late Sunday session.
+  const end = addDays(start, 7)
 
   const [all, movements] = await Promise.all([db.sessions.toArray(), listMovements()])
-  const sessions = all.filter(
-    (s) => s.finishedAt !== null && s.startedAt >= start && s.startedAt < end,
-  )
-
-  const midnight = (t: number) => {
-    const d = new Date(t)
-    d.setHours(0, 0, 0, 0)
-    return d.getTime()
-  }
-  const today = midnight(Date.now())
 
   const days: WeekDay[] = Array.from({ length: 7 }, (_, i) => {
-    const dayStart = midnight(start + i * 86400000)
+    const dayStart = addDays(start, i)
     return {
       at: dayStart,
+      day: localDay(dayStart),
       weekday: WEEKDAYS[i],
-      isToday: dayStart === today,
-      isFuture: dayStart > today,
-      sessions: sessions.filter((s) => midnight(s.startedAt) === dayStart),
+      isToday: false,
+      isFuture: false,
+      sessions: [],
     }
   })
+  const today = localDay(Date.now())
+  for (const d of days) {
+    d.isToday = d.day === today
+    d.isFuture = d.day > today
+  }
+
+  // Bucket by the day the session was logged on, not by the viewer's midnight.
+  const byDay = new Map(days.map((d) => [d.day, d]))
+  const sessions = all.filter((s) => s.finishedAt !== null && byDay.has(s.startedLocalDay))
+  for (const s of sessions) byDay.get(s.startedLocalDay)!.sessions.push(s)
 
   // Working sets per muscle: primary counts fully, secondary at half — it does
   // work but it is not what the movement is for.

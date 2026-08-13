@@ -9,10 +9,12 @@ import { Overrides } from './screens/Overrides'
 import { Settings } from './screens/Settings'
 import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
+import { Day } from './screens/Day'
 import { Today } from './screens/Today'
 
 type View =
   | { name: 'today' }
+  | { name: 'day'; at: number }
   | { name: 'session'; id: string }
   | { name: 'summary'; id: string }
   | { name: 'library' }
@@ -51,8 +53,15 @@ export function App() {
           {view.name === 'today' ? (
             <Today
               onOpenSession={(id) => setView({ name: 'session', id })}
+              onOpenDay={(at) => setView({ name: 'day', at })}
               onOpenLibrary={library}
               onOpenSettings={() => setView({ name: 'settings' })}
+            />
+          ) : view.name === 'day' ? (
+            <Day
+              at={view.at}
+              onBack={today}
+              onOpenSession={(id) => setView({ name: 'session', id })}
               onOpenSummary={(id) => setView({ name: 'summary', id })}
             />
           ) : view.name === 'session' ? (

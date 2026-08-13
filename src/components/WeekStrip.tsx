@@ -13,10 +13,10 @@ import type { Week } from '../lib/week'
  */
 export function WeekStrip({
   week,
-  onOpenSession,
+  onOpenDay,
 }: {
   week: Week
-  onOpenSession: (id: string) => void
+  onOpenDay: (at: number) => void
 }) {
   const busiest = Object.entries(week.setsPerMuscle)
     .sort((a, b) => b[1] - a[1])
@@ -50,24 +50,28 @@ export function WeekStrip({
             .filter(Boolean)
             .join(' ')
 
+          // Every past or present day opens; only the future has nothing to show.
           return (
             <li key={day.at}>
-              {trained ? (
-                <button
-                  className={classes}
-                  onClick={() => onOpenSession(day.sessions[0].id)}
-                  title={label}
-                >
-                  <span className="week-weekday t-data">{day.weekday}</span>
-                  <span className="week-dot" aria-hidden="true" />
-                  <span className="week-label t-data">{label}</span>
-                </button>
-              ) : (
+              {day.isFuture ? (
                 <div className={classes} aria-label={day.weekday}>
                   <span className="week-weekday t-data">{day.weekday}</span>
                   <span className="week-dot empty" aria-hidden="true" />
                   <span className="week-label t-data" />
                 </div>
+              ) : (
+                <button
+                  className={classes}
+                  onClick={() => onOpenDay(day.at)}
+                  title={label || day.weekday}
+                >
+                  <span className="week-weekday t-data">{day.weekday}</span>
+                  <span
+                    className={`week-dot${trained ? '' : ' empty'}`}
+                    aria-hidden="true"
+                  />
+                  <span className="week-label t-data">{label}</span>
+                </button>
               )}
             </li>
           )

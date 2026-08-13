@@ -66,8 +66,29 @@ position, not an achievement — and there are no missed-day marks, because a pl
 you deviate from is the shame mechanic `SPEC.md` rules out. The week shows what
 happened, which you can act on without being scolded.
 
-Below the week: the `Seuraava` card, then the routine list. Verified to stay above
-the fold on a 375×667 screen, so the primary action is never pushed out of reach.
+Below the week: the `Seuraava` card and one way in — `Tämän päivän treenit`. That
+is the whole landing screen.
+
+The routine list used to sit here too. Measured on a 393×852 phone it was 732px,
+**47% of the page**, for seven rows that mostly restated what `Seuraava` already
+said — 1.84 screens of scroll to answer "what now". It moved to the day view.
+The landing is now one screen with nine controls, and `Seuraava` stays above the
+fold so starting today's session is still **one tap**.
+
+### Päivä
+
+Tapping any past or present day in the strip opens it. Future days are not
+tappable — there is nothing to show and nothing to plan.
+
+- Sessions logged that day, each opening its summary.
+- **Only today offers a start**: `Aloita tyhjä treeni` and the routine list. A
+  past day is a record, not somewhere you can retroactively train.
+- A day with nothing logged says so plainly.
+
+Sessions record `startedLocalDay` alongside the absolute `startedAt`. Bucketing an
+instant by the *viewing* device's midnight moves a late-evening session to another
+day as soon as you open the app in a different timezone; the day it belonged to is
+decided once, when it started.
 
 States, in priority order:
 

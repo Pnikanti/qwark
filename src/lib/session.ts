@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { localDay } from './format'
 import type {
   LoggedSet,
   Session,
@@ -96,6 +97,7 @@ export async function startSession(template?: Template): Promise<string> {
     templateId: template?.id ?? null,
     templateName: template?.name ?? null,
     startedAt: Date.now(),
+    startedLocalDay: localDay(Date.now()),
     finishedAt: null,
     movements: (template?.items ?? []).map((item) => ({
       uid: id(),

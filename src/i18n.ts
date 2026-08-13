@@ -108,6 +108,8 @@ export const fi = {
   weekNumber: (n: number) => `Viikko ${n}`,
   sessionCount: (n: number) => (n === 1 ? '1 treeni' : `${n} treeniä`),
   noTrainingThisWeek: 'Ei treenejä tällä viikolla',
+  noTrainingThatDay: 'Ei treeniä tänä päivänä',
+  openToday: 'Tämän päivän treenit',
   muscleBalance: 'Lihasryhmät tällä viikolla',
   nextInCycle: '· seuraava',
   lastDone: (when: string) => `Tehty ${when}`,

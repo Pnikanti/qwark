@@ -24,6 +24,26 @@ export function relativeAge(at: number): string {
 
 const WEEKDAYS = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la']
 
+/** "to 13.8.2026" — the weekday and date, spelled the Finnish way. */
+export function fullDate(at: number): string {
+  const d = new Date(at)
+  return `${WEEKDAYS[d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`
+}
+
+/** The local calendar day of an instant, as `YYYY-MM-DD`. */
+export function localDay(at: number): string {
+  const d = new Date(at)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/** Add whole calendar days. Adding 86 400 000 ms breaks across a DST change. */
+export function addDays(at: number, days: number): number {
+  const d = new Date(at)
+  d.setDate(d.getDate() + days)
+  return d.getTime()
+}
+
 export function shortDate(at: number): string {
   const d = new Date(at)
   const today = new Date()
