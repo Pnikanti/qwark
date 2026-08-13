@@ -1774,16 +1774,14 @@ select {
 }
 
 .week-balance {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .week-balance-list {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  margin-top: 6px;
   min-width: 0;
 }
 
@@ -1877,12 +1875,15 @@ select {
   margin: 6px 0 0;
 }
 
-.hero-figure {
-  margin: 22px 0 16px;
+/* The tag belongs to the figure below it, not the date above, so it takes its
+   air on top and hugs what it labels. */
+.hero-tag {
+  margin-top: 20px;
+  color: var(--accent);
 }
 
-.hero-tag {
-  color: var(--accent);
+.hero-figure {
+  margin: 11px 0 14px;
 }
 
 .hero-tag.done {

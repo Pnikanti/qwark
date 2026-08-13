@@ -67,14 +67,22 @@ states, in priority order:
 
 1. **Session underway** — `Kesken`, the routine, sets logged and elapsed, and
    `Jatka treeniä`.
-2. **Mid-cycle** — the body-plan glyph showing *what it works* before naming it,
-   then the routine, its cycle position, its size, its movements, and `Aloita`.
-   `Muut vaihtoehdot ▸` reaches the picker.
+2. **Mid-cycle** — `Seuraava`, then the body-plan glyph showing *what it works*
+   before naming it, then the routine, its cycle position and size, when it was
+   last done, its movements, and `Aloita`. `Muut vaihtoehdot ▸` reaches the picker.
+   The group is dropped from the meta line when the routine name already carries
+   it: `5×5 · 2/2` beside `5×5 B` says the same thing twice.
 3. **Trained already today** — acknowledges it: `Tänään treenattu`, what was done,
    and what is next **stated rather than offered**, with a secondary `Lisää toinen
    treeni`. Proposing the next routine the moment you finish one reads as nagging.
 4. **No history** — the greeting and `Valitse ohjelma`. No cycle position exists,
    so nothing is proposed; that would be inventing a plan.
+
+**The glyph appears once.** The week block used to carry one too, which put four
+human figures on one screen and diluted the hero's. In the hero the glyph does real
+work — a wordless preview of what you are about to train — while in the week block
+it restated a precise numeric list sitting right beside it. The list stayed, and
+grew to five muscle groups now that it has the room.
 
 Below the hero: the week strip, restyled as support. The hero owns the first
 screen and the week is meant to be scrolled to — trying to fit both above the fold

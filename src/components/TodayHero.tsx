@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from './BodyPlan'
 import { db } from '../db'
 import { fi } from '../i18n'
-import { duration, fullDate, localDay } from '../lib/format'
+import { duration, localDay, shortDate, weekdayName } from '../lib/format'
 import { listMovements } from '../lib/movements'
 import { currentRotation } from '../lib/rotation'
 import {
@@ -46,7 +46,9 @@ export function TodayHero({
   const greeting = (
     <>
       <p className="hero-greeting">{fi.greeting(Date.now(), profile.name)}</p>
-      <p className="hero-date t-data">{fullDate(Date.now())}</p>
+      <p className="hero-date t-data">
+        {weekdayName(Date.now())} {new Date().getDate()}.{new Date().getMonth() + 1}.
+      </p>
     </>
   )
 
@@ -127,29 +129,41 @@ export function TodayHero({
     .filter(Boolean)
     .join(' · ')
 
+  // The group is dropped when the routine name already carries it: "5×5 · 2/2"
+  // beside "5×5 B" says the same thing twice.
+  const group = data.current.group
+  const meta = [
+    next.name.startsWith(group) ? null : group,
+    `${data.current.position}/${data.current.length}`,
+    `${next.items.length} ${fi.movementWord(next.items.length)}`,
+    fi.setCount(totalSets),
+  ].filter(Boolean) as string[]
+
+  const lastDoneAt =
+    data.current.entries.find((e) => e.template.id === next.id)?.lastDoneAt ?? null
+
   return (
     <section className="hero">
       {greeting}
 
-      {/* What it works, before what it is called. */}
+      {/* The tag comes first so the figure belongs to it: SEURAAVA → what it
+          works → what it is called. */}
+      <span className="hero-tag t-data">{fi.nextUp}</span>
+
       <BodyPlan
         className="hero-figure"
         primary={primary}
         secondary={secondary}
         view="both"
         size={104}
-        title={fi.muscleBalance}
+        title={fi.worksThese}
       />
 
-      <span className="hero-tag t-data">{fi.nextUp}</span>
       <h2 className="hero-name">{next.name}</h2>
-      <p className="hero-meta t-data">
-        {data.current.group} · {data.current.position}/{data.current.length}
-      </p>
-      <p className="hero-meta t-data">
-        {next.items.length} {fi.movementWord(next.items.length)} ·{' '}
-        {fi.setCount(totalSets)}
-      </p>
+      <p className="hero-meta t-data">{meta.join(' · ')}</p>
+      {lastDoneAt !== null && (
+        <p className="hero-meta t-data">{fi.lastDone(shortDate(lastDoneAt))}</p>
+      )}
       <p className="hero-movements t-data">{movementNames}</p>
 
       <button

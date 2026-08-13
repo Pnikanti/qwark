@@ -148,6 +148,7 @@ export const fi = {
   openTodayHint: 'Ohjelmat ja tyhjä treeni',
   startEmptyHint: 'Valitse liikkeet matkan varrella',
   muscleBalance: 'Lihasryhmät tällä viikolla',
+  worksThese: 'Kuormittaa näitä lihasryhmiä',
   nextInCycle: '· seuraava',
   lastDone: (when: string) => `Tehty ${when}`,
   noHistory: 'Ei vielä treenejä',

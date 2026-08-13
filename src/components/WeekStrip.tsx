@@ -1,4 +1,3 @@
-import { BodyPlan } from './BodyPlan'
 import { fi, muscleFi } from '../i18n'
 import type { Week } from '../lib/week'
 
@@ -20,7 +19,7 @@ export function WeekStrip({
 }) {
   const busiest = Object.entries(week.setsPerMuscle)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
+    .slice(0, 5)
 
   return (
     <section className="week">
@@ -80,15 +79,8 @@ export function WeekStrip({
 
       {week.workedMuscles.length > 0 && (
         <div className="week-balance">
-          <BodyPlan
-            primary={week.workedMuscles}
-            view="both"
-            size={96}
-            intensity={week.muscleLoad}
-            title={fi.muscleBalance}
-          />
+          <span className="t-data">{fi.muscleBalance}</span>
           <div className="week-balance-list">
-            <span className="t-data">{fi.muscleBalance}</span>
             {busiest.map(([muscle, sets]) => (
               <span className="t-data week-muscle" key={muscle}>
                 {muscleFi(muscle)}
