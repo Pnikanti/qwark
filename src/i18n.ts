@@ -174,7 +174,8 @@ export const fi = {
   needReps: 'Syötä toistot',
   warmup: 'Lämmittely',
   working: 'Työsarja',
-  previous: 'Edellinen',
+  /** "Last time", not "Edellinen" — that read equally as the previous *set*. */
+  previous: 'Viime kerralla',
   applySuggestion: 'Täytä',
   suggestRepeat: (kg: string) => `Sama kuin edellinen ${kg} kg`,
   suggestRamp: (kg: string, reps: number | null) =>
@@ -221,6 +222,15 @@ export const fi = {
   decimal: 'Desimaalipilkku',
   deleteDigit: 'Poista numero',
   estimatedMax: 'Arvioitu maksimi',
+
+  history: 'Historia',
+  openHistory: 'Näytä koko historia',
+  /** Column label in the history summary — the sheet is already titled Historia. */
+  sessionsLabel: 'Treenejä',
+  trend: 'Raskain sarja treeneittäin',
+  noMovementHistory: 'Tätä liikettä ei ole vielä kirjattu.',
+  noMovementHistoryHint: 'Merkitse ensimmäinen sarja tehdyksi, niin se näkyy täällä.',
+  retroLogged: 'jälkikäteen kirjattu',
 
 } as const
 

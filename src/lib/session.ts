@@ -111,6 +111,81 @@ export async function previousPerformance(
   return null
 }
 
+/** One past session's worth of a single movement, ready to render. */
+export interface HistoryEntry {
+  sessionId: string
+  at: number
+  /** Snapshot from the session, so a renamed routine does not relabel history. */
+  templateName: string | null
+  retro: boolean
+  warmups: LoggedSet[]
+  working: LoggedSet[]
+  /** Heaviest working set, or the longest one when nothing carried a load. */
+  topSet: LoggedSet | null
+  volumeKg: number
+  note: string | null
+}
+
+/**
+ * Every finished session that logged this movement, newest first.
+ *
+ * A session can hold the same movement twice — the type comments on `uid` say so
+ * — and the two entries are one day's work on that lift, so they merge into a
+ * single row rather than reading as two separate sessions.
+ */
+export async function movementHistory(
+  movementId: string,
+  excludeSessionId?: string,
+): Promise<HistoryEntry[]> {
+  const sessions = await db.sessions.orderBy('startedAt').reverse().toArray()
+  const out: HistoryEntry[] = []
+
+  for (const s of sessions) {
+    if (s.id === excludeSessionId || s.finishedAt === null) continue
+    const entries = s.movements.filter((m) => m.movementId === movementId)
+    if (!entries.length) continue
+
+    const sets = entries.flatMap((m) => m.sets.filter((x) => x.done))
+    if (!sets.length) continue
+    const working = sets.filter((x) => x.kind === 'working')
+
+    out.push({
+      sessionId: s.id,
+      at: s.startedAt,
+      templateName: s.templateName,
+      retro: Boolean(s.retro),
+      warmups: sets.filter((x) => x.kind === 'warmup'),
+      working,
+      topSet: heaviest(working),
+      volumeKg: Math.round(
+        working.reduce((n, x) => n + (x.kg && x.reps ? x.kg * x.reps : 0), 0),
+      ),
+      note: entries.map((m) => m.note).find((n) => n) ?? null,
+    })
+  }
+  return out
+}
+
+/**
+ * The set that best represents a session's effort: heaviest load, reps breaking
+ * the tie. Bodyweight work has no load to rank, so it falls back to reps —
+ * otherwise a movement you have never loaded would report no best set at all.
+ */
+function heaviest(sets: LoggedSet[]): LoggedSet | null {
+  if (!sets.length) return null
+  const loaded = sets.filter((s) => s.kg !== null && s.kg > 0)
+  const pool = loaded.length ? loaded : sets
+  return pool.reduce((best, s) =>
+    (s.kg ?? 0) !== (best.kg ?? 0)
+      ? (s.kg ?? 0) > (best.kg ?? 0)
+        ? s
+        : best
+      : (s.reps ?? 0) > (best.reps ?? 0)
+        ? s
+        : best,
+  )
+}
+
 /**
  * Last session's warmup ramp for this movement. The counterpart to
  * previousPerformance, which deliberately looks at working sets only.

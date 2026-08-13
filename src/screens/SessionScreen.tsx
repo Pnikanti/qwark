@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { NumberPad, type PadMode } from '../components/NumberPad'
+import { MovementHistory } from '../components/MovementHistory'
 import { MovementPicker } from '../components/MovementPicker'
 import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
@@ -62,6 +63,8 @@ export function SessionScreen({
   const movements = useLiveQuery(listMovements, [])
   const [pad, setPad] = useState<PadTarget | null>(null)
   const [picking, setPicking] = useState(false)
+  /** Movement id whose history is open, as a sheet over the session. */
+  const [historyOf, setHistoryOf] = useState<string | null>(null)
   const [restUntil, setRestUntil] = useState<number | null>(null)
   const [now, setNow] = useState(Date.now())
   /** null follows the workout; a uid means the user parked on that movement.
@@ -223,6 +226,7 @@ export function SessionScreen({
                 }
                 showLogged={showLogged}
                 onToggleLogged={() => setShowLogged((v) => !v)}
+                onOpenHistory={() => setHistoryOf(m.movementId)}
                 handleProps={reorder.handleProps(mIndex)}
                 onOpenPad={(sIndex, mode) => setPad({ mIndex, sIndex, mode })}
                 onCommit={() => commit(mIndex)}
@@ -296,6 +300,14 @@ export function SessionScreen({
             patchSet(id, pad.mIndex, pad.sIndex, pad.mode === 'kg' ? { kg: v } : { reps: v })
           }
           onClose={() => setPad(null)}
+        />
+      )}
+
+      {historyOf && (
+        <MovementHistory
+          movementId={historyOf}
+          name={name(historyOf)}
+          onClose={() => setHistoryOf(null)}
         />
       )}
 
@@ -428,6 +440,7 @@ function ActiveMovement({
   onApply,
   showLogged,
   onToggleLogged,
+  onOpenHistory,
   handleProps,
   onOpenPad,
   onCommit,
@@ -444,6 +457,7 @@ function ActiveMovement({
   onApply: (kg: number, reps: number | null) => void
   showLogged: boolean
   onToggleLogged: () => void
+  onOpenHistory: () => void
   handleProps: GripProps
   onNote: (note: string) => void
   onOpenPad: (sIndex: number, mode: PadMode) => void
@@ -480,9 +494,16 @@ function ActiveMovement({
         </button>
       </div>
 
-      <p className="prev t-data">
-        {previousLine ? `${fi.previous}: ${previousLine}` : fi.noPrevious}
-      </p>
+      {/* The last session, and the way into every session before it. This line
+          used to be inert text labelled "Edellinen" — ambiguous between the
+          previous set and the previous session, and a dead end either way. */}
+      <button className="prev" onClick={onOpenHistory}>
+        <span className="grow">
+          <span className="prev-tag t-data">{fi.previous}</span>
+          <span className="t-data">{previousLine || fi.noPrevious}</span>
+        </span>
+        <span className="t-data prev-more">{fi.history} ▸</span>
+      </button>
 
 
       {/* Logged work is history. Warmups read on their own line so they are

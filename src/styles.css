@@ -789,9 +789,42 @@ select {
   min-width: 0;
 }
 
+/* Last session's line, and the way into every session before it. A button, but
+   a quiet one: the tick owns the accent on this screen. */
 .prev {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
   margin: 0 0 12px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
   color: var(--ink-mid);
+  text-align: left;
+}
+
+.prev .grow {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prev-tag {
+  display: inline-block;
+  min-width: 82px;
+  color: var(--ink-dim);
+}
+
+.prev-more {
+  flex: none;
+  color: var(--ink-dim);
+}
+
+.prev:active .prev-more {
+  color: var(--ink);
 }
 
 /* Set rows: a fixed four-column grid so numbers align down the column, which
@@ -2145,4 +2178,97 @@ select {
 
 .append-link:hover {
   color: var(--ink);
+}
+
+/* --- movement history --------------------------------------------------- */
+
+.hist-name {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+/* Three answers on one line: how many sessions, the best set, how long ago. */
+.hist-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 26px;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hist-summary div {
+  min-width: 0;
+}
+
+.hist-summary dt {
+  color: var(--ink-dim);
+}
+
+.hist-summary dd {
+  margin: 2px 0 0;
+  font-variation-settings: 'wdth' 87;
+  font-weight: 600;
+}
+
+.trend-block {
+  margin-bottom: 18px;
+}
+
+.trend-label {
+  margin: 0 0 8px;
+  color: var(--ink-dim);
+}
+
+.trend {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 58px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.trend-bar {
+  flex: 1;
+  min-width: 4px;
+  min-height: 2px;
+  background: var(--line-strong);
+}
+
+/* The session you are in the middle of comparing against. */
+.trend-bar.now {
+  background: var(--accent);
+}
+
+/* The scale is cropped to the loaded range, so it has to be stated. */
+.trend-scale {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0 0;
+  color: var(--ink-dim);
+}
+
+/* The gutter is restated because .scroller pulls itself out of the sheet's
+   padding, so the hairline runs full-bleed while the text stays in the column. */
+.hist {
+  padding: 12px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.hist-head {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 6px;
+  color: var(--ink-dim);
+}
+
+.hist-head .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.hist-note {
+  margin: 6px 0 0;
+  color: var(--ink-mid);
+  font-style: italic;
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { MovementHistory } from '../components/MovementHistory'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import {
   deleteMovement,
@@ -18,6 +19,7 @@ const LEVEL = ['beginner', 'intermediate', 'expert']
 export function MovementEdit({ id, onBack }: { id: string; onBack: () => void }) {
   const movement = useLiveQuery(() => getMovement(id), [id])
   const [musclesOpen, setMusclesOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
   if (!movement) return <p className="blank note">{fi.loading}</p>
 
   const set = <K extends keyof Patchable>(field: K, value: Patchable[K]) =>
@@ -45,6 +47,24 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
           title={movement.primaryMuscles.map(muscleFi).join(', ')}
         />
       </div>
+
+      {/* What you have actually lifted outranks how the movement is described,
+          so it sits above the editing fields. */}
+      <button className="entry" onClick={() => setHistoryOpen(true)}>
+        <span className="grow">
+          <span className="t-name">{fi.history}</span>
+          <span className="t-data">{fi.openHistory}</span>
+        </span>
+        <span className="t-data">→</span>
+      </button>
+
+      {historyOpen && (
+        <MovementHistory
+          movementId={movement.id}
+          name={movement.nameFi ?? movement.nameEn}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
 
       <div className="panel">
         <Field movement={movement} field="nameFi" label={fi.nameFi}>

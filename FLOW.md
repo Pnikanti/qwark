@@ -178,7 +178,7 @@ JALKAPÄIVÄ                              ⋯
 ✓  Jalkakyykky          100 kg × 8, 8, 8
 ────────────────────────────────────────
 ▏ Romanialainen maastaveto           1/3
-▏ Edellinen: 90 kg × 8, 8, 7
+▏ VIIME KERRALLA 90 kg × 8, 8, 7  HISTORIA ▸
 ▏
 ▏ LÄMMITTELY  50 × 8 · 70 × 5
 ▏ TYÖSARJAT   92,5 kg × 8          Muokkaa
@@ -206,6 +206,7 @@ JALKAPÄIVÄ                              ⋯
 - **One movement expanded**, marked with a cobalt rule. It **auto-advances** on the transition into completion — once only, so returning to add an extra set does not bounce you away again. Any collapsed line is one tap away, so an occupied machine costs nothing.
 - **Work beyond the plan is additive, never inflated.** A sixth set on a five-set movement reads `5/5 +1` and the input says `Lisäsarja 1`. `6/5` would state one confusing thing where there are two true ones, and it made the session rail exceed its own track.
 - **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh, blank one.
+- **Last time is a door, not a dead end.** The line under the movement name reads `Viime kerralla`, because `Edellinen` was ambiguous between the previous *set* and the previous *session*. It is a button: tapping it opens that movement's full history, so the one-line summary is no longer the only history the app will show you.
 - **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
 - **A set needs both values before it can be logged**, so nothing is ever recorded that you did not affirm. `0` counts — it means bodyweight.
 - **The set kind is a mode, not a chip.** A segmented control — one object with two halves — rather than two chips that read as filters, and the chosen mode **recolours the whole input**: plate yellow for a warmup, cobalt for a working set. A warmup genuinely is a different kind of record, excluded from volume, from 1RM and from progression, so it should not look like a working set with a toggle flipped.
@@ -222,6 +223,41 @@ JALKAPÄIVÄ                              ⋯
 - Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
 
 Result: 14 controls on one screen, against 23 for the row grid and 92 before the accordion.
+
+### Liikkeen historia
+
+Reached from `Viime kerralla` mid-set, and from the movement's page in the library. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
+
+```
+HISTORIA                          SULJE
+Penkkipunnerrus
+
+TREENEJÄ   ENNÄTYS      VIIME KERRALLA
+6          75 kg × 5    3 vrk
+
+RASKAIN SARJA TREENEITTÄIN
+        ▄▄  ██  ██          ██
+▄▄  ▄▄  ██  ██  ██  ▁▁  ▄▄  ██   ← newest, cobalt
+────────────────────────────────────────
+67,5 KG                          75 KG
+────────────────────────────────────────
+MA 10.8.2026                  YLÄKROPPA
+TYÖSARJAT   70 kg × 5, 5, 5, 5, 5
+LÄMMITTELY  40 × 8 · 55 × 5
+VOLYYMI     1 750 kg
+otetta leveämmäksi
+────────────────────────────────────────
+PE 7.8.2026                       5×5 A
+TYÖSARJAT   67,5 kg × 5, 5, 5, 5, 5
+…
+```
+
+- **A sheet, not a screen.** It is opened mid-set; pushing a route would discard which movement the accordion has open — including one you deliberately parked on to add extra sets.
+- **The scale is cropped and says so.** Loads cluster in a narrow band, so a zero baseline draws every session the same height. The chart plots the heaviest working set per session and prints its own range underneath, which is what keeps a cropped axis honest.
+- **Three bars minimum.** Two sessions are a pair of numbers; the ledger states that better than a chart could.
+- **Warmups stay on their own line**, as they do in the session view, so the working sets remain comparable at a glance.
+- Same movement logged twice in one session merges into one row — that is one day's work on that lift, not two sessions.
+- Notes carry through, in the words you wrote them in.
 
 ### Liikkeen valinta
 
