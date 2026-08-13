@@ -90,15 +90,26 @@ one screen and nine controls, with everything else one tap away in the day view.
 Tapping any past or present day in the strip opens it. Future days are not
 tappable — there is nothing to show and nothing to plan.
 
-- Sessions logged that day, each opening its summary.
-- **Any day that has happened can take a workout** — you might have forgotten to
-  log one. Only the future cannot. The verb differs: today you `Aloita` a workout,
-  a past day you `Lisää` one, under a `Lisää treeni` heading.
-- The empty start is the **same full-bleed row element as the routines**, with a
-  `+` in the slot their glyph occupies. Starting from nothing is one of the
-  options, not a control floating above them.
-- A past day with nothing logged says so. Today does not — the start rows follow,
-  so the message would only be a gap above them.
+- Sessions logged that day, each opening its summary. A day with nothing logged
+  says so.
+- **One action**: `Aloita treeni` today, `Lisää treeni` for a day already past. It
+  opens the picker. Any day that has happened can take a workout — you might have
+  forgotten to log one — and only the future cannot.
+
+The routine list used to live here, which made this view answer two questions at
+once: what happened, and what to do. It is four controls now.
+
+### Valitse treeni
+
+Choosing what to train, reached from the day's action or from `Muut ▸` in the
+action bar. Routine groups in cycle order, each with its last-done date and the
+cycle marker; **starting from nothing sits at the foot of the list**, the same
+place the movement picker keeps `Luo oma liike` — you came here to choose, so the
+escape hatch goes last.
+
+Back returns to wherever the picker was opened from, not always to the day view:
+reaching it from the action bar and landing on a day screen you never saw would be
+its own kind of wrong.
 
 A session added to a past day is dated to noon on that day, well clear of midnight
 and DST boundaries, and is flagged `retro`. It **claims no duration**: it was never

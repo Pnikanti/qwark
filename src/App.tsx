@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
-import { startSession } from './lib/session'
 import { Toaster, toast } from './lib/toast'
 import { fi } from './i18n'
 import { BulkRename } from './screens/BulkRename'
@@ -12,11 +11,14 @@ import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
 import { ActionBar } from './components/ActionBar'
 import { Day } from './screens/Day'
+import { RoutinePicker } from './screens/RoutinePicker'
 import { Today } from './screens/Today'
 
 type View =
   | { name: 'today' }
   | { name: 'day'; at: number }
+  /** `from` is where Back returns to — the picker is reachable from both. */
+  | { name: 'pick'; at: number; from: 'today' | 'day' }
   | { name: 'session'; id: string }
   | { name: 'summary'; id: string }
   | { name: 'library' }
@@ -62,8 +64,16 @@ export function App() {
             <Day
               at={view.at}
               onBack={today}
-              onOpenSession={(id) => setView({ name: 'session', id })}
+              onAddWorkout={() => setView({ name: 'pick', at: view.at, from: 'day' })}
               onOpenSummary={(id) => setView({ name: 'summary', id })}
+            />
+          ) : view.name === 'pick' ? (
+            <RoutinePicker
+              at={view.at}
+              onBack={() =>
+                view.from === 'day' ? setView({ name: 'day', at: view.at }) : today()
+              }
+              onStarted={(id) => setView({ name: 'session', id })}
             />
           ) : view.name === 'session' ? (
             <SessionScreen
@@ -100,10 +110,8 @@ export function App() {
               {view.name === 'today' && (
                 <ActionBar
                   onResume={(id) => setView({ name: 'session', id })}
-                  onStart={async (template) =>
-                    setView({ name: 'session', id: await startSession(template) })
-                  }
-                  onOpenDay={() => setView({ name: 'day', at: Date.now() })}
+                  onStarted={(id) => setView({ name: 'session', id })}
+                  onPick={() => setView({ name: 'pick', at: Date.now(), from: 'today' })}
                 />
               )}
               <nav className="tabs">

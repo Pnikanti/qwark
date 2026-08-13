@@ -2,8 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { fi } from '../i18n'
 import { relativeAge, weekdayName } from '../lib/format'
 import { currentRotation } from '../lib/rotation'
-import { activeSession, completedSetCount } from '../lib/session'
-import type { Template } from '../types'
+import { activeSession, completedSetCount, startSession } from '../lib/session'
 
 /**
  * The one action, at the thumb.
@@ -17,12 +16,13 @@ import type { Template } from '../types'
  */
 export function ActionBar({
   onResume,
-  onStart,
-  onOpenDay,
+  onStarted,
+  onPick,
 }: {
   onResume: (id: string) => void
-  onStart: (template: Template) => void
-  onOpenDay: () => void
+  onStarted: (sessionId: string) => void
+  /** Opens the routine picker for today. */
+  onPick: () => void
 }) {
   const data = useLiveQuery(async () => ({
     active: await activeSession(),
@@ -59,7 +59,7 @@ export function ActionBar({
     return (
       <div className="actionbar">
         <div className="actionbar-row">
-          <button className="btn solid grow" onClick={onOpenDay}>
+          <button className="btn solid grow" onClick={onPick}>
             {fi.chooseRoutine}
           </button>
         </div>
@@ -74,10 +74,13 @@ export function ActionBar({
         {data.current.length}
       </span>
       <div className="actionbar-row">
-        <button className="btn solid grow" onClick={() => onStart(data.current!.next)}>
+        <button
+          className="btn solid grow"
+          onClick={async () => onStarted(await startSession(data.current!.next))}
+        >
           {fi.start}
         </button>
-        <button className="btn" onClick={onOpenDay}>
+        <button className="btn" onClick={onPick}>
           {fi.otherRoutines} ▸
         </button>
       </div>
