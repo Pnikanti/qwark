@@ -1687,3 +1687,109 @@ select {
   text-transform: uppercase;
   color: var(--accent);
 }
+
+/* --- the week ------------------------------------------------------------ */
+
+.week {
+  padding: 14px var(--gutter) 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.week-head {
+  margin-bottom: 12px;
+}
+
+.week-title {
+  font-size: 1.02rem;
+  margin-bottom: 3px;
+}
+
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 7px 2px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+}
+
+.week-day.trained {
+  border-color: var(--line);
+  background: var(--raise);
+}
+
+/* Today is outlined, not filled — it is a position, not an achievement. */
+.week-day.today {
+  border-color: var(--accent);
+}
+
+.week-day.future {
+  opacity: 0.4;
+}
+
+.week-weekday {
+  letter-spacing: 0.06em;
+}
+
+.week-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.week-dot.empty {
+  width: 5px;
+  height: 5px;
+  background: var(--line-strong);
+}
+
+.week-label {
+  width: 100%;
+  min-height: 0.85em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 0.56rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-dim);
+}
+
+.week-balance {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.week-balance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.week-muscle {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ink-mid);
+}
+
+.week-muscle-sets {
+  color: var(--ink-dim);
+}

@@ -54,6 +54,21 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 
 ### Tänään
 
+**Opening the app shows the week you have actually had.** A Monday-first strip of
+seven days with the sessions logged on each, the week's totals, and how the work
+landed across muscle groups — measured in **working sets per muscle**, not kilos,
+because volume in kg scores every bodyweight movement as zero and sets per muscle
+per week is the measure lifters actually use. Primary muscles count fully,
+secondary at half. Tapping a trained day opens that session.
+
+It is retrospective by design. Today is *outlined* rather than filled — it is a
+position, not an achievement — and there are no missed-day marks, because a plan
+you deviate from is the shame mechanic `SPEC.md` rules out. The week shows what
+happened, which you can act on without being scolded.
+
+Below the week: the `Seuraava` card, then the routine list. Verified to stay above
+the fold on a 375×667 screen, so the primary action is never pushed out of reach.
+
 States, in priority order:
 
 1. **Session in progress** — persistent banner `Jatka treeniä · aloitettu 14 h sitten`, with discard. Overrides all other states.

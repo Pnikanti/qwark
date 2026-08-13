@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { WeekStrip } from '../components/WeekStrip'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
 import {
@@ -12,6 +13,7 @@ import {
 } from '../lib/session'
 import { relativeAge, shortDate } from '../lib/format'
 import { currentRotation, rotations, type Rotation } from '../lib/rotation'
+import { weekOf } from '../lib/week'
 import type { EffectiveMovement, Template } from '../types'
 
 interface Props {
@@ -34,6 +36,7 @@ export function Today({
     movements: await listMovements(),
     rotations: await rotations(),
     current: await currentRotation(),
+    week: await weekOf(Date.now()),
   }))
 
   if (!data) return <p className="blank note">{fi.loading}</p>
@@ -90,6 +93,9 @@ export function Today({
           <span className="t-data">→</span>
         </button>
       )}
+
+      {/* Opening the app shows the week you have actually had. */}
+      <WeekStrip week={data.week} onOpenSession={onOpenSummary} />
 
       {/* Derived from which routine you finished last — no calendar involved. */}
       {data.current && !data.active && (

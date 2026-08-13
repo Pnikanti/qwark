@@ -80,6 +80,7 @@ export function BodyPlan({
   view = 'auto',
   title,
   className = '',
+  intensity,
 }: {
   primary: string[]
   secondary?: string[]
@@ -87,6 +88,8 @@ export function BodyPlan({
   view?: BodyView
   title?: string
   className?: string
+  /** muscle → 0..1. When given, regions are shaded by it instead of binary. */
+  intensity?: Record<string, number>
 }) {
   const primarySet = new Set(primary)
   const secondarySet = new Set(secondary.filter((m) => !primarySet.has(m)))
@@ -100,6 +103,19 @@ export function BodyPlan({
 
   const draw = (regions: Region[], dx: number) =>
     regions.flatMap((region, ri) => {
+      if (intensity && region.muscle !== null && !(region.muscle in intensity)) {
+        return region.shapes.map((s, si) => (
+          <rect
+            key={`${dx}-${ri}-${si}`}
+            className="bp-idle"
+            x={s.x + dx}
+            y={s.y}
+            width={s.w}
+            height={s.h}
+            rx={Math.min(1.2, s.w / 3)}
+          />
+        ))
+      }
       const tone =
         region.muscle === null
           ? 'idle'
@@ -108,10 +124,16 @@ export function BodyPlan({
             : secondarySet.has(region.muscle)
               ? 'secondary'
               : 'idle'
+      // With an intensity map the fill carries a magnitude, so a region with a
+      // little work reads differently from one with a lot. Floored well above
+      // zero, or light weeks would be invisible.
+      const shade =
+        intensity && region.muscle !== null ? intensity[region.muscle] : undefined
       return region.shapes.map((s, si) => (
         <rect
           key={`${dx}-${ri}-${si}`}
-          className={`bp-${tone}`}
+          className={shade === undefined ? `bp-${tone}` : 'bp-primary'}
+          opacity={shade === undefined ? undefined : 0.22 + 0.78 * shade}
           x={s.x + dx}
           y={s.y}
           width={s.w}

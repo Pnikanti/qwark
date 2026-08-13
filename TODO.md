@@ -115,7 +115,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 ## 5 — Progress
 
 - [ ] Per-movement history: estimated 1RM, volume, best sets
-- [ ] Weekly volume per muscle group (reuse `BodyPlan`)
+- [x] Weekly sets per muscle group on the week view, shading `BodyPlan` by intensity
 - [ ] Body weight + measurements, smoothed
 - [x] Rule-based progression targets for next session
 
@@ -162,3 +162,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-12 — A set now requires both a load and reps before it can be logged; `0` is accepted and means bodyweight, `null` means never entered. This resolved `null` doing two jobs. Two bugs fixed alongside: `snapToBar` clamped anything at or below bar weight *up to* bar weight, so a 10 kg dumbbell curl proposed 20 kg — added `snapLoad`, which uses the bar grid only above the bar; and a movement added mid-session got no pre-fill at all, unlike a templated one. Bodyweight progression now holds at 0 rather than proposing a weight belt.
 - 2026-08-12 — Loads are no longer pre-filled. The inference is shown below the input in a dashed box with a `Täytä` action, so applying it is a deliberate tap: within a session it repeats what was last lifted, across sessions it is the progression proposal with its reasoning. Target reps still fill, because they come from the chosen routine rather than from history. Costs one extra tap per set and means nothing is recorded that the user did not affirm.
 - 2026-08-13 — Week planning answered with a rotation rather than a calendar. Routine groups are already ordered cycles and sessions already store `templateId`, so the next routine is derived from history with no new schema — `src/lib/rotation.ts`. Tänään gains a `Seuraava` card naming the routine and its cycle position. Required an explicit `order` on templates: `db.templates.toArray()` returns key order, so `Ylä / Ala` had been listing Alakroppa before Yläkroppa. Weekday scheduling deliberately skipped: mostly empty cells for opportunistic training, and a grid of missed days is the shame mechanic the spec rules out.
+- 2026-08-13 — Tänään now opens on the week: Monday-first seven-day strip, sessions per day, week totals, and muscle balance shading the `BodyPlan` glyph by working sets per muscle (primary full, secondary half). Sets rather than kg, because kg scores bodyweight work as zero. `BodyPlan` gained an optional `intensity` map — the reuse promised when it was built. Retrospective only: today is outlined not filled, and nothing marks a missed day. Checked the `Seuraava` card still clears the fold at 375×667.
