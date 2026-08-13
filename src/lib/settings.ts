@@ -12,6 +12,7 @@ export const DEFAULT_GYM: GymSettings = {
 export const KNOWN_DISCS = [25, 20, 15, 10, 5, 2.5, 2, 1.25, 1, 0.5] as const
 
 const KEY = 'gym'
+const PROFILE_KEY = 'profile'
 
 export async function readGym(): Promise<GymSettings> {
   const stored = (await db.meta.get(KEY))?.value as GymSettings | undefined
@@ -31,4 +32,21 @@ export async function writeGym(settings: GymSettings): Promise<void> {
 /** Returns the defaults until the read resolves, so callers never see undefined. */
 export function useGym(): GymSettings {
   return useLiveQuery(readGym, [], DEFAULT_GYM)
+}
+
+export interface Profile {
+  name: string
+}
+
+export async function readProfile(): Promise<Profile> {
+  const stored = (await db.meta.get(PROFILE_KEY))?.value as Profile | undefined
+  return { name: stored?.name?.trim() ?? '' }
+}
+
+export async function writeProfile(profile: Profile): Promise<void> {
+  await db.meta.put({ key: PROFILE_KEY, value: { name: profile.name.trim() } })
+}
+
+export function useProfile(): Profile {
+  return useLiveQuery(readProfile, [], { name: '' })
 }

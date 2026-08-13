@@ -1854,3 +1854,37 @@ select {
 .entry.start-row:hover .start-mark {
   color: var(--accent);
 }
+
+/* --- greeting ------------------------------------------------------------ */
+
+.greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+.greeting .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.greeting .t-title,
+.greeting .t-data {
+  display: block;
+}
+
+.greeting .t-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.greeting:hover .t-title {
+  color: var(--accent);
+}

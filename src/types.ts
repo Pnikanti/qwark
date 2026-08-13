@@ -135,6 +135,12 @@ export interface Session {
    * the app in a different timezone.
    */
   startedLocalDay: string
+  /**
+   * Logged after the fact, for a day that had already passed. Such a session has
+   * no measured duration. Explicit rather than derived: a session that runs past
+   * midnight also starts on a different day from the one it finishes on.
+   */
+  retro?: boolean
   finishedAt: number | null
   movements: SessionMovement[]
 }

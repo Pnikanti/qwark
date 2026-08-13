@@ -1,5 +1,5 @@
 import { db } from '../db'
-import { localDay } from './format'
+import { localDay, noonOn } from './format'
 import type {
   LoggedSet,
   Session,
@@ -91,13 +91,20 @@ export async function previousNote(movementId: string): Promise<string | null> {
  * Copies the plan out of the template. Later edits to the template cannot
  * rewrite this session — that separation is required, not incidental.
  */
-export async function startSession(template?: Template): Promise<string> {
+export async function startSession(
+  template?: Template,
+  /** The day to log against. Defaults to now; a past day logs retroactively. */
+  at: number = Date.now(),
+): Promise<string> {
+  const retro = localDay(at) !== localDay(Date.now())
+  const startedAt = retro ? noonOn(at) : Date.now()
   const session: Session = {
     id: id(),
     templateId: template?.id ?? null,
     templateName: template?.name ?? null,
-    startedAt: Date.now(),
-    startedLocalDay: localDay(Date.now()),
+    startedAt,
+    startedLocalDay: localDay(startedAt),
+    retro,
     finishedAt: null,
     movements: (template?.items ?? []).map((item) => ({
       uid: id(),
@@ -312,7 +319,8 @@ export async function finishSession(
   session.movements = session.movements
     .map((m) => ({ ...m, sets: m.sets.filter((s) => s.done) }))
     .filter((m) => m.sets.length > 0)
-  session.finishedAt = Date.now()
+  // A session logged after the fact was never timed, so it claims no duration.
+  session.finishedAt = session.retro ? session.startedAt : Date.now()
   await db.sessions.put(session)
   return { kept: true }
 }

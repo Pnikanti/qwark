@@ -18,11 +18,14 @@ export function RoutineList({
   movements,
   meta,
   onStart,
+  startLabel,
 }: {
   templates: Template[]
   movements: Map<string, EffectiveMovement>
   meta: (templateId: string) => RoutineMeta
   onStart: (template: Template) => void
+  /** "Aloita" today, "Lisää" for a day already past. */
+  startLabel: string
 }) {
   const name = (id: string) =>
     movements.get(id)?.nameFi ?? movements.get(id)?.nameEn ?? id
@@ -46,6 +49,7 @@ export function RoutineList({
                   movements={movements}
                   label={t.items.map((i) => name(i.movementId)).join(' · ')}
                   meta={meta(t.id)}
+                  startLabel={startLabel}
                   onStart={() => onStart(t)}
                 />
               </li>
@@ -62,12 +66,14 @@ function RoutineRow({
   movements,
   label,
   meta,
+  startLabel,
   onStart,
 }: {
   template: Template
   movements: Map<string, EffectiveMovement>
   label: string
   meta: RoutineMeta
+  startLabel: string
   onStart: () => void
 }) {
   const primary = template.items.flatMap(
@@ -94,7 +100,7 @@ function RoutineRow({
         <span className="t-data routine-detail">{label}</span>
       </span>
       <button className="btn" onClick={onStart}>
-        {fi.start}
+        {startLabel}
       </button>
     </div>
   )

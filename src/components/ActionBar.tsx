@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { fi } from '../i18n'
-import { relativeAge } from '../lib/format'
+import { relativeAge, weekdayName } from '../lib/format'
 import { currentRotation } from '../lib/rotation'
 import { activeSession, completedSetCount } from '../lib/session'
 import type { Template } from '../types'
@@ -37,8 +37,12 @@ export function ActionBar({
       <div className="actionbar resuming">
         <span className="t-data actionbar-label">
           {data.active.templateName ?? fi.startEmpty} ·{' '}
-          {fi.startedAgo(relativeAge(data.active.startedAt))} ·{' '}
-          {fi.setCount(completedSetCount(data.active))}
+          {/* "aloitettu 3 vrk sitten" would be nonsense for a session you are
+              logging after the fact; name the day instead. */}
+          {data.active.retro
+            ? fi.loggingFor(weekdayName(data.active.startedAt))
+            : fi.startedAgo(relativeAge(data.active.startedAt))}{' '}
+          · {fi.setCount(completedSetCount(data.active))}
         </span>
         <div className="actionbar-row">
           <button className="btn solid grow" onClick={() => onResume(data.active!.id)}>

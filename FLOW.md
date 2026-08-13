@@ -54,7 +54,10 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 
 ### Tänään
 
-**The landing screen is the week, and nothing else.** A Monday-first strip of
+**The landing screen greets you, then shows the week.** `Hei, Patrick` — the name
+comes from Asetukset, and without one the heading stays `Tänään`. The greeting is
+itself the way into today's detail, so the largest thing on screen is a target
+rather than a label. A Monday-first strip of
 seven days with the sessions logged on each, the week's totals, and how the work
 landed across muscle groups — measured in **working sets per muscle**, not kilos,
 because volume in kg scores every bodyweight movement as zero and sets per muscle
@@ -88,13 +91,20 @@ Tapping any past or present day in the strip opens it. Future days are not
 tappable — there is nothing to show and nothing to plan.
 
 - Sessions logged that day, each opening its summary.
-- **Only today offers a start**: `Aloita tyhjä treeni` and the routine list. A
-  past day is a record, not somewhere you can retroactively train.
-- `Aloita tyhjä treeni` is the **same full-bleed row element as the routines**,
-  with a `+` in the slot their glyph occupies. Starting from nothing is one of the
+- **Any day that has happened can take a workout** — you might have forgotten to
+  log one. Only the future cannot. The verb differs: today you `Aloita` a workout,
+  a past day you `Lisää` one, under a `Lisää treeni` heading.
+- The empty start is the **same full-bleed row element as the routines**, with a
+  `+` in the slot their glyph occupies. Starting from nothing is one of the
   options, not a control floating above them.
 - A past day with nothing logged says so. Today does not — the start rows follow,
   so the message would only be a gap above them.
+
+A session added to a past day is dated to noon on that day, well clear of midnight
+and DST boundaries, and is flagged `retro`. It **claims no duration**: it was never
+timed, so the summary shows `–` rather than a fabricated figure. The flag is stored
+rather than derived from dates, because a real session can start before midnight
+and finish after it.
 
 Sessions record `startedLocalDay` alongside the absolute `startedAt`. Bucketing an
 instant by the *viewing* device's midnight moves a late-evening session to another

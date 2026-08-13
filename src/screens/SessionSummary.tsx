@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
 import { fi } from '../i18n'
-import { duration, setsLine, shortDate } from '../lib/format'
+import { durationOrDash, setsLine, shortDate } from '../lib/format'
 import { listMovements } from '../lib/movements'
 import { toast } from '../lib/toast'
 import {
@@ -47,7 +47,7 @@ export function SessionSummary({ id, onDone }: { id: string; onDone: () => void 
       <div className="panel figures">
         <Figure
           label={fi.duration}
-          value={duration((session.finishedAt ?? Date.now()) - session.startedAt)}
+          value={durationOrDash((session.finishedAt ?? Date.now()) - session.startedAt)}
         />
         <Figure label={fi.completedSets} value={String(completedSetCount(session))} />
         <Figure label={fi.volume} value={`${volumeKg(session).toLocaleString('fi')} kg`} />

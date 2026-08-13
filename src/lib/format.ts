@@ -5,6 +5,11 @@ export function clock(seconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
 
+/** An unmeasured duration reads as a dash, not as "0 min". */
+export function durationOrDash(ms: number): string {
+  return ms <= 0 ? '–' : duration(ms)
+}
+
 export function duration(ms: number): string {
   const minutes = Math.round(ms / 60000)
   if (minutes < 60) return `${minutes} min`
@@ -23,6 +28,27 @@ export function relativeAge(at: number): string {
 }
 
 const WEEKDAYS = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la']
+
+const LONG_WEEKDAYS = [
+  'sunnuntai',
+  'maanantai',
+  'tiistai',
+  'keskiviikko',
+  'torstai',
+  'perjantai',
+  'lauantai',
+]
+
+export function weekdayName(at: number): string {
+  return LONG_WEEKDAYS[new Date(at).getDay()]
+}
+
+/** Noon, so a stored instant sits well clear of midnight and DST boundaries. */
+export function noonOn(at: number): number {
+  const d = new Date(at)
+  d.setHours(12, 0, 0, 0)
+  return d.getTime()
+}
 
 /** "to 13.8.2026" — the weekday and date, spelled the Finnish way. */
 export function fullDate(at: number): string {

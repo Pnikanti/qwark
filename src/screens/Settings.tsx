@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
 import { fi } from '../i18n'
 import { stepKg } from '../lib/plates'
-import { DEFAULT_GYM, KNOWN_DISCS, readGym, writeGym } from '../lib/settings'
+import {
+  DEFAULT_GYM,
+  KNOWN_DISCS,
+  readGym,
+  readProfile,
+  writeGym,
+  writeProfile,
+} from '../lib/settings'
 import { toast } from '../lib/toast'
 import type { GymSettings } from '../types'
 
@@ -12,12 +19,14 @@ import type { GymSettings } from '../types'
  */
 export function Settings({ onBack }: { onBack: () => void }) {
   const [gym, setGym] = useState<GymSettings | null>(null)
+  const [name, setName] = useState<string | null>(null)
 
   useEffect(() => {
     readGym().then(setGym)
+    readProfile().then((p) => setName(p.name))
   }, [])
 
-  if (!gym) return <p className="blank note">{fi.loading}</p>
+  if (!gym || name === null) return <p className="blank note">{fi.loading}</p>
 
   const save = async (next: GymSettings) => {
     setGym(next)
@@ -44,6 +53,23 @@ export function Settings({ onBack }: { onBack: () => void }) {
         <h1 className="t-title">{fi.settings}</h1>
         <span className="t-data">{fi.gymSetup}</span>
       </header>
+
+      <div className="panel">
+        <div className="field">
+          <div className="field-label">
+            <span className="t-data">{fi.yourName}</span>
+          </div>
+          <input
+            value={name}
+            placeholder={fi.yourName}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={() => writeProfile({ name })}
+          />
+          <p className="note" style={{ marginTop: 8 }}>
+            {fi.yourNameHint}
+          </p>
+        </div>
+      </div>
 
       <div className="panel">
         <div className="field">

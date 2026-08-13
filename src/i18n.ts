@@ -97,6 +97,13 @@ export const fi = {
 
   /* --- training --- */
   today: 'Tänään',
+  greeting: (name: string) => `Hei, ${name}`,
+  yourName: 'Nimi',
+  yourNameHint: 'Näkyy etusivun tervehdyksessä.',
+  addWorkout: 'Lisää treeni',
+  add: 'Lisää',
+  addEmpty: 'Lisää tyhjä treeni',
+  loggingFor: (day: string) => `Kirjataan: ${day}`,
   startEmpty: 'Aloita tyhjä treeni',
   start: 'Aloita',
   resume: 'Jatka treeniä',

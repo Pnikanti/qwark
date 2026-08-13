@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { WeekStrip } from '../components/WeekStrip'
 import { fi } from '../i18n'
 import { fullDate } from '../lib/format'
+import { useProfile } from '../lib/settings'
 import { listMovements } from '../lib/movements'
 import { weekOf } from '../lib/week'
 
@@ -22,6 +23,8 @@ export function Today({
   onOpenLibrary: () => void
   onOpenSettings: () => void
 }) {
+  const profile = useProfile()
+
   const data = useLiveQuery(async () => ({
     week: await weekOf(Date.now()),
     // Loaded so the week glyph can resolve muscles; never rendered as a list.
@@ -33,8 +36,17 @@ export function Today({
   return (
     <>
       <header className="masthead">
-        <h1 className="t-title">{fi.today}</h1>
-        <span className="t-data">{fullDate(Date.now())}</span>
+        {/* The greeting is also the way into today's detail, so the largest
+            thing on screen is a target rather than a label. */}
+        <button className="greeting" onClick={() => onOpenDay(Date.now())}>
+          <span className="grow">
+            <span className="t-title">
+              {profile.name ? fi.greeting(profile.name) : fi.today}
+            </span>
+            <span className="t-data">{fullDate(Date.now())}</span>
+          </span>
+          <span className="t-data">→</span>
+        </button>
         <div className="masthead-actions">
           <button className="btn" onClick={onOpenLibrary}>
             {fi.library}

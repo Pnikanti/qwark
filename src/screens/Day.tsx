@@ -2,21 +2,11 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { RoutineList } from '../components/RoutineList'
 import { db } from '../db'
 import { fi } from '../i18n'
-import { duration, localDay, shortDate } from '../lib/format'
+import { durationOrDash, localDay, shortDate, weekdayName } from '../lib/format'
 import { listMovements } from '../lib/movements'
 import { currentRotation, rotations } from '../lib/rotation'
 import { completedSetCount, listTemplates, startSession, volumeKg } from '../lib/session'
 import type { Template } from '../types'
-
-const LONG_WEEKDAYS = [
-  'sunnuntai',
-  'maanantai',
-  'tiistai',
-  'keskiviikko',
-  'torstai',
-  'perjantai',
-  'lauantai',
-]
 
 /**
  * One day: what was trained, and — when it is today — what there is to start.
@@ -37,6 +27,7 @@ export function Day({
 }) {
   const day = localDay(at)
   const isToday = day === localDay(Date.now())
+  const isFuture = day > localDay(Date.now())
 
   const data = useLiveQuery(
     async () => ({
@@ -59,8 +50,9 @@ export function Day({
   )
   const nextId = data.current?.next.id ?? null
 
+  // Sessions added to a past day are dated to that day, not to now.
   const begin = async (template?: Template) =>
-    onOpenSession(await startSession(template))
+    onOpenSession(await startSession(template, at))
 
   const date = new Date(at)
 
@@ -70,9 +62,7 @@ export function Day({
         <button className="back" onClick={onBack}>
           ← {fi.back}
         </button>
-        <h1 className="t-title">
-          {isToday ? fi.today : LONG_WEEKDAYS[date.getDay()]}
-        </h1>
+        <h1 className="t-title">{isToday ? fi.today : weekdayName(at)}</h1>
         <span className="t-data">
           {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
           {data.sessions.length > 0 && ` · ${fi.sessionCount(data.sessions.length)}`}
@@ -97,7 +87,8 @@ export function Day({
                   <span className="t-data">
                     {shortDate(s.startedAt)} · {fi.setCount(completedSetCount(s))}
                     {volumeKg(s) > 0 && ` · ${volumeKg(s).toLocaleString('fi')} kg`}
-                    {s.finishedAt && ` · ${duration(s.finishedAt - s.startedAt)}`}
+                    {s.finishedAt !== null &&
+                      ` · ${durationOrDash(s.finishedAt - s.startedAt)}`}
                   </span>
                 </span>
                 <span className="t-data">→</span>
@@ -107,9 +98,11 @@ export function Day({
         </ul>
       )}
 
-      {/* Only today can be started. A past day is a record. */}
-      {isToday && (
+      {/* Any day that has happened can take a workout — you might have forgotten
+          to log one. Only the future cannot. */}
+      {!isFuture && (
         <>
+          {!isToday && <h2 className="section-mark">{fi.addWorkout}</h2>}
           {/* Same row element as the routines below it — starting from nothing
               is one of the options, not a control floating above them. */}
           <button className="entry start-row" onClick={() => begin()}>
@@ -117,7 +110,9 @@ export function Day({
               +
             </span>
             <span className="grow">
-              <span className="t-name">{fi.startEmpty}</span>
+              <span className="t-name">
+                {isToday ? fi.startEmpty : fi.addEmpty}
+              </span>
               <span className="t-data">{fi.startEmptyHint}</span>
             </span>
             <span className="t-data">→</span>
@@ -130,6 +125,7 @@ export function Day({
               isNext: id === nextId,
             })}
             onStart={begin}
+            startLabel={isToday ? fi.start : fi.add}
           />
         </>
       )}
