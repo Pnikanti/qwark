@@ -11,6 +11,7 @@ import {
   volumeKg,
 } from '../lib/session'
 import { relativeAge, shortDate } from '../lib/format'
+import { currentRotation, rotations, type Rotation } from '../lib/rotation'
 import type { EffectiveMovement, Template } from '../types'
 
 interface Props {
@@ -31,6 +32,8 @@ export function Today({
     templates: await listTemplates(),
     history: await finishedSessions(3),
     movements: await listMovements(),
+    rotations: await rotations(),
+    current: await currentRotation(),
   }))
 
   if (!data) return <p className="blank note">{fi.loading}</p>
@@ -42,10 +45,17 @@ export function Today({
   const begin = async (template?: Template) => onOpenSession(await startSession(template))
 
   const groups = new Map<string, Template[]>()
-  for (const t of data.templates) {
+  for (const t of [...data.templates].sort((a, b) => a.order - b.order)) {
     const key = t.group ?? fi.yourRoutines
     groups.set(key, [...(groups.get(key) ?? []), t])
   }
+  // When each routine was last done is useful everywhere. The "next" marker is
+  // not: every group has one, and marking them all makes the accent mean nothing,
+  // so only the cycle you are part-way through carries it.
+  const lastDone = new Map(
+    data.rotations.flatMap((r) => r.entries.map((e) => [e.template.id, e.lastDoneAt])),
+  )
+  const nextId = data.current?.next.id ?? null
 
   return (
     <>
@@ -81,10 +91,20 @@ export function Today({
         </button>
       )}
 
+      {/* Derived from which routine you finished last — no calendar involved. */}
+      {data.current && !data.active && (
+        <NextUp rotation={data.current} onStart={() => begin(data.current!.next)} />
+      )}
+
       <div className="panel">
         {firstRun && <p className="note">{fi.firstRunHint}</p>}
         <div className="row-actions">
-          <button className="btn solid btn-tall" onClick={() => begin()}>
+          {/* Secondary once the cycle has an answer — two primary buttons in a
+              row would compete for the same tap. */}
+          <button
+            className={`btn btn-tall${data.current && !data.active ? '' : ' solid'}`}
+            onClick={() => begin()}
+          >
             {fi.startEmpty}
           </button>
         </div>
@@ -100,6 +120,10 @@ export function Today({
                   template={t}
                   movements={byId}
                   label={t.items.map((i) => name(i.movementId)).join(' · ')}
+                  entry={{
+                    lastDoneAt: lastDone.get(t.id) ?? null,
+                    isNext: t.id === nextId,
+                  }}
                   onStart={() => begin(t)}
                 />
               </li>
@@ -133,15 +157,43 @@ export function Today({
   )
 }
 
+/** What to train next, and where that sits in the cycle. */
+function NextUp({
+  rotation,
+  onStart,
+}: {
+  rotation: Rotation
+  onStart: () => void
+}) {
+  return (
+    <div className="nextup">
+      <span className="t-data nextup-tag">{fi.nextUp}</span>
+      <div className="nextup-row">
+        <span className="grow">
+          <span className="t-name">{rotation.next.name}</span>
+          <span className="t-data">
+            {rotation.group} · {rotation.position}/{rotation.length}
+          </span>
+        </span>
+        <button className="btn solid" onClick={onStart}>
+          {fi.start}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function RoutineRow({
   template,
   movements,
   label,
+  entry,
   onStart,
 }: {
   template: Template
   movements: Map<string, EffectiveMovement>
   label: string
+  entry: { lastDoneAt: number | null; isNext: boolean } | undefined
   onStart: () => void
 }) {
   const primary = template.items.flatMap(
@@ -153,13 +205,17 @@ function RoutineRow({
   const totalSets = template.items.reduce((n, i) => n + i.sets, 0)
 
   return (
-    <div className="entry routine">
+    <div className={`entry routine${entry?.isNext ? ' is-next' : ''}`}>
       <BodyPlan primary={primary} secondary={secondary} size={42} view="both" />
       <span className="grow">
-        <span className="t-name">{template.name}</span>
+        <span className="t-name">
+          {template.name}
+          {entry?.isNext && <span className="cycle-mark"> {fi.nextInCycle}</span>}
+        </span>
         <span className="t-data">
-          {template.items.length} {fi.movementWord(template.items.length)} ·{' '}
-          {fi.setCount(totalSets)}
+          {entry?.lastDoneAt
+            ? fi.lastDone(shortDate(entry.lastDoneAt))
+            : `${template.items.length} ${fi.movementWord(template.items.length)} · ${fi.setCount(totalSets)}`}
         </span>
         <span className="t-data routine-detail">{label}</span>
       </span>

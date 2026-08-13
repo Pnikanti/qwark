@@ -105,6 +105,8 @@ export const fi = {
   firstRunHint: 'Valitse ohjelma tai aloita tyhjä treeni. Voit muokata kaikkea matkan varrella.',
   yourRoutines: 'Omat ohjelmat',
   lastSession: 'Viime treeni',
+  nextInCycle: '· seuraava',
+  lastDone: (when: string) => `Tehty ${when}`,
   noHistory: 'Ei vielä treenejä',
   startedAgo: (t: string) => `aloitettu ${t} sitten`,
   setCount: (n: number) => (n === 1 ? '1 sarja' : `${n} sarjaa`),

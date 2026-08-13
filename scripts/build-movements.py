@@ -471,6 +471,9 @@ def main() -> int:
                     "id": t["id"],
                     "group": t["group"],
                     "name": t["name"],
+                    # Position in the group's cycle. Table order is the sequence;
+                    # id order is alphabetical and would scramble it.
+                    "order": i,
                     "items": [
                         {
                             "movementId": mid,
@@ -481,7 +484,7 @@ def main() -> int:
                         for mid, sets, reps, rest in t["items"]
                     ],
                 }
-                for t in TEMPLATES
+                for i, t in enumerate(TEMPLATES)
             ],
             ensure_ascii=False,
             indent=2,

@@ -79,13 +79,14 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [ ] Set types: superset, circuit, drop, AMRAP, time-based
 - [ ] Template editor — routines can be created from a session but not yet edited
 - [ ] Routine preview before starting
-- [ ] Multi-week programme structure and scheduling
+- [x] Rotation: next routine derived from the cycle and session history
+- [>] Weekday scheduling — deliberately not built; the rotation answers "what next" without a calendar
 - [ ] Substitution picker ("no barbell available")
 
 ## 4 — Session logging
 
 - [x] Tänään: in-progress resume banner, first run, and has-history states
-- [ ] Tänään: training-day / rest-day states (needs programme scheduling first)
+- [x] Tänään: `Seuraava` card from the rotation, replacing the planned training-day / rest-day states
 - [x] Start session from routine or ad hoc
 - [x] Live view: previous performance inline, set-by-set entry
 - [x] Accordion: one movement expanded, rest folded to a line, auto-advance on completion
@@ -160,3 +161,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-12 — Sets beyond the plan now read as `5/5 +2` with the input labelled `Lisäsarja n`, instead of `6/5` / `Sarja 6 / 5`. Fixed two bugs this exposed: the session progress rail reached 120% and visually overflowed its track, and auto-advance re-fired on every extra set, bouncing you off a movement you had deliberately returned to. Ad hoc movements with no plan show a bare count rather than a false `3/3`.
 - 2026-08-12 — A set now requires both a load and reps before it can be logged; `0` is accepted and means bodyweight, `null` means never entered. This resolved `null` doing two jobs. Two bugs fixed alongside: `snapToBar` clamped anything at or below bar weight *up to* bar weight, so a 10 kg dumbbell curl proposed 20 kg — added `snapLoad`, which uses the bar grid only above the bar; and a movement added mid-session got no pre-fill at all, unlike a templated one. Bodyweight progression now holds at 0 rather than proposing a weight belt.
 - 2026-08-12 — Loads are no longer pre-filled. The inference is shown below the input in a dashed box with a `Täytä` action, so applying it is a deliberate tap: within a session it repeats what was last lifted, across sessions it is the progression proposal with its reasoning. Target reps still fill, because they come from the chosen routine rather than from history. Costs one extra tap per set and means nothing is recorded that the user did not affirm.
+- 2026-08-13 — Week planning answered with a rotation rather than a calendar. Routine groups are already ordered cycles and sessions already store `templateId`, so the next routine is derived from history with no new schema — `src/lib/rotation.ts`. Tänään gains a `Seuraava` card naming the routine and its cycle position. Required an explicit `order` on templates: `db.templates.toArray()` returns key order, so `Ylä / Ala` had been listing Alakroppa before Yläkroppa. Weekday scheduling deliberately skipped: mostly empty cells for opportunistic training, and a grid of missed days is the shame mechanic the spec rules out.

@@ -1638,3 +1638,52 @@ select {
   opacity: 0.35;
   cursor: not-allowed;
 }
+
+/* --- next in the cycle --------------------------------------------------- */
+
+.nextup {
+  padding: 12px var(--gutter) 14px;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--accent-wash);
+}
+
+.nextup-tag {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--accent);
+}
+
+.nextup-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nextup-row .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.nextup-row .t-name,
+.nextup-row .t-data {
+  display: block;
+}
+
+.nextup-row .t-name {
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.entry.routine.is-next .t-name {
+  color: var(--accent);
+}
+
+.cycle-mark {
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}

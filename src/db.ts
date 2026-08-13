@@ -12,7 +12,7 @@ import type {
 /** Bump when data/movements.seed.json changes so the library re-seeds. */
 const MOVEMENT_SEED_VERSION = 1
 /** Bump when data/templates.seed.json changes. */
-const TEMPLATE_SEED_VERSION = 1
+const TEMPLATE_SEED_VERSION = 2
 
 interface Meta {
   key: string

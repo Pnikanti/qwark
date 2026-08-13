@@ -57,10 +57,13 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 States, in priority order:
 
 1. **Session in progress** — persistent banner `Jatka treeniä · aloitettu 14 h sitten`, with discard. Overrides all other states.
-2. **First run** — template picker: 3–4 seeded routines, plus `Aloita tyhjä treeni`.
-3. **Training day** — today's session card, primary `Aloita`. Routine list below.
-4. **Rest day** — `Ei treeniä tänään`, next session preview, last session recap, `Aloita tyhjä treeni` available.
-5. **No program, has history** — last session recap and routine list.
+2. **First run** — the routine list, plus `Aloita tyhjä treeni`. Nothing is marked next: with no history there is no cycle position, and inventing one would be inventing a plan.
+3. **Mid-cycle** — a `Seuraava` card names the next routine and its position (`Työntö / Veto / Jalat · 2/3`), with the primary `Aloita`. The same routine is marked in the list below; `Aloita tyhjä treeni` steps back to secondary.
+4. **No routine history** — routine list with each entry's last-done date.
+
+**What to train next is derived, not scheduled.** A routine group is an ordered cycle and finished sessions already record which routine they came from, so the next one falls out of history with nothing extra stored. There is deliberately no weekday calendar: it would be mostly empty cells for anyone training on the days they actually reach the gym, and a grid of missed Mondays is the shame mechanic `SPEC.md` rules out.
+
+Training a routine from a different group moves the pointer to that group — the cycle follows what you did, not what a plan expected. Ad hoc sessions leave it untouched. Only the cycle you are part-way through carries the marker; every group has a "next", and marking them all would make the accent mean nothing.
 
 Sync state is visible here: a quiet indicator when writes are still queued.
 

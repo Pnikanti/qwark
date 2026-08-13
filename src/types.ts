@@ -79,6 +79,8 @@ export interface Template {
   id: string
   /** Groups routines into a programme on Tänään, e.g. "Työntö / Veto / Jalat". */
   group: string | null
+  /** Position in the group's cycle. Key order is alphabetical and loses it. */
+  order: number
   name: string
   items: TemplateItem[]
   /** Seeded routines are replaceable on re-seed; saved ones are the user's. */

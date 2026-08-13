@@ -324,6 +324,7 @@ export async function saveAsTemplate(sessionId: string, name: string): Promise<v
   await db.templates.put({
     id: id(),
     group: null,
+    order: Date.now(),
     name: name.trim() || 'Uusi ohjelma',
     seeded: false,
     createdAt: Date.now(),
