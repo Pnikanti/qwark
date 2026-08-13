@@ -183,7 +183,7 @@ export function SessionScreen({
           />
         </div>
         <div className="masthead-actions end">
-          <button className="btn solid" onClick={finish}>
+          <button className="btn" onClick={finish}>
             {fi.finish}
           </button>
         </div>
@@ -260,7 +260,7 @@ export function SessionScreen({
           the foot of the expanded movement. Always rendered — an empty ad hoc
           session would otherwise have no way to add anything. */}
       <div className="append">
-        <button className="btn btn-tall" onClick={() => setPicking(true)}>
+        <button className="append-link" onClick={() => setPicking(true)}>
           + {fi.addMovement}
         </button>
       </div>
@@ -275,7 +275,9 @@ export function SessionScreen({
             </button>
           </div>
           {/* Rest is dead time, so it is where the plan belongs. */}
-          <span className="t-data rest-next">{nextUpLine(session, active, name)}</span>
+          <span className="t-data rest-next">
+            {nextUpLine(session, active, chosenIndex >= 0, name)}
+          </span>
         </div>
       )}
 
@@ -322,14 +324,21 @@ function draftLabelFor(m: SessionMovement, draft: LoggedSet): string {
   return fi.setOf(done + 1, total ?? 0)
 }
 
-/** What happens when the timer runs out: the next set here, or the next movement. */
+/**
+ * What happens when the timer runs out: the next set here, or the next movement.
+ *
+ * A movement whose plan is met still names its draft when the user has parked on
+ * it — they are adding extra sets deliberately, and telling them to move on while
+ * the screen asks for another set contradicts the screen.
+ */
 function nextUpLine(
   session: Session,
   active: number,
+  parked: boolean,
   name: (id: string) => string,
 ): string {
   const current = session.movements[active]
-  if (current && !movementComplete(current)) {
+  if (current && (parked || !movementComplete(current))) {
     const draft = draftSet(current)
     if (draft) {
       const load = draft.kg ? ` · ${kgLabel(draft.kg)} kg × ${draft.reps ?? '–'}` : ''

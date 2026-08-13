@@ -1249,11 +1249,10 @@ select {
   justify-content: flex-end;
 }
 
-/* Ending the session should be unmistakable but not a full-width target under a
-   sticky header you may brush while scrolling. */
+/* Ending the session takes its natural width: it happens once, sits under a
+   sticky header you may brush while scrolling, and should not outweigh the tick. */
 .masthead-actions.end .btn {
   flex: 0 0 auto;
-  min-width: 168px;
 }
 
 .append {
@@ -2061,5 +2060,89 @@ select {
 }
 
 .upcoming:hover .t-data {
+  color: var(--ink);
+}
+
+/* --- attention budget ----------------------------------------------------- */
+
+/*
+ * Accent had drifted onto fifteen elements at once: the active movement's border,
+ * the mode switch, a label, both inputs, an offer, a countdown, the rail, and the
+ * button that ends the session — which was the only solid-filled one on screen,
+ * at 1.5× the area of the tick. The action performed eighteen times a session was
+ * the quietest control on it.
+ *
+ * Accent now belongs to four things only: the progress rail, the suggestion while
+ * it is the next tap, the rest countdown, and the tick once it can be pressed.
+ */
+
+/* The tick is the primary action. Outlined while it cannot be pressed, solid the
+   moment it can — so accent appears exactly when there is something to press. */
+.tick.big {
+  border-color: var(--line-strong);
+  background: transparent;
+  color: var(--ink-dim);
+  font-size: 1.5rem;
+}
+
+.tick.big:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.tick.big:disabled {
+  opacity: 1;
+}
+
+.draft-row {
+  grid-template-columns: 1fr 1fr 86px;
+}
+
+/* Warmup keeps its own colour, since a warmup is a different kind of record. */
+.draft.is-warmup .tick.big:not(:disabled) {
+  border-color: var(--mark);
+  background: var(--mark);
+  color: var(--ground);
+}
+
+/* Mode is state, not an action: the default reads as neutral-selected, and only
+   the unusual mode spends a colour. */
+.segment[aria-pressed='true'] {
+  background: var(--line-strong);
+  color: var(--ink);
+}
+
+.draft-label {
+  color: var(--ink-mid);
+}
+
+/* The expanded movement is already obviously expanded; its rule does not need
+   to compete for the eye. */
+.active {
+  border-left-color: var(--line-strong);
+}
+
+/* Adding a movement is rare, and was a full-width bordered button outweighing
+   the tick. */
+.append {
+  display: flex;
+  justify-content: center;
+}
+
+.append-link {
+  min-height: var(--tap);
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--ink-dim);
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.append-link:hover {
   color: var(--ink);
 }
