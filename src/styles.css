@@ -1083,11 +1083,47 @@ select {
 
 /* --- tab bar ------------------------------------------------------------ */
 
-.tabs {
+.dock {
   position: sticky;
   bottom: 0;
   margin-top: auto;
   z-index: 30;
+  background: var(--ground);
+}
+
+.actionbar {
+  padding: 10px var(--gutter) 11px;
+  border-top: 1px solid var(--line);
+}
+
+.actionbar.resuming {
+  border-top-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.actionbar-label {
+  display: block;
+  margin-bottom: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+.actionbar-row {
+  display: flex;
+  gap: 7px;
+}
+
+.actionbar-row .grow {
+  flex: 1;
+}
+
+.actionbar-row .btn {
+  min-height: var(--tap);
+}
+
+.tabs {
   display: flex;
   background: var(--ground);
   border-top: 1px solid var(--line);

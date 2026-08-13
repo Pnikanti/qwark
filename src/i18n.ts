@@ -102,6 +102,7 @@ export const fi = {
   resume: 'Jatka treeniä',
   discard: 'Hylkää',
   chooseRoutine: 'Valitse ohjelma',
+  otherRoutines: 'Muut',
   firstRunHint: 'Valitse ohjelma tai aloita tyhjä treeni. Voit muokata kaikkea matkan varrella.',
   yourRoutines: 'Omat ohjelmat',
   lastSession: 'Viime treeni',

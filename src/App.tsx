@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
+import { startSession } from './lib/session'
 import { Toaster, toast } from './lib/toast'
 import { fi } from './i18n'
 import { BulkRename } from './screens/BulkRename'
@@ -9,6 +10,7 @@ import { Overrides } from './screens/Overrides'
 import { Settings } from './screens/Settings'
 import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
+import { ActionBar } from './components/ActionBar'
 import { Day } from './screens/Day'
 import { Today } from './screens/Today'
 
@@ -52,7 +54,6 @@ export function App() {
         <>
           {view.name === 'today' ? (
             <Today
-              onOpenSession={(id) => setView({ name: 'session', id })}
               onOpenDay={(at) => setView({ name: 'day', at })}
               onOpenLibrary={library}
               onOpenSettings={() => setView({ name: 'settings' })}
@@ -91,21 +92,33 @@ export function App() {
             <Overrides onBack={library} />
           )}
 
-          {/* Editing is deliberately unreachable while a session is live: a
-              mis-tap mid-set would be costly. */}
+          {/* One dock so the action bar and the tabs stack instead of fighting
+              over `bottom: 0`. Editing is deliberately unreachable while a
+              session is live: a mis-tap mid-set would be costly. */}
           {!inSession && (
-            <nav className="tabs">
-              {ROOTS.map((root) => (
-                <button
-                  key={root}
-                  className="tab"
-                  aria-current={view.name === root ? 'page' : undefined}
-                  onClick={() => (root === 'today' ? today() : library())}
-                >
-                  {root === 'today' ? fi.today : fi.library}
-                </button>
-              ))}
-            </nav>
+            <div className="dock">
+              {view.name === 'today' && (
+                <ActionBar
+                  onResume={(id) => setView({ name: 'session', id })}
+                  onStart={async (template) =>
+                    setView({ name: 'session', id: await startSession(template) })
+                  }
+                  onOpenDay={() => setView({ name: 'day', at: Date.now() })}
+                />
+              )}
+              <nav className="tabs">
+                {ROOTS.map((root) => (
+                  <button
+                    key={root}
+                    className="tab"
+                    aria-current={view.name === root ? 'page' : undefined}
+                    onClick={() => (root === 'today' ? today() : library())}
+                  >
+                    {root === 'today' ? fi.today : fi.library}
+                  </button>
+                ))}
+              </nav>
+            </div>
           )}
         </>
       )}

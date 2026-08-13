@@ -54,26 +54,33 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 
 ### Tänään
 
-**Opening the app shows the week you have actually had.** A Monday-first strip of
+**The landing screen is the week, and nothing else.** A Monday-first strip of
 seven days with the sessions logged on each, the week's totals, and how the work
 landed across muscle groups — measured in **working sets per muscle**, not kilos,
 because volume in kg scores every bodyweight movement as zero and sets per muscle
 per week is the measure lifters actually use. Primary muscles count fully,
-secondary at half. Tapping a trained day opens that session.
+secondary at half.
 
 It is retrospective by design. Today is *outlined* rather than filled — it is a
 position, not an achievement — and there are no missed-day marks, because a plan
-you deviate from is the shame mechanic `SPEC.md` rules out. The week shows what
-happened, which you can act on without being scolded.
+you deviate from is the shame mechanic `SPEC.md` rules out.
 
-Below the week: the `Seuraava` card and one way in — `Tämän päivän treenit`. That
-is the whole landing screen.
+**Starting lives in a bottom action bar**, in the same dock as the tab bar so the
+two stack rather than fighting over `bottom: 0`. It carries one action, at the
+thumb, and has three states:
 
-The routine list used to sit here too. Measured on a 393×852 phone it was 732px,
-**47% of the page**, for seven rows that mostly restated what `Seuraava` already
-said — 1.84 screens of scroll to answer "what now". It moved to the day view.
-The landing is now one screen with nine controls, and `Seuraava` stays above the
-fold so starting today's session is still **one tap**.
+- **Unfinished session** — `Jatka treeniä`, in the accent wash. It outranks
+  everything; nothing else should be started while a session is open.
+- **Mid-cycle** — `Seuraava · Vetopäivä · 2/3`, with `Aloita` and `Muut ▸`.
+- **No routine history** — `Valitse ohjelma`. There is no cycle position yet, so
+  the bar offers a choice rather than a confirmation.
+
+The bar is absent during a session, along with the tabs: a mis-tap mid-set would
+be costly, and leaving a session is done by finishing it.
+
+What used to be here — a `Seuraava` card, a resume banner, a way-in row and seven
+routine rows — measured 1.84 screens and 16 controls to answer "what now". It is
+one screen and nine controls, with everything else one tap away in the day view.
 
 ### Päivä
 
