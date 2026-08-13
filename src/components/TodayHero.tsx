@@ -43,9 +43,16 @@ export function TodayHero({
     }
   })
 
+  // Two lines so both can be large: the greeting, then who it is for.
   const greeting = (
     <>
-      <p className="hero-greeting">{fi.greeting(Date.now(), profile.name)}</p>
+      <h1 className="hero-greeting">
+        <span>
+          {fi.timeGreeting(Date.now())}
+          {profile.name ? ',' : ''}
+        </span>
+        {profile.name && <span>{profile.name}</span>}
+      </h1>
       <p className="hero-date t-data">
         {weekdayName(Date.now())} {new Date().getDate()}.{new Date().getMonth() + 1}.
       </p>
@@ -127,7 +134,9 @@ export function TodayHero({
   const movementNames = next.items
     .map((i) => byId.get(i.movementId)?.nameFi ?? byId.get(i.movementId)?.nameEn ?? '')
     .filter(Boolean)
-    .join(' · ')
+    // Non-breaking space before each separator, so a wrap never starts a line
+    // with a dangling "·".
+    .join('\u00A0· ')
 
   // The group is dropped when the routine name already carries it: "5×5 · 2/2"
   // beside "5×5 B" says the same thing twice.
@@ -148,7 +157,7 @@ export function TodayHero({
 
       {/* The tag comes first so the figure belongs to it: SEURAAVA → what it
           works → what it is called. */}
-      <span className="hero-tag t-data">{fi.nextUp}</span>
+      <span className="hero-tag pill t-data">{fi.yourNextWorkout}</span>
 
       <BodyPlan
         className="hero-figure"

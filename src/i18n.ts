@@ -102,7 +102,7 @@ export const fi = {
    * than "Hyvää aamua" — both are correct, huomenta is what is actually said.
    * Late night gets a plain "Hei": "Hyvää yötä" is a farewell, not a greeting.
    */
-  greeting: (at: number, name: string) => {
+  timeGreeting: (at: number) => {
     const hour = new Date(at).getHours()
     const base =
       hour < 5
@@ -114,7 +114,7 @@ export const fi = {
             : hour < 23
               ? 'Hyvää iltaa'
               : 'Hei'
-    return name ? `${base}, ${name}` : base
+    return base
   },
   yourName: 'Nimi',
   yourNameHint: 'Näkyy etusivun tervehdyksessä.',
@@ -131,7 +131,7 @@ export const fi = {
   discard: 'Hylkää',
   chooseRoutine: 'Valitse ohjelma',
   otherRoutines: 'Muut',
-  otherOptions: 'Muut vaihtoehdot',
+  otherOptions: 'Valitse toinen treeni',
   inProgress: 'Kesken',
   trainedToday: 'Tänään treenattu',
   nextTime: 'Seuraavaksi',
@@ -148,6 +148,8 @@ export const fi = {
   openTodayHint: 'Ohjelmat ja tyhjä treeni',
   startEmptyHint: 'Valitse liikkeet matkan varrella',
   muscleBalance: 'Lihasryhmät tällä viikolla',
+  showMore: 'Näytä',
+  showLess: 'Piilota',
   worksThese: 'Kuormittaa näitä lihasryhmiä',
   nextInCycle: '· seuraava',
   lastDone: (when: string) => `Tehty ${when}`,
@@ -190,6 +192,7 @@ export const fi = {
   notePlaceholder: 'Esim. otetta leveämmäksi',
   rest: 'Palautus',
   nextUp: 'Seuraava',
+  yourNextWorkout: 'Seuraava treenisi',
   allSetsDone: 'Kaikki sarjat tehty',
   markDone: 'Merkitse tehdyksi',
   editLogged: 'Muokkaa',

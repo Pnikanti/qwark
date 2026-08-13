@@ -62,12 +62,13 @@ most important question, *what do I train*, as the smallest text on the screen
 while a retrospective week strip carried the visual weight. This inverts it.
 
 It is **centre-aligned**, the one deliberate exception to the left-aligned ledger
-language, which is what lets it read as a centrepiece rather than a wide row. Four
-states, in priority order:
+language, which is what lets it read as a centrepiece rather than a wide row. The
+greeting is set as **two lines** — the greeting, then who it is for — so both can
+carry real size. Four states, in priority order:
 
 1. **Session underway** — `Kesken`, the routine, sets logged and elapsed, and
    `Jatka treeniä`.
-2. **Mid-cycle** — `Seuraava`, then the body-plan glyph showing *what it works*
+2. **Mid-cycle** — `Seuraava treenisi` as a pill, then the body-plan glyph showing *what it works*
    before naming it, then the routine, its cycle position and size, when it was
    last done, its movements, and `Aloita`. `Muut vaihtoehdot ▸` reaches the picker.
    The group is dropped from the meta line when the routine name already carries
@@ -78,13 +79,20 @@ states, in priority order:
 4. **No history** — the greeting and `Valitse ohjelma`. No cycle position exists,
    so nothing is proposed; that would be inventing a plan.
 
+The tag is a **pill** rather than floating text: floating text read as another line
+of copy, which is how it was getting lost. `Valitse toinen treeni` rather than
+`Muut vaihtoehdot`, because the picker holds routines *and* the blank start.
+
 **The glyph appears once.** The week block used to carry one too, which put four
 human figures on one screen and diluted the hero's. In the hero the glyph does real
 work — a wordless preview of what you are about to train — while in the week block
 it restated a precise numeric list sitting right beside it. The list stayed, and
 grew to five muscle groups now that it has the room.
 
-Below the hero: the week strip, restyled as support. The hero owns the first
+Below the hero: the week strip, restyled as support. **The day strip stays open;
+only the muscle balance folds.** Collapsing the whole week would bury what the
+landing is built around, and scrolling to it is cheaper than a tap — but the
+balance is five rows of analysis, which is genuinely extra. The hero owns the first
 screen and the week is meant to be scrolled to — trying to fit both above the fold
 is what produced the cramped-then-empty layout this replaced. The primary action
 sits at 495px on a 375×667 screen, comfortably above the fold.

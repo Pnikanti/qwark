@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { fi, muscleFi } from '../i18n'
 import type { Week } from '../lib/week'
 
@@ -17,6 +18,10 @@ export function WeekStrip({
   week: Week
   onOpenDay: (at: number) => void
 }) {
+  // The day strip stays; the balance is the genuinely extra part, so only it
+  // folds. Collapsing the whole week would bury what the landing is built around.
+  const [showBalance, setShowBalance] = useState(false)
+
   const busiest = Object.entries(week.setsPerMuscle)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
@@ -79,17 +84,26 @@ export function WeekStrip({
 
       {week.workedMuscles.length > 0 && (
         <div className="week-balance">
-          <span className="t-data">{fi.muscleBalance}</span>
-          <div className="week-balance-list">
-            {busiest.map(([muscle, sets]) => (
-              <span className="t-data week-muscle" key={muscle}>
-                {muscleFi(muscle)}
-                <span className="week-muscle-sets">
-                  {fi.setCount(Math.round(sets))}
+          <button
+            className="week-balance-toggle"
+            aria-expanded={showBalance}
+            onClick={() => setShowBalance((v) => !v)}
+          >
+            <span className="t-data grow">{fi.muscleBalance}</span>
+            <span className="t-data">{showBalance ? fi.showLess : fi.showMore}</span>
+          </button>
+          {showBalance && (
+            <div className="week-balance-list">
+              {busiest.map(([muscle, sets]) => (
+                <span className="t-data week-muscle" key={muscle}>
+                  {muscleFi(muscle)}
+                  <span className="week-muscle-sets">
+                    {fi.setCount(Math.round(sets))}
+                  </span>
                 </span>
-              </span>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>

@@ -1774,14 +1774,36 @@ select {
 }
 
 .week-balance {
-  margin-top: 16px;
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.week-balance-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.week-balance-toggle .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.week-balance-toggle:hover .t-data {
+  color: var(--ink);
 }
 
 .week-balance-list {
   display: flex;
   flex-direction: column;
   gap: 3px;
-  margin-top: 6px;
+  padding-bottom: 4px;
   min-width: 0;
 }
 
@@ -1861,14 +1883,19 @@ select {
   border-bottom: 1px solid var(--line);
 }
 
+/* Two lines, so both the greeting and the name can be large. */
 .hero-greeting {
   margin: 0;
-  font-variation-settings: 'wdth' 112;
+  font-variation-settings: 'wdth' 108;
   font-weight: 800;
-  font-size: 1.42rem;
-  line-height: 1.1;
-  letter-spacing: -0.008em;
+  font-size: 2.05rem;
+  line-height: 1.02;
+  letter-spacing: -0.018em;
   text-transform: uppercase;
+}
+
+.hero-greeting span {
+  display: block;
 }
 
 .hero-date {
@@ -1878,8 +1905,17 @@ select {
 /* The tag belongs to the figure below it, not the date above, so it takes its
    air on top and hugs what it labels. */
 .hero-tag {
-  margin-top: 20px;
+  margin-top: 22px;
   color: var(--accent);
+}
+
+/* A pill reads as a label on the thing beneath it; floating text reads as another
+   line of copy, which is how "Seuraava" was getting lost. */
+.hero-tag.pill {
+  padding: 5px 11px 4px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-wash);
 }
 
 .hero-figure {
