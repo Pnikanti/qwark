@@ -1793,3 +1793,28 @@ select {
 .week-muscle-sets {
   color: var(--ink-dim);
 }
+
+/* --- start rows ---------------------------------------------------------- */
+
+/* Reuses .entry so it lines up exactly with the routine rows: the glyph slot is
+   the width BodyPlan occupies at size 42 with both figures. */
+.start-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 43px;
+  color: var(--ink-dim);
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.entry.start-row .t-name,
+.entry.start-row .t-data {
+  display: block;
+}
+
+.entry.start-row:hover .start-mark {
+  color: var(--accent);
+}

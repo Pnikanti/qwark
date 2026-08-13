@@ -79,10 +79,14 @@ export function Day({
         </span>
       </header>
 
+      {/* Only a past day needs telling. On today the start rows follow, so the
+          message would just be a gap above them. */}
       {data.sessions.length === 0 ? (
-        <div className="blank">
-          <span className="t-data">{fi.noTrainingThatDay}</span>
-        </div>
+        !isToday && (
+          <div className="blank">
+            <span className="t-data">{fi.noTrainingThatDay}</span>
+          </div>
+        )
       ) : (
         <ul className="ledger">
           {data.sessions.map((s) => (
@@ -106,13 +110,18 @@ export function Day({
       {/* Only today can be started. A past day is a record. */}
       {isToday && (
         <>
-          <div className="panel">
-            <div className="row-actions">
-              <button className="btn btn-tall" onClick={() => begin()}>
-                {fi.startEmpty}
-              </button>
-            </div>
-          </div>
+          {/* Same row element as the routines below it — starting from nothing
+              is one of the options, not a control floating above them. */}
+          <button className="entry start-row" onClick={() => begin()}>
+            <span className="start-mark" aria-hidden="true">
+              +
+            </span>
+            <span className="grow">
+              <span className="t-name">{fi.startEmpty}</span>
+              <span className="t-data">{fi.startEmptyHint}</span>
+            </span>
+            <span className="t-data">→</span>
+          </button>
           <RoutineList
             templates={data.templates}
             movements={byId}

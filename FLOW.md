@@ -83,7 +83,11 @@ tappable — there is nothing to show and nothing to plan.
 - Sessions logged that day, each opening its summary.
 - **Only today offers a start**: `Aloita tyhjä treeni` and the routine list. A
   past day is a record, not somewhere you can retroactively train.
-- A day with nothing logged says so plainly.
+- `Aloita tyhjä treeni` is the **same full-bleed row element as the routines**,
+  with a `+` in the slot their glyph occupies. Starting from nothing is one of the
+  options, not a control floating above them.
+- A past day with nothing logged says so. Today does not — the start rows follow,
+  so the message would only be a gap above them.
 
 Sessions record `startedLocalDay` alongside the absolute `startedAt`. Bucketing an
 instant by the *viewing* device's midnight moves a late-evening session to another

@@ -78,21 +78,18 @@ export function Today({
       )}
 
       {/* The way into routines and everything else about today. */}
-      <div className="panel">
-        <div className="row-actions">
-          <button
-            className={`btn btn-tall${data.current && !data.active ? '' : ' solid'}`}
-            onClick={() => onOpenDay(Date.now())}
-          >
-            {fi.openToday}
-          </button>
-        </div>
-        {!data.current && !data.active && (
-          <p className="note" style={{ marginTop: 12 }}>
-            {fi.firstRunHint}
-          </p>
-        )}
-      </div>
+      <button className="entry start-row" onClick={() => onOpenDay(Date.now())}>
+        <span className="start-mark" aria-hidden="true">
+          ▸
+        </span>
+        <span className="grow">
+          <span className="t-name">{fi.openToday}</span>
+          <span className="t-data">
+            {data.current ? fi.openTodayHint : fi.firstRunHint}
+          </span>
+        </span>
+        <span className="t-data">→</span>
+      </button>
     </>
   )
 }
