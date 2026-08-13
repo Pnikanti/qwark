@@ -1977,3 +1977,89 @@ select {
   font-size: 0.86rem;
   color: var(--ink-mid);
 }
+
+/* --- set kind, as a mode rather than a chip ------------------------------ */
+
+/* One object with two halves reads as a switch; two separate chips read as
+   filters, which is how the kind was getting overlooked. */
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin-bottom: 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.segment {
+  min-height: 42px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-dim);
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.segment + .segment {
+  border-left: 1px solid var(--line-strong);
+}
+
+.segment[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Warmup mode recolours the whole input: it is a different kind of record, not a
+   working set with a chip toggled. */
+.draft.is-warmup .segment[aria-pressed='true'] {
+  background: var(--mark);
+  color: var(--ground);
+}
+
+.draft.is-warmup .draft-label {
+  color: var(--mark);
+}
+
+.draft.is-warmup .cell.next {
+  border-color: var(--mark);
+  box-shadow: inset 0 0 0 1px var(--mark);
+}
+
+.draft.is-warmup .tick.big:not(:disabled) {
+  border-color: var(--mark);
+  color: var(--mark);
+}
+
+.draft.is-warmup .suggestion {
+  border-color: var(--mark);
+  color: var(--mark);
+}
+
+/* --- movements still to come --------------------------------------------- */
+
+.upcoming {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 var(--gutter);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+}
+
+.upcoming .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.upcoming:hover .t-data {
+  color: var(--ink);
+}

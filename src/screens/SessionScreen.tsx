@@ -68,6 +68,7 @@ export function SessionScreen({
    *  Tracked by uid, not index, so reordering cannot shift the focus. */
   const [chosenUid, setChosenUid] = useState<string | null>(null)
   const [showLogged, setShowLogged] = useState(false)
+  const [upcomingOpen, setUpcomingOpen] = useState(false)
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000)
@@ -118,9 +119,12 @@ export function SessionScreen({
   const resting = restUntil !== null && restUntil > now
   if (restUntil && restUntil <= now) setRestUntil(null)
 
+  const upcoming = session.movements.length - 1 - active
+
   const focus = (index: number) => {
     setChosenUid(session.movements[index]?.uid ?? null)
     setShowLogged(false)
+    setUpcomingOpen(false)
   }
 
   const commit = async (mIndex: number) => {
@@ -195,6 +199,11 @@ export function SessionScreen({
         {session.movements.map((m, mIndex) => (
           <li
             key={m.uid}
+            /* Movements still to come are folded behind one line. Mid-set they
+               carry almost nothing — six rows of "0/3" — while the ones already
+               behind you carry what you lifted. Hidden entirely while dragging
+               would break reordering, so the list opens for that. */
+            hidden={mIndex > active && !upcomingOpen && !reorder.dragging}
             className={reorder.draggingIndex === mIndex ? 'lifted' : undefined}
             style={
               reorder.dragging
@@ -235,6 +244,17 @@ export function SessionScreen({
           </li>
         ))}
       </ul>
+
+      {upcoming > 0 && !reorder.dragging && (
+        <button
+          className="upcoming"
+          aria-expanded={upcomingOpen}
+          onClick={() => setUpcomingOpen((v) => !v)}
+        >
+          <span className="t-data grow">{fi.remainingMovements(upcoming)}</span>
+          <span className="t-data">{upcomingOpen ? '▲' : '▾'}</span>
+        </button>
+      )}
 
       {/* Appending belongs where the append happens, matching "Lisää sarja" at
           the foot of the expanded movement. Always rendered — an empty ad hoc
@@ -625,13 +645,18 @@ function Draft({
           ? fi.needReps
           : null
 
+  const warmup = set.kind === 'warmup'
+
   return (
-    <div className="draft">
-      <div className="chipset draft-kind">
+    /* The mode colours the whole input, not just the switch. A warmup really is a
+       different kind of record — excluded from volume, from 1RM and from
+       progression — so it should not look like a working set with a chip toggled. */
+    <div className={`draft${warmup ? ' is-warmup' : ''}`}>
+      <div className="segmented" role="group" aria-label={fi.setKind}>
         {(['warmup', 'working'] as SetKind[]).map((kind) => (
           <button
             key={kind}
-            className="toggle"
+            className="segment"
             aria-pressed={set.kind === kind}
             onClick={() => onSetKind(kind)}
           >

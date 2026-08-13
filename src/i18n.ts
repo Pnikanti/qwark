@@ -165,6 +165,7 @@ export const fi = {
   warmupNumber: (n: number) => `Lämmittely ${n}`,
   extraSet: (n: number) => `Lisäsarja ${n}`,
   plusExtra: (n: number) => `+${n}`,
+  setKind: 'Sarjan tyyppi',
   warmupsLabel: 'Lämmittely',
   workingLabel: 'Työsarjat',
   logSet: 'Merkitse tehdyksi',
@@ -183,6 +184,8 @@ export const fi = {
   proposalDeload: (kg: string) => `Ehdotus ${kg} kg — kevennys`,
   noPrevious: 'Ei aiempaa tietoa',
   addSet: 'Lisää sarja',
+  remainingMovements: (n: number) =>
+    n === 1 ? '1 liike jäljellä' : `${n} liikettä jäljellä`,
   addMovement: 'Lisää liike',
   removeSet: 'Poista sarja',
   removeMovement: 'Poista liike',

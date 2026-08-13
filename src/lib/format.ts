@@ -1,3 +1,5 @@
+import { fi } from '../i18n'
+
 /** Finnish-language time and number formatting, in one place. */
 
 export function clock(seconds: number): string {
@@ -88,9 +90,9 @@ export function setsLine(sets: { kg: number | null; reps: number | null }[]): st
   if (!sets.length) return ''
   const reps = sets.map((s) => s.reps ?? '–').join(', ')
 
-  // Bodyweight work carries no external load — an explicit 0 or a blank both
-  // mean the same thing here, and reps alone are the honest record.
-  if (sets.every((s) => s.kg === null || s.kg === 0)) return reps
+  // Bodyweight work carries no external load — an explicit 0 or a blank both mean
+  // the same thing. The unit has to stay, or "Edellinen: 5" says nothing at all.
+  if (sets.every((s) => s.kg === null || s.kg === 0)) return `${reps} ${fi.reps}`
 
   const kg = sets[0].kg
   if (sets.every((s) => s.kg === kg)) return `${kgLabel(kg!)} kg × ${reps}`
