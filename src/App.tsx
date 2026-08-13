@@ -57,7 +57,6 @@ export function App() {
           {view.name === 'today' ? (
             <Today
               onOpenDay={(at) => setView({ name: 'day', at })}
-              onOpenLibrary={library}
               onOpenSettings={() => setView({ name: 'settings' })}
             />
           ) : view.name === 'day' ? (

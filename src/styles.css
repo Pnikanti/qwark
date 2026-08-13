@@ -1857,12 +1857,37 @@ select {
 
 /* --- greeting ------------------------------------------------------------ */
 
+/* Top row carrying only the settings icon. Deliberately not sticky: there is
+   nothing here worth holding on screen while you scroll. */
+.appbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px var(--gutter) 0;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-mid);
+}
+
+.icon-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
 .greeting {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 0;
+  padding: 8px var(--gutter) 16px;
   border: 0;
   background: none;
   color: inherit;

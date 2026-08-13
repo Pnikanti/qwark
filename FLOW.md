@@ -61,8 +61,14 @@ rather than a greeting. `Hyvää huomenta` over `Hyvää aamua`: both are correc
 huomenta is what is actually said. The name comes from Asetukset and is appended
 when set; without one the greeting stands alone.
 
-The greeting is itself the way into today's detail, so the largest thing on screen
-is a target rather than a label. A Monday-first strip of
+The greeting sits in the content rather than in a header bar, and is itself the way
+into today's detail — the largest thing on screen is a target, not a label.
+
+There is no masthead on the landing. `Liikekirjasto` is a tab, so a button for it
+at the top was a duplicate, and once that went a sticky bar holding a single icon
+was not worth 44px. Asetukset is an icon button in a plain top row instead —
+sliders rather than a gear, because three strokes and three knobs stay crisp at
+20px where a gear's teeth turn to mush. A Monday-first strip of
 seven days with the sessions logged on each, the week's totals, and how the work
 landed across muscle groups — measured in **working sets per muscle**, not kilos,
 because volume in kg scores every bodyweight movement as zero and sets per muscle
