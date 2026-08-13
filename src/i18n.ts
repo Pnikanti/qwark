@@ -97,7 +97,25 @@ export const fi = {
 
   /* --- training --- */
   today: 'Tänään',
-  greeting: (name: string) => `Hei, ${name}`,
+  /**
+   * Time-of-day greeting, with the name when one is set. "Hyvää huomenta" rather
+   * than "Hyvää aamua" — both are correct, huomenta is what is actually said.
+   * Late night gets a plain "Hei": "Hyvää yötä" is a farewell, not a greeting.
+   */
+  greeting: (at: number, name: string) => {
+    const hour = new Date(at).getHours()
+    const base =
+      hour < 5
+        ? 'Hei'
+        : hour < 10
+          ? 'Hyvää huomenta'
+          : hour < 17
+            ? 'Hyvää päivää'
+            : hour < 23
+              ? 'Hyvää iltaa'
+              : 'Hei'
+    return name ? `${base}, ${name}` : base
+  },
   yourName: 'Nimi',
   yourNameHint: 'Näkyy etusivun tervehdyksessä.',
   addWorkout: 'Lisää treeni',

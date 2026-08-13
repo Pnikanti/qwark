@@ -54,10 +54,15 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 
 ### Tänään
 
-**The landing screen greets you, then shows the week.** `Hei, Patrick` — the name
-comes from Asetukset, and without one the heading stays `Tänään`. The greeting is
-itself the way into today's detail, so the largest thing on screen is a target
-rather than a label. A Monday-first strip of
+**The landing screen greets you, then shows the week.** The greeting follows the
+clock — `Hyvää huomenta` before 10, `Hyvää päivää` until 17, `Hyvää iltaa` until
+23, and a plain `Hei` through the small hours, since `Hyvää yötä` is a farewell
+rather than a greeting. `Hyvää huomenta` over `Hyvää aamua`: both are correct, but
+huomenta is what is actually said. The name comes from Asetukset and is appended
+when set; without one the greeting stands alone.
+
+The greeting is itself the way into today's detail, so the largest thing on screen
+is a target rather than a label. A Monday-first strip of
 seven days with the sessions logged on each, the week's totals, and how the work
 landed across muscle groups — measured in **working sets per muscle**, not kilos,
 because volume in kg scores every bodyweight movement as zero and sets per muscle

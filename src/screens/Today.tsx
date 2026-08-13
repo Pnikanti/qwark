@@ -40,9 +40,7 @@ export function Today({
             thing on screen is a target rather than a label. */}
         <button className="greeting" onClick={() => onOpenDay(Date.now())}>
           <span className="grow">
-            <span className="t-title">
-              {profile.name ? fi.greeting(profile.name) : fi.today}
-            </span>
+            <span className="t-title">{fi.greeting(Date.now(), profile.name)}</span>
             <span className="t-data">{fullDate(Date.now())}</span>
           </span>
           <span className="t-data">→</span>
