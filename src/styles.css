@@ -1091,38 +1091,6 @@ select {
   background: var(--ground);
 }
 
-.actionbar {
-  padding: 10px var(--gutter) 11px;
-  border-top: 1px solid var(--line);
-}
-
-.actionbar.resuming {
-  border-top-color: var(--accent);
-  background: var(--accent-wash);
-}
-
-.actionbar-label {
-  display: block;
-  margin-bottom: 7px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--accent);
-}
-
-.actionbar-row {
-  display: flex;
-  gap: 7px;
-}
-
-.actionbar-row .grow {
-  flex: 1;
-}
-
-.actionbar-row .btn {
-  min-height: var(--tap);
-}
-
 .tabs {
   display: flex;
   background: var(--ground);
@@ -1882,34 +1850,93 @@ select {
   border-color: var(--line-strong);
 }
 
-.greeting {
+/* --- the hero ------------------------------------------------------------ */
+
+/* Centre-aligned, deliberately: the one exception to the left-aligned ledger
+   language, and what lets it read as a centrepiece rather than a wide row. */
+.hero {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  padding: 22px var(--gutter) 30px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-greeting {
+  margin: 0;
+  font-variation-settings: 'wdth' 112;
+  font-weight: 800;
+  font-size: 1.42rem;
+  line-height: 1.1;
+  letter-spacing: -0.008em;
+  text-transform: uppercase;
+}
+
+.hero-date {
+  margin: 6px 0 0;
+}
+
+.hero-figure {
+  margin: 22px 0 16px;
+}
+
+.hero-tag {
+  color: var(--accent);
+}
+
+.hero-tag.done {
+  color: var(--ink-dim);
+}
+
+.hero-name {
+  margin: 5px 0 8px;
+  font-variation-settings: 'wdth' 100;
+  font-weight: 700;
+  font-size: 1.66rem;
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+}
+
+.hero-meta {
+  margin: 0 0 3px;
+  color: var(--ink-mid);
+}
+
+.hero-movements {
+  margin: 10px 0 0;
+  max-width: 36ch;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+.hero-action {
   width: 100%;
-  padding: 8px var(--gutter) 16px;
+  max-width: 320px;
+  min-height: 54px;
+  margin-top: 22px;
+  font-size: 0.82rem;
+}
+
+.hero-secondary {
+  margin-top: 12px;
+  padding: 8px 4px;
   border: 0;
   background: none;
-  color: inherit;
-  text-align: left;
+  color: var(--ink-dim);
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.greeting .grow {
-  flex: 1;
-  min-width: 0;
+.hero-secondary:hover {
+  color: var(--ink);
 }
 
-.greeting .t-title,
-.greeting .t-data {
-  display: block;
-}
-
-.greeting .t-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.greeting:hover .t-title {
-  color: var(--accent);
+/* The week is support under the hero, so its title steps back. */
+.week-title {
+  font-size: 0.86rem;
+  color: var(--ink-mid);
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
+import { closeStaleSessions } from './lib/session'
 import { Toaster, toast } from './lib/toast'
 import { fi } from './i18n'
 import { BulkRename } from './screens/BulkRename'
@@ -9,7 +10,6 @@ import { Overrides } from './screens/Overrides'
 import { Settings } from './screens/Settings'
 import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
-import { ActionBar } from './components/ActionBar'
 import { Day } from './screens/Day'
 import { RoutinePicker } from './screens/RoutinePicker'
 import { Today } from './screens/Today'
@@ -36,10 +36,10 @@ export function App() {
   const [view, setView] = useState<View>({ name: 'today' })
 
   useEffect(() => {
-    ensureSeeded().then(
-      () => setReady(true),
-      (err) => setError(String(err)),
-    )
+    ensureSeeded()
+      // Sessions nobody came back to are closed at their last logged set.
+      .then(closeStaleSessions)
+      .then(() => setReady(true), (err) => setError(String(err)))
   }, [])
 
   const today = () => setView({ name: 'today' })
@@ -56,7 +56,9 @@ export function App() {
         <>
           {view.name === 'today' ? (
             <Today
+              onOpenSession={(id) => setView({ name: 'session', id })}
               onOpenDay={(at) => setView({ name: 'day', at })}
+              onPick={() => setView({ name: 'pick', at: Date.now(), from: 'today' })}
               onOpenSettings={() => setView({ name: 'settings' })}
             />
           ) : view.name === 'day' ? (
@@ -106,13 +108,6 @@ export function App() {
               session is live: a mis-tap mid-set would be costly. */}
           {!inSession && (
             <div className="dock">
-              {view.name === 'today' && (
-                <ActionBar
-                  onResume={(id) => setView({ name: 'session', id })}
-                  onStarted={(id) => setView({ name: 'session', id })}
-                  onPick={() => setView({ name: 'pick', at: Date.now(), from: 'today' })}
-                />
-              )}
               <nav className="tabs">
                 {ROOTS.map((root) => (
                   <button

@@ -1,39 +1,32 @@
 import { useLiveQuery } from 'dexie-react-hooks'
+import { TodayHero } from '../components/TodayHero'
 import { WeekStrip } from '../components/WeekStrip'
 import { fi } from '../i18n'
-import { fullDate } from '../lib/format'
-import { useProfile } from '../lib/settings'
 import { listMovements } from '../lib/movements'
 import { weekOf } from '../lib/week'
 
 interface Props {
+  onOpenSession: (id: string) => void
   onOpenDay: (at: number) => void
+  onPick: () => void
   onOpenSettings: () => void
 }
 
 /**
- * The landing screen is a greeting and the week, and nothing else.
- *
- * Starting a session lives in the app's bottom action bar; the routine list and
- * the empty start live in the day view. What was here before — a Seuraava card,
- * a resume banner, a way-in row, and seven routine rows — came to 1.84 screens
- * and 16 controls to answer "what now".
+ * Landing: a hero answering "what today could be", with the week below it as
+ * support. The hero owns the first screen; the week is meant to be scrolled to.
+ * Trying to fit both above the fold is what produced the cramped-then-empty
+ * layout this replaces.
  */
-export function Today({ onOpenDay, onOpenSettings }: Props) {
-  const profile = useProfile()
-
+export function Today({ onOpenSession, onOpenDay, onPick, onOpenSettings }: Props) {
   const data = useLiveQuery(async () => ({
     week: await weekOf(Date.now()),
     // Loaded so the week glyph can resolve muscles; never rendered as a list.
     movements: await listMovements(),
   }))
 
-  if (!data) return <p className="blank note">{fi.loading}</p>
-
   return (
     <>
-      {/* No masthead here. Liikekirjasto lives in the tab bar, so repeating it
-          was a duplicate, and a sticky bar holding one icon is not worth 44px. */}
       <div className="appbar">
         <button
           className="icon-btn"
@@ -45,17 +38,9 @@ export function Today({ onOpenDay, onOpenSettings }: Props) {
         </button>
       </div>
 
-      {/* The greeting sits in the content, and is also the way into today's
-          detail — the largest thing on screen is a target, not a label. */}
-      <button className="greeting" onClick={() => onOpenDay(Date.now())}>
-        <span className="grow">
-          <span className="t-title">{fi.greeting(Date.now(), profile.name)}</span>
-          <span className="t-data">{fullDate(Date.now())}</span>
-        </span>
-        <span className="t-data">→</span>
-      </button>
+      <TodayHero onOpenSession={onOpenSession} onPick={onPick} />
 
-      <WeekStrip week={data.week} onOpenDay={onOpenDay} />
+      {data && <WeekStrip week={data.week} onOpenDay={onOpenDay} />}
     </>
   )
 }
@@ -65,12 +50,7 @@ export function Today({ onOpenDay, onOpenSettings }: Props) {
 function SlidersIcon() {
   return (
     <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
-      <g
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-      >
+      <g stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none">
         <path d="M3 5.5h14M3 10h14M3 14.5h14" />
         <circle cx="13" cy="5.5" r="2.1" fill="var(--ground)" />
         <circle cx="7" cy="10" r="2.1" fill="var(--ground)" />

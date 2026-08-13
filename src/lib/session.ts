@@ -21,9 +21,62 @@ const emptySet = (kind: SetKind = 'working'): LoggedSet => ({
 
 /* --- reading ------------------------------------------------------------- */
 
-/** The session still open, if any. Drives the resume banner on Tänään. */
-export function activeSession(): Promise<Session | undefined> {
-  return db.sessions.filter((s) => s.finishedAt === null).first()
+/**
+ * How long an open session stays resumable. Past this, you did not pause — you
+ * finished training and forgot to say so.
+ */
+const STALE_AFTER_MS = 6 * 60 * 60 * 1000
+
+/** When training last actually happened: the newest completed set, else the start. */
+export function lastActivityAt(session: Session): number {
+  let latest = session.startedAt
+  for (const m of session.movements)
+    for (const set of m.sets)
+      if (set.completedAt && set.completedAt > latest) latest = set.completedAt
+  return latest
+}
+
+export function isStale(session: Session, now: number = Date.now()): boolean {
+  return now - lastActivityAt(session) > STALE_AFTER_MS
+}
+
+/**
+ * The open session worth resuming. A stale one is deliberately excluded: offering
+ * to continue a workout from this morning is worse than offering nothing.
+ */
+export async function activeSession(): Promise<Session | undefined> {
+  const open = await db.sessions.filter((s) => s.finishedAt === null).first()
+  return open && !isStale(open) ? open : undefined
+}
+
+/**
+ * Close out sessions nobody is coming back to. Called at startup.
+ *
+ * The logged sets are real training, so they are kept and the session is finished
+ * at its last completed set — which is when training actually stopped, and gives
+ * an honest duration. One with nothing logged is discarded, the same rule
+ * finishSession applies.
+ */
+export async function closeStaleSessions(): Promise<number> {
+  const open = await db.sessions.filter((s) => s.finishedAt === null).toArray()
+  let closed = 0
+  for (const session of open) {
+    if (!isStale(session)) continue
+    const done = session.movements
+      .map((m) => ({ ...m, sets: m.sets.filter((x) => x.done) }))
+      .filter((m) => m.sets.length > 0)
+    if (!done.length) {
+      await db.sessions.delete(session.id)
+      continue
+    }
+    await db.sessions.put({
+      ...session,
+      movements: done,
+      finishedAt: session.retro ? session.startedAt : lastActivityAt(session),
+    })
+    closed++
+  }
+  return closed
 }
 
 export function getSession(sessionId: string): Promise<Session | undefined> {

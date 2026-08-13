@@ -54,47 +54,44 @@ Tap budget: launch → logging in **1 tap**. A set whose numbers are unchanged f
 
 ### Tänään
 
-**The landing screen greets you, then shows the week.** The greeting follows the
-clock — `Hyvää huomenta` before 10, `Hyvää päivää` until 17, `Hyvää iltaa` until
-23, and a plain `Hei` through the small hours, since `Hyvää yötä` is a farewell
-rather than a greeting. `Hyvää huomenta` over `Hyvää aamua`: both are correct, but
-huomenta is what is actually said. The name comes from Asetukset and is appended
-when set; without one the greeting stands alone.
+**The landing is a hero answering "what today could be", with the week below it.**
 
-The greeting sits in the content rather than in a header bar, and is itself the way
-into today's detail — the largest thing on screen is a target, not a label.
+The hero is the centrepiece and combines what used to be three separate things — a
+greeting line, a mid-page card, and a bottom action bar. That arrangement left the
+most important question, *what do I train*, as the smallest text on the screen
+while a retrospective week strip carried the visual weight. This inverts it.
 
-There is no masthead on the landing. `Liikekirjasto` is a tab, so a button for it
-at the top was a duplicate, and once that went a sticky bar holding a single icon
-was not worth 44px. Asetukset is an icon button in a plain top row instead —
-sliders rather than a gear, because three strokes and three knobs stay crisp at
-20px where a gear's teeth turn to mush. A Monday-first strip of
-seven days with the sessions logged on each, the week's totals, and how the work
-landed across muscle groups — measured in **working sets per muscle**, not kilos,
-because volume in kg scores every bodyweight movement as zero and sets per muscle
-per week is the measure lifters actually use. Primary muscles count fully,
-secondary at half.
+It is **centre-aligned**, the one deliberate exception to the left-aligned ledger
+language, which is what lets it read as a centrepiece rather than a wide row. Four
+states, in priority order:
 
-It is retrospective by design. Today is *outlined* rather than filled — it is a
-position, not an achievement — and there are no missed-day marks, because a plan
-you deviate from is the shame mechanic `SPEC.md` rules out.
+1. **Session underway** — `Kesken`, the routine, sets logged and elapsed, and
+   `Jatka treeniä`.
+2. **Mid-cycle** — the body-plan glyph showing *what it works* before naming it,
+   then the routine, its cycle position, its size, its movements, and `Aloita`.
+   `Muut vaihtoehdot ▸` reaches the picker.
+3. **Trained already today** — acknowledges it: `Tänään treenattu`, what was done,
+   and what is next **stated rather than offered**, with a secondary `Lisää toinen
+   treeni`. Proposing the next routine the moment you finish one reads as nagging.
+4. **No history** — the greeting and `Valitse ohjelma`. No cycle position exists,
+   so nothing is proposed; that would be inventing a plan.
 
-**Starting lives in a bottom action bar**, in the same dock as the tab bar so the
-two stack rather than fighting over `bottom: 0`. It carries one action, at the
-thumb, and has three states:
+Below the hero: the week strip, restyled as support. The hero owns the first
+screen and the week is meant to be scrolled to — trying to fit both above the fold
+is what produced the cramped-then-empty layout this replaced. The primary action
+sits at 495px on a 375×667 screen, comfortably above the fold.
 
-- **Unfinished session** — `Jatka treeniä`, in the accent wash. It outranks
-  everything; nothing else should be started while a session is open.
-- **Mid-cycle** — `Seuraava · Vetopäivä · 2/3`, with `Aloita` and `Muut ▸`.
-- **No routine history** — `Valitse ohjelma`. There is no cycle position yet, so
-  the bar offers a choice rather than a confirmation.
+There is no masthead. `Liikekirjasto` is a tab, so a button for it was a duplicate,
+and Asetukset is an icon button in a plain top row — sliders rather than a gear,
+because three strokes and three knobs stay crisp at 20px.
 
-The bar is absent during a session, along with the tabs: a mis-tap mid-set would
-be costly, and leaving a session is done by finishing it.
-
-What used to be here — a `Seuraava` card, a resume banner, a way-in row and seven
-routine rows — measured 1.84 screens and 16 controls to answer "what now". It is
-one screen and nine controls, with everything else one tap away in the day view.
+**An open session goes stale after six hours.** Past that you did not pause, you
+finished training and forgot to say so, and offering to continue this morning's
+workout is worse than offering nothing. Stale sessions close themselves at startup
+at the time of their **last completed set** — which is when training actually
+stopped, and gives an honest duration. The logged sets are real training, so they
+are kept; a session with nothing logged is discarded, the same rule finishing one
+applies.
 
 ### Päivä
 
