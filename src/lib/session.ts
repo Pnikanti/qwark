@@ -241,8 +241,10 @@ export async function startSession(
       plannedSets: item.sets,
       restSeconds: item.restSeconds,
       note: null,
-      // Target reps come from the routine, so they fill; the load does not.
-      sets: [{ ...emptySet(), reps: item.targetReps }],
+      /* Each movement opens on a warmup, because that is what you actually do
+         first. Reps stay blank for it: the routine's target describes a working
+         set, and switching to Työsarja fills it — see setDraftKind. */
+      sets: [emptySet('warmup')],
     })),
   }
 
@@ -287,7 +289,8 @@ export async function addMovement(
       plannedSets: null,
       restSeconds: null,
       note,
-      sets: [emptySet()],
+      // Same as a templated movement: you warm up on it first.
+      sets: [emptySet('warmup')],
     })
   })
   return uid

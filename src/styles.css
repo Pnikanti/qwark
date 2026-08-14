@@ -841,9 +841,12 @@ select {
   white-space: nowrap;
 }
 
+/* min-width aligns the values into a column; the padding is what keeps a label
+   longer than that column from running into its own value. */
 .prev-tag {
   display: inline-block;
   min-width: 82px;
+  padding-right: 8px;
   color: var(--ink-dim);
 }
 
@@ -1686,6 +1689,7 @@ select {
 .logline-tag {
   display: inline-block;
   min-width: 82px;
+  padding-right: 8px;
   color: var(--ink-dim);
 }
 

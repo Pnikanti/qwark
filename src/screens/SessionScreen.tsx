@@ -260,14 +260,19 @@ export function SessionScreen({
         </button>
       )}
 
-      {/* Appending belongs where the append happens, matching "Lisää sarja" at
-          the foot of the expanded movement. Always rendered — an empty ad hoc
-          session would otherwise have no way to add anything. */}
-      <div className="append">
-        <button className="append-link" onClick={() => setPicking(true)}>
-          + {fi.addMovement}
-        </button>
-      </div>
+      {/* Appending belongs where the append happens, at the foot of the list —
+          but only once the list is all there. Sitting under the fold it invited
+          adding a movement while five were still hidden, which is how you end up
+          with the same lift in a session twice. An empty ad hoc session has
+          nothing folded, so it still offers this; that regression is why the
+          condition is about the fold and not about the movement count. */}
+      {(upcoming === 0 || upcomingOpen) && (
+        <div className="append">
+          <button className="append-link" onClick={() => setPicking(true)}>
+            + {fi.addMovement}
+          </button>
+        </div>
+      )}
 
       {resting && (
         <div className="restbar">
