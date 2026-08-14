@@ -2357,3 +2357,9 @@ select {
   color: var(--ink-mid);
   font-style: italic;
 }
+
+/* Into the full session ledger, from the inline overview. Sized to its text and
+   left in the flow — the page's own actions are the editing fields below. */
+.overview-all {
+  margin-top: 14px;
+}

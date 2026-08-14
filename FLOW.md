@@ -226,7 +226,12 @@ Result: 14 controls on one screen, against 23 for the row grid and 92 before the
 
 ### Liikkeen historia
 
-Reached from **anywhere a movement is named**: `Viime kerralla` mid-set, a movement row in Yhteenveto, and the movement's page in the library. A movement's name is a way into its record, not a label — in Yhteenveto the whole row is the target, because a summary is read on a phone and one line of text makes a poor one. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
+Reached from **anywhere a movement is named**: `Viime kerralla` mid-set, a movement row in Yhteenveto, and the movement's page in the library. A movement's name is a way into its record, not a label — in Yhteenveto the whole row is the target, because a summary is read on a phone and one line of text makes a poor one.
+
+The overview — the figures and the plot — renders in two places, and the difference matters:
+
+- **On the movement's page in the library, inline**, directly under the body-plan glyph and *above* the name fields and equipment dropdown. It was behind a `Historia →` row at first, which put how the movement is described above what you have lifted. Wrong order: nobody opens a bench press page to check its English name. `Näytä kaikki N treeniä` opens the sheet for the session ledger.
+- **In a sheet, everywhere else**, because those places are mid-flow — mid-set, or reading a summary — and a route change would cost you your place. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
 
 ```
 HISTORIA                            SULJE

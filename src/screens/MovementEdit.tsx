@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
-import { MovementHistory } from '../components/MovementHistory'
+import { MovementHistory, MovementOverview } from '../components/MovementHistory'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import {
   deleteMovement,
@@ -49,14 +49,9 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
       </div>
 
       {/* What you have actually lifted outranks how the movement is described,
-          so it sits above the editing fields. */}
-      <button className="entry" onClick={() => setHistoryOpen(true)}>
-        <span className="grow">
-          <span className="t-name">{fi.history}</span>
-          <span className="t-data">{fi.openHistory}</span>
-        </span>
-        <span className="t-data">→</span>
-      </button>
+          so the plot is on the page rather than behind a row. The full session
+          ledger is still a tap away, in the sheet. */}
+      <MovementOverview movementId={movement.id} onOpenAll={() => setHistoryOpen(true)} />
 
       {historyOpen && (
         <MovementHistory

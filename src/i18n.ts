@@ -225,6 +225,8 @@ export const fi = {
 
   history: 'Historia',
   openHistory: 'Näytä koko historia',
+  allSessions: (n: number) =>
+    n === 1 ? 'Näytä treeni' : `Näytä kaikki ${n} treeniä`,
   /** Column label in the history summary — the sheet is already titled Historia. */
   sessionsLabel: 'Treenejä',
   oneRepMax: '1RM-arvio',

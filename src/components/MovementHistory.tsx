@@ -71,6 +71,45 @@ export function MovementHistory({
   )
 }
 
+/**
+ * The same overview, inline rather than in a sheet.
+ *
+ * The movement's page in the library used to keep this behind a `Historia →`
+ * row, which put the name fields and the equipment dropdown above the thing you
+ * actually came to see. What you have lifted outranks how the movement is
+ * described, so it is on the page; the full session ledger stays one tap away.
+ */
+export function MovementOverview({
+  movementId,
+  onOpenAll,
+}: {
+  movementId: string
+  onOpenAll: () => void
+}) {
+  const entries = useLiveQuery(() => movementHistory(movementId), [movementId])
+
+  if (!entries) return <p className="panel note">{fi.loading}</p>
+
+  if (entries.length === 0) {
+    return (
+      <div className="panel">
+        <p className="note">{fi.noMovementHistory}</p>
+        <p className="note">{fi.noMovementHistoryHint}</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="panel">
+      <Summary entries={entries} />
+      <Progress entries={entries} />
+      <button className="btn overview-all" onClick={onOpenAll}>
+        {fi.allSessions(entries.length)}
+      </button>
+    </div>
+  )
+}
+
 /** How much, how heavy, how recently — the three questions, answered once. */
 function Summary({ entries }: { entries: HistoryEntry[] }) {
   const best = entries.reduce<LoggedSet | null>((top, e) => {
