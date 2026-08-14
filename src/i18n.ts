@@ -255,6 +255,7 @@ export const fi = {
   loadAxis: 'Kuorma',
   dotSizeIsReps: 'pallon koko = toistot',
   axisMax: 'enint.',
+  volumePerWeek: 'Volyymi viikoittain',
   lastNSessions: (n: number) => `viimeiset ${n}`,
   noMovementHistory: 'Tätä liikettä ei ole vielä kirjattu.',
   noMovementHistoryHint: 'Merkitse ensimmäinen sarja tehdyksi, niin se näkyy täällä.',

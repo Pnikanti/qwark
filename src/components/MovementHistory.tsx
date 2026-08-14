@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { fi } from '../i18n'
-import { fullDate, kgLabel, relativeAge, setsLine } from '../lib/format'
+import { addDays, fullDate, kgLabel, relativeAge, setsLine } from '../lib/format'
+import { startOfWeek } from '../lib/week'
 import { movementHistory, type HistoryEntry } from '../lib/session'
 import type { LoggedSet } from '../types'
 
@@ -192,7 +193,8 @@ const axisDate = (at: number) => {
  * and a zero baseline flattens every session onto one row. Both ends of the
  * range are printed, which is what makes a cropped axis honest rather than
  * flattering. Volume *is* zero-based, because volume genuinely starts at zero;
- * a steady bar profile there is a true reading, not a rendering failure.
+ * a steady bar profile there is a true reading, not a rendering failure. It is
+ * also totalled by week rather than by session — see the weeks block below.
  */
 function Progress({ entries }: { entries: HistoryEntry[] }) {
   const [ref, width] = useWidth()
@@ -257,33 +259,37 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
         )
       : 4
 
-  const volMax = Math.max(...points.map((p) => p.volume), 1)
-
   /**
-   * Volume bars are sized per bar, from the gap to their own neighbours.
+   * Volume is totalled by week, not by session.
    *
-   * Bars are the right mark here — volume is a discrete amount at a point in
-   * time, and an area would fill a month you did not train — but a bar has width
-   * and a time axis has no slots to put it in. Sizing every bar from the average
-   * gap merged them into one block wherever two sessions fell on consecutive
-   * days, which reads as a rendering fault. Sizing them all from the *tightest*
-   * gap instead turned the whole panel into hairlines because of one close pair.
+   * Per-session bars could not be drawn honestly on a time axis. Training three
+   * times a week puts sessions two days apart, which is about four pixels across
+   * three months, so the bars either merged into one block or had to shrink to
+   * hairlines. Sizing each bar to its own neighbourhood stopped the merging but
+   * left a row of bars in four different widths, which looked like a fault of its
+   * own.
    *
-   * So each bar is as wide as its own neighbourhood allows: a clustered pair
-   * narrows, and the rest of the panel stays readable. Sessions hours apart on a
-   * three-month axis will share a pixel column, which is what being hours apart
-   * on a three-month axis looks like.
+   * Weeks are evenly spaced by definition, so clustering cannot reach them. It is
+   * also the more useful total: weekly workload is the thing you manage, where a
+   * single session's volume mostly reflects how the week happened to be split.
+   * Per-session volume is still on every row of the ledger below.
+   *
+   * A week with no training gets no bar. The gap stays visible, which was the
+   * point of a real time axis in the first place.
    */
-  const spacing = points.slice(1).map((p, i) => x(p.at) - x(points[i].at))
-  const sorted = [...spacing].sort((a, b) => a - b)
-  const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : x1 - x0
-  const target = Math.min(18, Math.max(3, median * 0.8))
-  const barWidthAt = (i: number) => {
-    const left = i > 0 ? x(points[i].at) - x(points[i - 1].at) : Infinity
-    const right = i < points.length - 1 ? x(points[i + 1].at) - x(points[i].at) : Infinity
-    return Math.max(1, Math.min(target, Math.min(left, right) * 0.9))
+  const weeks: { at: number; volume: number }[] = []
+  for (let at = startOfWeek(t0); at <= t1; at = addDays(at, 7)) {
+    const end = addDays(at, 7)
+    weeks.push({
+      at,
+      volume: points
+        .filter((p) => p.at >= at && p.at < end)
+        .reduce((n, p) => n + p.volume, 0),
+    })
   }
-  const hasVolume = points.some((p) => p.volume > 0)
+  const volMax = Math.max(...weeks.map((w) => w.volume), 1)
+  const weekW = Math.max(3, Math.min(24, ((x1 - x0) / Math.max(1, weeks.length)) * 0.72))
+  const hasVolume = weeks.some((w) => w.volume > 0)
 
   const unit = loaded ? ' kg' : ''
 
@@ -356,8 +362,8 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
       {hasVolume && (
         <>
           <p className="t-data chart-label">
-            <span>{fi.volume}</span>
-            {/* Marked as the axis top, or it reads as the latest session's. */}
+            <span>{fi.volumePerWeek}</span>
+            {/* Marked as the axis top, or it reads as the latest week's. */}
             <span>
               {fi.axisMax} {volMax.toLocaleString('fi')} kg
             </span>
@@ -368,26 +374,29 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
                 width={width}
                 height={VOL_H}
                 role="img"
-                aria-label={points
-                  .map((p) => `${axisDate(p.at)} ${p.volume.toLocaleString('fi')} kg`)
+                aria-label={weeks
+                  .filter((w) => w.volume > 0)
+                  .map((w) => `${axisDate(w.at)} ${w.volume.toLocaleString('fi')} kg`)
                   .join(', ')}
               >
-                {points.map((p, i) => {
-                  const h = Math.max(1, (VOL_H - 2) * (p.volume / volMax))
-                  const w = barWidthAt(i)
-                  return (
-                    <rect
-                      key={p.at}
-                      className="volbar"
-                      /* Nudged in at the ends rather than clipped: half a bar is
-                         a smaller lie than a bar that looks cut off. */
-                      x={Math.min(Math.max(0, x(p.at) - w / 2), width - w)}
-                      y={VOL_H - h}
-                      width={w}
-                      height={h}
-                    />
-                  )
-                })}
+                {weeks
+                  .filter((w) => w.volume > 0)
+                  .map((w) => {
+                    const h = Math.max(1, (VOL_H - 2) * (w.volume / volMax))
+                    // Centred on the week, which can start before the first
+                    // session or end after the last, so it is clamped in.
+                    const mid = x(Math.min(Math.max(addDays(w.at, 3) + 43_200_000, t0), t1))
+                    return (
+                      <rect
+                        key={w.at}
+                        className="volbar"
+                        x={Math.min(Math.max(0, mid - weekW / 2), width - weekW)}
+                        y={VOL_H - h}
+                        width={weekW}
+                        height={h}
+                      />
+                    )
+                  })}
               </svg>
             )}
           </div>
