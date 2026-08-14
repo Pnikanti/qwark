@@ -223,6 +223,16 @@ export const fi = {
   deleteDigit: 'Poista numero',
   estimatedMax: 'Arvioitu maksimi',
 
+  manage: 'Hallinta',
+  doneEditing: 'Valmis',
+  trainedCount: (n: number) => (n === 0 ? 'ei vielä tehtyjä' : `${n} tehty`),
+  trainedOnly: 'Tehdyt',
+  recentlyTrained: 'Viimeksi tehdyt',
+  otherMovements: 'Muut liikkeet',
+  moreTrained: (n: number) => `${n} muuta tehtyä liikettä`,
+  timesDone: (n: number) => `${n} ×`,
+  movementDetails: 'Tiedot',
+
   demoData: 'Esimerkkidata',
   demoDataHint:
     'Luo 12 viikon treenihistoria pisimmälle ohjelmakierrolle, jotta grafiikat ja historia näyttävät jotain. Poistaminen koskee vain tätä dataa — omat treenit säilyvät.',

@@ -50,3 +50,29 @@ export async function writeProfile(profile: Profile): Promise<void> {
 export function useProfile(): Profile {
   return useLiveQuery(readProfile, [], { name: '' })
 }
+
+/**
+ * Whether the library is showing its editing controls.
+ *
+ * Persisted rather than component state: correcting the seeded Finnish names is a
+ * sitting-down session across many movements, and a mode that reset every time
+ * you came back from a movement page would be worse than no mode at all.
+ */
+export interface UiState {
+  admin: boolean
+}
+
+const UI_KEY = 'ui'
+
+export async function readUi(): Promise<UiState> {
+  const stored = (await db.meta.get(UI_KEY))?.value as UiState | undefined
+  return { admin: stored?.admin === true }
+}
+
+export async function writeUi(next: UiState): Promise<void> {
+  await db.meta.put({ key: UI_KEY, value: next })
+}
+
+export function useUi(): UiState {
+  return useLiveQuery(readUi, [], { admin: false })
+}

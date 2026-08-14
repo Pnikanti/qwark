@@ -324,11 +324,45 @@ Because the id carries the reference, renaming either name never touches history
 
 Ids are pinned in `data/id-ledger.json` rather than recomputed each build, because upstream has no stable identifier of its own (its `id` field is slugified from the name, so it rotates on rename). Without the ledger an upstream rename would mint a fresh id and orphan every set logged against the old one. See the script's `THE ID LEDGER` docstring for the resolution procedure.
 
+### Browse first, maintain second
+
+The library and the movement page are read-only until you ask for `Hallinta`. They were not: the library opened with three admin buttons above the search box (bulk rename, override export, new movement) and rails carrying `Tarkistettavat` flags and edited pips, and tapping a row landed you in two text inputs. All of that is about the canonical *data*. None of it is why you open the library, and none of it answered the obvious question — **which of these 68 have I actually done?**
+
+```
+LIIKEKIRJASTO
+68 LIIKETTÄ · 15 TEHTY
+[ HALLINTA ]  [ + UUSI LIIKE ]
+[ Hae liikettä                      ]
+[ Kaikki lihasryhmät ▾ ][ Välineet ▾ ]
+[ TEHDYT 15 ] [ PIILOTETUT ]
+──────────────────────────────────────
+VIIMEKSI TEHDYT ─────────────────────
+▍ Maastaveto                     11 ×
+  ALASELKÄ · LEVYTANKO      97,5 KG × 5
+▍ Kulmasoutu                     11 ×
+  KESKISELKÄ · LEVYTANKO    62,5 KG × 8
+  …
+  9 MUUTA TEHTYÄ LIIKETTÄ            ▾
+MUUT LIIKKEET ───────────────────────
+A ───────────────────────────────────
+▍ Aamunavaus
+  TAKAREIDET · LEVYTANKO
+```
+
+- **The rail carries your training**: sessions, then the best working set. A movement you have never done has an **empty rail** — absence is the answer, and it needs no badge of its own.
+- **Trained movements come first**, ordered by when you last did them, ties falling back to the alphabet. Capped at six with an expander, so the alphabet still begins within a screen.
+- **Searching collapses the split.** Once you have typed a name you want one list of matches, not your history followed by the alphabet.
+- **The English name only shows under `Hallinta`.** On a detail page it is useful context; on a row among 68 it is noise. Same for `own` / `incomplete` / the edited pip, which is what the rail carries in that mode instead.
+- **The mode persists**, because reviewing 68 draft Finnish names is one sitting, not one visit — a mode that reset on every return from a movement page would be worse than no mode.
+- The movement page follows the same flag, and the switch sits in the masthead on both screens rather than moving between the header and the body.
+
 ### Screens
 
-**Liikekirjasto** — the library list, with an edit affordance per row. Filters include a `Tarkistettavat` (needs review) view driven by the gaps the build script reports: missing `nameFi`, `mechanic`, `force`, or `equipment`.
+**Liikekirjasto** — the library list. Under `Hallinta` it gains bulk rename, override export, and a `Tarkistettavat` (needs review) filter driven by the gaps the build script reports: missing `nameFi`, `mechanic`, `force`, or `equipment`.
 
-**Liikkeen muokkaus** — per-movement editor:
+**Liikkeen sivu** — read-only by default: the body-plan glyph, the figures and the plot, `Näytä kaikki N treeniä`, a `Tiedot` summary (muscles, equipment, type, direction), then the instructions. `Muokkaa liikettä` in the masthead turns on `Hallinta` and swaps the summary for the fields below. Instructions stay in both modes — they are reference material either way.
+
+**Liikkeen muokkaus** — the same page under `Hallinta`:
 
 ```
 Penkkipunnerrus                              ⋯
@@ -353,7 +387,9 @@ Penkkipunnerrus                              ⋯
 
 ### Why an "admin" mode at all in a single-user app
 
-There is one user, so this is not permissioning — it is a mode switch that keeps destructive editing out of the way of logging. Editing is reachable from the library, never from the live session screen, where a mis-tap during a set would be costly.
+There is one user, so this is not permissioning — it is a mode switch that keeps destructive editing out of the way of logging, and out of the way of *reading*. Editing is reachable from the library, never from the live session screen, where a mis-tap during a set would be costly.
+
+The second reason turned out to matter as much as the first: with the editing controls always present, the library had no room to say anything about your training, and both screens opened with the least interesting thing on them.
 
 ## The first-session problem
 

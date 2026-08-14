@@ -2363,3 +2363,20 @@ select {
 .overview-all {
   margin-top: 14px;
 }
+
+/* Section markers that name a group rather than mark an initial: the rule runs
+   after the words instead of beside a single letter. */
+.section-mark.wide-mark {
+  font-variation-settings: 'wdth' 70;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* Training on the library rail: how many sessions, then the best set under it. */
+.rail-count {
+  color: var(--ink);
+  font-size: 0.78rem;
+}

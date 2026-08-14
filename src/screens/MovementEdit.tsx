@@ -9,6 +9,7 @@ import {
   patchMovement,
   resetField,
 } from '../lib/movements'
+import { readUi, useUi, writeUi } from '../lib/settings'
 import { toast } from '../lib/toast'
 import type { EffectiveMovement, Patchable } from '../types'
 
@@ -16,11 +17,22 @@ const MECHANIC = ['compound', 'isolation']
 const FORCE = ['push', 'pull', 'static']
 const LEVEL = ['beginner', 'intermediate', 'expert']
 
+/**
+ * A movement: what it works, what you have lifted on it, and how it is described.
+ *
+ * Read-only by default. The fields that define the canonical record — both names,
+ * the muscle pickers, the taxonomy selects, delete — appear only under `Hallinta`,
+ * the same mode the library uses, because correcting seeded data and looking up
+ * your squat history are different activities that were sharing one screen.
+ */
 export function MovementEdit({ id, onBack }: { id: string; onBack: () => void }) {
   const movement = useLiveQuery(() => getMovement(id), [id])
+  const { admin } = useUi()
   const [musclesOpen, setMusclesOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
   if (!movement) return <p className="blank note">{fi.loading}</p>
+
+  const toggleAdmin = async () => writeUi({ ...(await readUi()), admin: !admin })
 
   const set = <K extends keyof Patchable>(field: K, value: Patchable[K]) =>
     patchMovement(id, { [field]: value } as Partial<Patchable>)
@@ -35,6 +47,13 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
         <span className="t-data">
           {movement.nameFi ? movement.nameEn : fi.nameFi + ' ' + fi.incomplete.toLowerCase()}
         </span>
+        {/* Same place as the library's switch, so the mode lives in one spot
+            rather than moving between the header and the body. */}
+        <div className="masthead-actions end">
+          <button className="btn" aria-pressed={admin} onClick={toggleAdmin}>
+            {admin ? fi.doneEditing : fi.editMovement}
+          </button>
+        </div>
       </header>
 
       <div className="panel">
@@ -61,6 +80,39 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
         />
       )}
 
+      {/* Reading the record: what the movement is, stated rather than editable. */}
+      {!admin && (
+        <>
+          <div className="panel">
+            <div className="panel-head">
+              <span className="t-data">{fi.movementDetails}</span>
+            </div>
+            <dl className="summary">
+              <dt className="t-data">{fi.primaryMuscles}</dt>
+              <dd>{movement.primaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
+              <dt className="t-data">{fi.secondaryMuscles}</dt>
+              <dd>{movement.secondaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
+              <dt className="t-data">{fi.equipment}</dt>
+              <dd>{equipmentFi(movement.equipment)}</dd>
+              {movement.mechanic && (
+                <>
+                  <dt className="t-data">{fi.mechanic}</dt>
+                  <dd>{fi.mechanicValue[movement.mechanic] ?? movement.mechanic}</dd>
+                </>
+              )}
+              {movement.force && (
+                <>
+                  <dt className="t-data">{fi.force}</dt>
+                  <dd>{fi.forceValue[movement.force] ?? movement.force}</dd>
+                </>
+              )}
+            </dl>
+          </div>
+        </>
+      )}
+
+      {admin && (
+        <>
       <div className="panel">
         <Field movement={movement} field="nameFi" label={fi.nameFi}>
           <input
@@ -218,6 +270,10 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
         </p>
       </div>
 
+        </>
+      )}
+
+      {/* Instructions are reference material either way, so they stay. */}
       {movement.instructions.length > 0 && (
         <div className="panel">
           <div className="panel-head">
