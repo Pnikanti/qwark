@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fi } from '../i18n'
+import { countDemoSessions, removeDemoSessions, seedDemoSessions } from '../lib/demo'
+import { shortDate } from '../lib/format'
 import { stepKg } from '../lib/plates'
 import {
   DEFAULT_GYM,
@@ -125,6 +127,8 @@ export function Settings({ onBack }: { onBack: () => void }) {
         <p className="note">{fi.smallestStep(stepKg(gym))}</p>
       </div>
 
+      <DemoData />
+
       <div className="panel">
         <div className="row-actions">
           <button
@@ -139,5 +143,70 @@ export function Settings({ onBack }: { onBack: () => void }) {
         </div>
       </div>
     </>
+  )
+}
+
+/**
+ * Generated training history, so the screens that need one have something to
+ * show. Several of them say nothing at all on a fresh install — the movement
+ * plot will not draw under three sessions.
+ *
+ * It only ever adds and removes its own `demo-` sessions, so removing it cannot
+ * take a real workout with it. That is why there is no "clear all sessions"
+ * button here: this needs to be safe to press twice.
+ */
+function DemoData() {
+  const [count, setCount] = useState<number | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    countDemoSessions().then(setCount)
+  }, [])
+
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <span className="t-data">{fi.demoData}</span>
+      </div>
+      <p className="note">{fi.demoDataHint}</p>
+      <div className="row-actions">
+        <button
+          className="btn"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true)
+            const { sessions, from, to } = await seedDemoSessions()
+            setCount(await countDemoSessions())
+            setBusy(false)
+            toast(
+              sessions
+                ? fi.demoDataAdded(sessions, shortDate(from), shortDate(to))
+                : fi.demoDataNoRoutines,
+              sessions ? undefined : { tone: 'warn' },
+            )
+          }}
+        >
+          {fi.generateDemoData}
+        </button>
+        {count !== null && count > 0 && (
+          <button
+            className="btn"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true)
+              const removed = await removeDemoSessions()
+              setCount(0)
+              setBusy(false)
+              toast(fi.demoDataRemoved(removed))
+            }}
+          >
+            {fi.removeDemoData}
+          </button>
+        )}
+      </div>
+      {count !== null && count > 0 && (
+        <p className="note">{fi.demoDataPresent(count)}</p>
+      )}
+    </div>
   )
 }

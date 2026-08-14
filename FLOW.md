@@ -361,6 +361,10 @@ The app's core value is pre-filling from history, which on day one does not exis
 
 So session one shows `Ei aiempaa tietoa` and blank kg fields. This is a one-time cost, paid once per movement, and it is the honest option. From session two onward every field arrives pre-filled.
 
+The same emptiness makes several screens impossible to *look at* while building them — the movement plot will not draw under three sessions, the week strip has nothing to shade, and the rotation cannot say what is next. `Asetukset → Esimerkkidata` generates twelve weeks of one programme for that: three sessions a week, a week off in the middle so the time axis has a gap, and a progression that stalls and deloads rather than climbing cleanly, because a clean ramp is the one shape real logs never have.
+
+It writes `demo-` session ids and nothing else, so removing it takes back exactly what it added and can never delete a real workout. That is also why there is no "clear all sessions" button next to it — a generator has to be safe to press twice, and a destructive twin sitting beside it is a mis-tap waiting to happen.
+
 ## Edge cases worth designing, not discovering
 
 - Losing signal mid-session — nothing visible changes; the sync badge shows pending writes.

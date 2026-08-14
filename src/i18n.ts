@@ -223,6 +223,18 @@ export const fi = {
   deleteDigit: 'Poista numero',
   estimatedMax: 'Arvioitu maksimi',
 
+  demoData: 'Esimerkkidata',
+  demoDataHint:
+    'Luo 12 viikon treenihistoria pisimmälle ohjelmakierrolle, jotta grafiikat ja historia näyttävät jotain. Poistaminen koskee vain tätä dataa — omat treenit säilyvät.',
+  generateDemoData: 'Luo esimerkkidata',
+  removeDemoData: 'Poista esimerkkidata',
+  demoDataAdded: (n: number, from: string, to: string) =>
+    `${n} treeniä luotu (${from} – ${to})`,
+  demoDataRemoved: (n: number) => `${n} esimerkkitreeni${n === 1 ? '' : 'ä'} poistettu`,
+  demoDataPresent: (n: number) =>
+    `Esimerkkidataa on nyt ${n} treeniä. Ne on merkitty erikseen, joten poisto ei kosketa omia treenejäsi.`,
+  demoDataNoRoutines: 'Ei ohjelmia, joista dataa voisi luoda',
+
   history: 'Historia',
   openHistory: 'Näytä koko historia',
   allSessions: (n: number) =>
