@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { MovementHistory } from '../components/MovementHistory'
 import { fi } from '../i18n'
 import { durationOrDash, setsLine, shortDate } from '../lib/format'
 import { listMovements } from '../lib/movements'
@@ -18,6 +19,8 @@ import {
 export function SessionSummary({ id, onDone }: { id: string; onDone: () => void }) {
   const [name, setName] = useState('')
   const [saved, setSaved] = useState(false)
+  /** Movement id whose history is open, as a sheet over the summary. */
+  const [historyOf, setHistoryOf] = useState<string | null>(null)
 
   const data = useLiveQuery(async () => {
     const session = await getSession(id)
@@ -57,20 +60,30 @@ export function SessionSummary({ id, onDone }: { id: string; onDone: () => void 
         const movement = byId.get(m.movementId)
         const best = bestWorkingSet(m)
         const oneRm = best?.kg && best?.reps ? estimatedOneRepMax(best.kg, best.reps) : null
+        const label = movement?.nameFi ?? movement?.nameEn ?? m.movementId
         return (
           <section className="panel movement" key={`${m.movementId}-${i}`}>
-            <div className="movement-head">
+            {/* The row is the control, not just the name: a summary is read on a
+                phone, and one line of text is a poor target. The heading level is
+                given up for that — this screen keeps its h1, and a movement here
+                is something you act on rather than a section you navigate to. */}
+            <button
+              className="movement-head"
+              onClick={() => setHistoryOf(m.movementId)}
+              aria-label={`${label} — ${fi.history}`}
+            >
               <BodyPlan
                 primary={movement?.primaryMuscles ?? []}
                 secondary={movement?.secondaryMuscles ?? []}
                 size={34}
               />
-              <h2 className="t-name grow">
-                {movement?.nameFi ?? movement?.nameEn ?? m.movementId}
-              </h2>
+              <span className="t-name grow">{label}</span>
               {records[m.movementId] && <span className="flagtag record">{fi.record}</span>}
-            </div>
-            <p className="prev t-data">{setsLine(m.sets)}</p>
+              <span className="t-data go" aria-hidden="true">
+                ▸
+              </span>
+            </button>
+            <p className="setline t-data">{setsLine(m.sets)}</p>
             {oneRm !== null && (
               <p className="t-data">
                 {fi.estimatedMax} ≈ {oneRm} kg
@@ -80,6 +93,14 @@ export function SessionSummary({ id, onDone }: { id: string; onDone: () => void 
           </section>
         )
       })}
+
+      {historyOf && (
+        <MovementHistory
+          movementId={historyOf}
+          name={byId.get(historyOf)?.nameFi ?? byId.get(historyOf)?.nameEn ?? historyOf}
+          onClose={() => setHistoryOf(null)}
+        />
+      )}
 
       {/* Ad hoc sessions can become a routine — the template grows out of what
           was actually done rather than being planned up front. */}

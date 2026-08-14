@@ -129,6 +129,8 @@ const GUTTER = 44
 const LOAD_H = 118
 const VOL_H = 32
 const R_MAX = 6
+/** How far the latest point's halo reaches beyond its dot. */
+const HALO = 4
 const MAX_SESSIONS = 30
 
 const axisDate = (at: number) => {
@@ -197,8 +199,10 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
 
   const t0 = points[0].at
   const t1 = points[points.length - 1].at
+  // The right inset clears the halo, not just the dot — the newest point is
+  // always the rightmost one, and its halo is 4px wider than its dot.
   const x0 = GUTTER + R_MAX
-  const x1 = Math.max(x0 + 1, width - R_MAX)
+  const x1 = Math.max(x0 + 1, width - R_MAX - HALO)
   const x = (at: number) => (t1 === t0 ? (x0 + x1) / 2 : x0 + (x1 - x0) * ((at - t0) / (t1 - t0)))
   const y = (v: number) =>
     span === 0 ? LOAD_H / 2 : R_MAX + (LOAD_H - 2 * R_MAX) * (1 - (v - min) / span)
@@ -272,7 +276,7 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
               className="halo"
               cx={x(points[points.length - 1].at)}
               cy={y(valueOf(points[points.length - 1].top))}
-              r={r(points[points.length - 1].top) + 4}
+              r={r(points[points.length - 1].top) + HALO}
             />
             {points.map((p, i) => (
               <circle

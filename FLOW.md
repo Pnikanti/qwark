@@ -226,7 +226,7 @@ Result: 14 controls on one screen, against 23 for the row grid and 92 before the
 
 ### Liikkeen historia
 
-Reached from `Viime kerralla` mid-set, and from the movement's page in the library. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
+Reached from **anywhere a movement is named**: `Viime kerralla` mid-set, a movement row in Yhteenveto, and the movement's page in the library. A movement's name is a way into its record, not a label — in Yhteenveto the whole row is the target, because a summary is read on a phone and one line of text makes a poor one. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
 
 ```
 HISTORIA                            SULJE

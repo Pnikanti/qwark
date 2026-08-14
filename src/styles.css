@@ -773,20 +773,49 @@ select {
   opacity: 0.75;
 }
 
+/* A button in the summary — the whole row opens that movement's history. Styled
+   as the row it already was, so it reads as content you can follow rather than
+   as another control competing for attention. */
 .movement-head {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  min-height: var(--tap);
   margin-bottom: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
 }
 
 .movement-head .t-name {
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .movement-head .grow {
   flex: 1;
   min-width: 0;
+}
+
+.movement-head .go {
+  flex: none;
+  color: var(--ink-dim);
+}
+
+.movement-head:hover .go {
+  color: var(--ink);
+}
+
+/* What was lifted, in the log vernacular. Was borrowing .prev, which has since
+   become a button. */
+.setline {
+  margin: 0 0 6px;
+  color: var(--ink-mid);
 }
 
 /* Last session's line, and the way into every session before it. A button, but
