@@ -258,8 +258,31 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
       : 4
 
   const volMax = Math.max(...points.map((p) => p.volume), 1)
-  const gap = points.length > 1 ? (x1 - x0) / (points.length - 1) : x1 - x0
-  const barW = Math.max(3, Math.min(22, gap * 0.7))
+
+  /**
+   * Volume bars are sized per bar, from the gap to their own neighbours.
+   *
+   * Bars are the right mark here — volume is a discrete amount at a point in
+   * time, and an area would fill a month you did not train — but a bar has width
+   * and a time axis has no slots to put it in. Sizing every bar from the average
+   * gap merged them into one block wherever two sessions fell on consecutive
+   * days, which reads as a rendering fault. Sizing them all from the *tightest*
+   * gap instead turned the whole panel into hairlines because of one close pair.
+   *
+   * So each bar is as wide as its own neighbourhood allows: a clustered pair
+   * narrows, and the rest of the panel stays readable. Sessions hours apart on a
+   * three-month axis will share a pixel column, which is what being hours apart
+   * on a three-month axis looks like.
+   */
+  const spacing = points.slice(1).map((p, i) => x(p.at) - x(points[i].at))
+  const sorted = [...spacing].sort((a, b) => a - b)
+  const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : x1 - x0
+  const target = Math.min(18, Math.max(3, median * 0.8))
+  const barWidthAt = (i: number) => {
+    const left = i > 0 ? x(points[i].at) - x(points[i - 1].at) : Infinity
+    const right = i < points.length - 1 ? x(points[i + 1].at) - x(points[i].at) : Infinity
+    return Math.max(1, Math.min(target, Math.min(left, right) * 0.9))
+  }
   const hasVolume = points.some((p) => p.volume > 0)
 
   const unit = loaded ? ' kg' : ''
@@ -349,16 +372,22 @@ function Progress({ entries }: { entries: HistoryEntry[] }) {
                   .map((p) => `${axisDate(p.at)} ${p.volume.toLocaleString('fi')} kg`)
                   .join(', ')}
               >
-                {points.map((p) => (
-                  <rect
-                    key={p.at}
-                    className="volbar"
-                    x={x(p.at) - barW / 2}
-                    y={VOL_H - Math.max(1, (VOL_H - 2) * (p.volume / volMax))}
-                    width={barW}
-                    height={Math.max(1, (VOL_H - 2) * (p.volume / volMax))}
-                  />
-                ))}
+                {points.map((p, i) => {
+                  const h = Math.max(1, (VOL_H - 2) * (p.volume / volMax))
+                  const w = barWidthAt(i)
+                  return (
+                    <rect
+                      key={p.at}
+                      className="volbar"
+                      /* Nudged in at the ends rather than clipped: half a bar is
+                         a smaller lie than a bar that looks cut off. */
+                      x={Math.min(Math.max(0, x(p.at) - w / 2), width - w)}
+                      y={VOL_H - h}
+                      width={w}
+                      height={h}
+                    />
+                  )
+                })}
               </svg>
             )}
           </div>
