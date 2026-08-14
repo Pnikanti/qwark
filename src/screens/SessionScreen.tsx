@@ -247,6 +247,23 @@ export function SessionScreen({
             )}
           </li>
         ))}
+
+        {/* Last row of the list, because that is what appending to a list looks
+            like — and above the fold count, which is a footer for the list rather
+            than another item in it.
+
+            Shown only once the list is all there: under the fold it invited
+            adding a movement while five were still hidden, which is how the same
+            lift ends up in a session twice. An empty ad hoc session has nothing
+            folded, so it still offers this — that regression is why the condition
+            is about the fold and not about the movement count. */}
+        {(upcoming === 0 || upcomingOpen) && !reorder.dragging && (
+          <li className="append">
+            <button className="append-link" onClick={() => setPicking(true)}>
+              + {fi.addMovement}
+            </button>
+          </li>
+        )}
       </ul>
 
       {upcoming > 0 && !reorder.dragging && (
@@ -258,20 +275,6 @@ export function SessionScreen({
           <span className="t-data grow">{fi.remainingMovements(upcoming)}</span>
           <span className="t-data">{upcomingOpen ? '▲' : '▾'}</span>
         </button>
-      )}
-
-      {/* Appending belongs where the append happens, at the foot of the list —
-          but only once the list is all there. Sitting under the fold it invited
-          adding a movement while five were still hidden, which is how you end up
-          with the same lift in a session twice. An empty ad hoc session has
-          nothing folded, so it still offers this; that regression is why the
-          condition is about the fold and not about the movement count. */}
-      {(upcoming === 0 || upcomingOpen) && (
-        <div className="append">
-          <button className="append-link" onClick={() => setPicking(true)}>
-            + {fi.addMovement}
-          </button>
-        </div>
       )}
 
       {resting && (
