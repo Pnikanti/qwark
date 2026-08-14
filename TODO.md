@@ -103,9 +103,10 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - [x] First-session empty state: `Ei aiempaa tietoa`, blank loads, no invented weights
 - [x] Movement picker: leads with common compounds when there are no recents
 - [x] Rest timer countdown, skippable
-- [ ] Rest timer background notification (in-app countdown only so far)
+- [x] Rest-end cue: vibration, optional beep, notification where the platform allows it
 - [x] Persist to IndexedDB on every change; resume banner with elapsed time
 - [x] Discard sessions that finish with zero completed sets
+- [x] Check at `Lopeta treeni` for movements logged only as warmups, with one-tap relabel
 - [x] Summary: duration, volume, per-movement recap, records, estimated 1RM
 - [x] Fully exercisable with the network off — verified end to end, not assumed
 - [ ] Optional RPE / RIR per set
@@ -114,7 +115,7 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 
 ## 5 — Progress
 
-- [ ] Per-movement history: estimated 1RM, volume, best sets
+- [x] Per-movement history: estimated 1RM, volume, best sets, plot on a real time axis
 - [x] Weekly sets per muscle group on the week view, shading `BodyPlan` by intensity
 - [ ] Body weight + measurements, smoothed
 - [x] Rule-based progression targets for next session
@@ -188,3 +189,4 @@ Outcome: decisions folded into [SPEC.md](SPEC.md#decisions). Nothing blocking.
 - 2026-08-14 — Every movement now opens on `Lämmittely`, templated or added mid-session, since that is what you do first. Reps stay blank for the warmup because the routine's target describes a working set, and `setDraftKind` already filled it on switching — no new rule needed. The kind still never changes on its own; it carries forward from the set you just logged. The cost is real and I hit it immediately: the summary driver typed a load and ticked without switching mode, logging 80 kg × 6 as a warmup, which the record and the plot correctly ignored. Three things signal the mode (plate-yellow input, `Lämmittely n` label, progress stuck at `0/3`) but nothing blocks a whole session logged in the wrong one. A finish-time check for movements with warmups and no working sets is the obvious guard if this bites in the gym.
 - 2026-08-14 — `Lisää liike` is hidden while movements are still folded behind `N liikettä jäljellä`. Under the fold it invited adding a movement while five were hidden, which is how the same lift gets into a session twice. The condition is `upcoming === 0 || upcomingOpen` rather than a movement count, deliberately: gating on `movements.length > 0` is the exact regression that once left an empty ad hoc session with no way to add anything. Also fixed a collision the screenshot showed — `.prev-tag` and `.logline-tag` aligned their values with `min-width: 82px`, but `VIIME KERRALLA` renders 90px, so it ran straight into its own value as `VIIME KERRALLAEI AIEMPAA TIETOA`. Padding, not min-width, is what guarantees the separation.
 - 2026-08-14 — `Lisää liike` moved inside the movement list as its last row, above `N liikettä jäljellä`. It had been a sibling after the fold row, which put it outside the container it acts on and below a footer that summarises that container. Now it is an `li` in the same `ul`, so appending to the list looks like appending to the list. Visibility rule unchanged. The check that it is the last child had to look at `.stack`, not `.ledger` — the session list uses a different container class from the library's.
+- 2026-08-14 — Hardening pass, closing the two ways the training loop lost information rather than adding surface. **`Lopeta treeni` now checks for movements logged only as warmups** and offers to relabel them in one tap or finish as-is. Neither action is the default: warming up and stopping is a real thing that happens, so the app must not rewrite it, and a mis-logged session must not vanish either. Only movements with warmups *and no* working sets are listed; the empty-session discard path still runs first, because a session with nothing logged has nothing to relabel. Converting keeps loads and reps exactly as logged — only the kind was wrong. **Rest ending is now announced**: vibration on by default (the only cue that works with the phone in a pocket), a synthesised two-tone beep off by default (a beep in a quiet gym is worse than none, and synthesising it keeps the app offline-complete), and a service-worker notification off until permission is granted — asked for when the toggle goes on, never on load. Fixing this meant moving elapse detection out of render, where it had been a comparison re-evaluated on every one-second tick, into an effect with a fired-once guard. Deliberately not promised: exact firing on a locked phone. A frozen page misses its own timeout and Notification Triggers is not broadly available, so a `visibilitychange` listener fires the cue late instead of swallowing it, and the Asetukset copy says so. Also corrected my own Finnish — a negated list takes `eikä` on the last item, not a second `eivät`.

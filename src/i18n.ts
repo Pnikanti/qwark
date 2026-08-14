@@ -192,6 +192,18 @@ export const fi = {
   removeMovement: 'Poista liike',
   reorder: 'Siirrä',
   finish: 'Lopeta treeni',
+  checkBeforeFinish: 'Tarkista',
+  warmupOnlyIntro: (n: number) =>
+    n === 1
+      ? 'Tässä liikkeessä on vain lämmittelysarjoja:'
+      : 'Näissä liikkeissä on vain lämmittelysarjoja:',
+  /* A negated list takes eikä on the last item, not a second eivät. */
+  warmupOnlyWhy:
+    'Lämmittelyt eivät näy volyymissä, ennätyksissä eikä kehityksessä. Jos ne olivat työsarjoja, merkitse ne nyt.',
+  markAsWorking: 'Merkitse työsarjoiksi',
+  finishAnyway: 'Lopeta silti',
+  markedAsWorking: (n: number) =>
+    n === 1 ? '1 liike merkittiin työsarjoiksi' : `${n} liikettä merkittiin työsarjoiksi`,
   note: 'Muistiinpano',
   notePlaceholder: 'Esim. otetta leveämmäksi',
   rest: 'Palautus',
@@ -232,6 +244,15 @@ export const fi = {
   moreTrained: (n: number) => `${n} muuta tehtyä liikettä`,
   timesDone: (n: number) => `${n} ×`,
   movementDetails: 'Tiedot',
+
+  alerts: 'Palautuksen merkki',
+  alertsHint:
+    'Miten palautuksen loppu ilmoitetaan. Tärinä toimii myös taskussa; ilmoitus vaatii luvan ja tulee perille kun sovellus on auki taustalla — lukitulla puhelimella se voi tulla myöhässä.',
+  alertVibrate: 'Tärinä',
+  alertSound: 'Äänimerkki',
+  alertNotify: 'Ilmoitus',
+  notifyDenied: 'Ilmoituslupa evätty. Voit sallia sen selaimen asetuksista.',
+  notifyUnsupported: 'Tämä selain ei tue ilmoituksia.',
 
   demoData: 'Esimerkkidata',
   demoDataHint:

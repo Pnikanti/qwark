@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { NumberPad, type PadMode } from '../components/NumberPad'
 import { MovementHistory } from '../components/MovementHistory'
@@ -6,16 +6,19 @@ import { MovementPicker } from '../components/MovementPicker'
 import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
+import { toast } from '../lib/toast'
 import { clock, duration, kgLabel, setsLine } from '../lib/format'
 import {
   progressionFor,
   type Progression,
   type ProgressionKind,
 } from '../lib/progression'
-import { useGym } from '../lib/settings'
+import { primeAudio, restOver } from '../lib/cue'
+import { useAlerts, useGym } from '../lib/settings'
 import {
   addMovement,
   commitSet,
+  convertWarmupsToWorking,
   draftIndex,
   draftSet,
   finishSession,
@@ -33,6 +36,7 @@ import {
   setMovementNote,
   sessionProgress,
   suggestionFor,
+  warmupOnlyMovements,
   warmupsDone,
   workingDone,
 } from '../lib/session'
@@ -72,6 +76,8 @@ export function SessionScreen({
   const [chosenUid, setChosenUid] = useState<string | null>(null)
   const [showLogged, setShowLogged] = useState(false)
   const [upcomingOpen, setUpcomingOpen] = useState(false)
+  /** Movement indices holding only warmups, held while the check is on screen. */
+  const [warmupOnly, setWarmupOnly] = useState<number[] | null>(null)
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000)
@@ -79,6 +85,48 @@ export function SessionScreen({
   }, [])
 
   const gym = useGym()
+  const alerts = useAlerts()
+
+  /** What the notification says is next; mirrored so the effect need not re-arm. */
+  const cueBody = useRef('')
+  /** The rest period already announced, so one period is never heard twice. */
+  const cued = useRef<number | null>(null)
+
+  /**
+   * Rest ending is an event, so it gets an effect rather than a comparison during
+   * render — which is where it used to live, and which re-evaluated on every one
+   * of the second-by-second ticks above.
+   *
+   * Two paths can reach the cue: the timer, and coming back to a page whose timer
+   * was frozen. `cued` makes sure only one of them is heard.
+   */
+  useEffect(() => {
+    if (restUntil === null) return
+
+    const ring = () => {
+      if (cued.current === restUntil) return
+      cued.current = restUntil
+      restOver(alerts, fi.restDone, cueBody.current)
+      setRestUntil(null)
+    }
+
+    const remaining = restUntil - Date.now()
+    if (remaining <= 0) {
+      ring()
+      return
+    }
+    const t = setTimeout(ring, remaining)
+    // A frozen page misses its own timeout, so the cue is reconciled on return
+    // instead of being swallowed. Late is a better answer than never.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && Date.now() >= restUntil) ring()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearTimeout(t)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [restUntil, alerts])
 
   const context = useLiveQuery(async () => {
     if (!session) return {}
@@ -120,9 +168,9 @@ export function SessionScreen({
       : (firstIncomplete(session) ?? session.movements.length - 1)
   const progress = sessionProgress(session)
   const resting = restUntil !== null && restUntil > now
-  if (restUntil && restUntil <= now) setRestUntil(null)
 
   const upcoming = session.movements.length - 1 - active
+  cueBody.current = nextUpLine(session, active, chosenIndex >= 0, name)
 
   const focus = (index: number) => {
     setChosenUid(session.movements[index]?.uid ?? null)
@@ -141,6 +189,8 @@ export function SessionScreen({
 
     // Warmups are moved through quickly; a countdown after each would be noise.
     if (!wasWarmup && movement.restSeconds) {
+      // Inside the tap, because iOS will not start an AudioContext from a timer.
+      if (alerts.sound) primeAudio()
       setRestUntil(Date.now() + movement.restSeconds * 1000)
     }
 
@@ -158,9 +208,27 @@ export function SessionScreen({
     }
   }
 
-  const finish = async () => {
+  const close = async () => {
     const { kept } = await finishSession(id)
     kept ? onFinished(id) : onDiscarded()
+  }
+
+  /**
+   * Everything opens on Lämmittely, and a warmup counts towards nothing, so a
+   * movement logged entirely in the wrong mode would vanish from every number
+   * the app keeps. Checked here rather than mid-set: switching modes on purpose
+   * is normal, and only at the end is it clear you never switched back.
+   */
+  const finish = async () => {
+    // A session with nothing logged has nothing to relabel — it is discarded, as
+    // it always was. This has to come first or the guard fires on an empty one.
+    const logged = session.movements.some((m) => m.sets.some((s) => s.done))
+    const suspect = logged ? warmupOnlyMovements(session) : []
+    if (suspect.length > 0) {
+      setWarmupOnly(suspect)
+      return
+    }
+    await close()
   }
 
   return (
@@ -309,6 +377,68 @@ export function SessionScreen({
           }
           onClose={() => setPad(null)}
         />
+      )}
+
+      {warmupOnly && (
+        <div className="sheet-backdrop" onClick={() => setWarmupOnly(null)}>
+          <div
+            className="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label={fi.checkBeforeFinish}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sheet-head">
+              <span className="t-data">{fi.checkBeforeFinish}</span>
+              <button className="revert" onClick={() => setWarmupOnly(null)}>
+                {fi.close}
+              </button>
+            </div>
+
+            <p className="check-intro">{fi.warmupOnlyIntro(warmupOnly.length)}</p>
+            <ul className="ledger check-list">
+              {warmupOnly.map((mIndex) => {
+                const m = session.movements[mIndex]
+                return (
+                  <li key={m.uid} className="check-row">
+                    <span className="t-name">{name(m.movementId)}</span>
+                    <span className="logline">
+                      <span className="logline-tag t-data">{fi.warmupsLabel}</span>
+                      {setsLine(warmupsDone(m))}
+                    </span>
+                  </li>
+                )
+              })}
+            </ul>
+            <p className="note">{fi.warmupOnlyWhy}</p>
+
+            {/* Neither is the default. Warming up and stopping is a real thing
+                that happens, so the app must not quietly rewrite it — and a
+                mis-logged session must not quietly disappear either. */}
+            <div className="check-actions">
+              <button
+                className="btn btn-tall"
+                onClick={async () => {
+                  await convertWarmupsToWorking(id, warmupOnly)
+                  toast(fi.markedAsWorking(warmupOnly.length))
+                  setWarmupOnly(null)
+                  await close()
+                }}
+              >
+                {fi.markAsWorking}
+              </button>
+              <button
+                className="btn btn-tall"
+                onClick={async () => {
+                  setWarmupOnly(null)
+                  await close()
+                }}
+              >
+                {fi.finishAnyway}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {historyOf && (

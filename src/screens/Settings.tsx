@@ -8,10 +8,13 @@ import {
   KNOWN_DISCS,
   readGym,
   readProfile,
+  useAlerts,
+  writeAlerts,
   writeGym,
   writeProfile,
 } from '../lib/settings'
 import { toast } from '../lib/toast'
+import type { Alerts } from '../lib/settings'
 import type { GymSettings } from '../types'
 
 /**
@@ -127,6 +130,8 @@ export function Settings({ onBack }: { onBack: () => void }) {
         <p className="note">{fi.smallestStep(stepKg(gym))}</p>
       </div>
 
+      <RestAlerts />
+
       <DemoData />
 
       <div className="panel">
@@ -143,6 +148,65 @@ export function Settings({ onBack }: { onBack: () => void }) {
         </div>
       </div>
     </>
+  )
+}
+
+/**
+ * How the end of a rest period announces itself.
+ *
+ * Notification permission is requested when the toggle is switched on and never
+ * on load — an unprompted permission dialog is how you get denied permanently.
+ * If it is refused the toggle goes back off rather than sitting on and lying.
+ */
+function RestAlerts() {
+  const alerts = useAlerts()
+
+  const set = async (key: keyof Alerts, value: boolean) =>
+    writeAlerts({ ...alerts, [key]: value })
+
+  const toggleNotify = async () => {
+    if (alerts.notify) return set('notify', false)
+    if (typeof Notification === 'undefined') {
+      toast(fi.notifyUnsupported, { tone: 'warn' })
+      return
+    }
+    const permission =
+      Notification.permission === 'granted'
+        ? 'granted'
+        : await Notification.requestPermission()
+    if (permission !== 'granted') {
+      toast(fi.notifyDenied, { tone: 'warn' })
+      return
+    }
+    await set('notify', true)
+  }
+
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <span className="t-data">{fi.alerts}</span>
+      </div>
+      <div className="chipset">
+        <button
+          className="toggle"
+          aria-pressed={alerts.vibrate}
+          onClick={() => set('vibrate', !alerts.vibrate)}
+        >
+          {fi.alertVibrate}
+        </button>
+        <button
+          className="toggle"
+          aria-pressed={alerts.sound}
+          onClick={() => set('sound', !alerts.sound)}
+        >
+          {fi.alertSound}
+        </button>
+        <button className="toggle" aria-pressed={alerts.notify} onClick={toggleNotify}>
+          {fi.alertNotify}
+        </button>
+      </div>
+      <p className="note">{fi.alertsHint}</p>
+    </div>
   )
 }
 

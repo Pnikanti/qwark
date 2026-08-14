@@ -545,6 +545,47 @@ export function warmupsDone(m: SessionMovement): LoggedSet[] {
 }
 
 /**
+ * Movements whose only logged work is warmups — indices, so the caller can act
+ * on them.
+ *
+ * Every movement opens on Lämmittely, and a warmup counts towards nothing: not
+ * the set count, the volume, the record, the 1RM estimate, or progression. Three
+ * things on screen say which mode you are in, but a session logged entirely in
+ * the wrong one still disappears from every number the app keeps. This is what
+ * `Lopeta treeni` checks before it commits.
+ *
+ * Pure, so the screen derives it from the session it already holds rather than
+ * querying again — the same reason `suggestionFor` is pure.
+ */
+export function warmupOnlyMovements(session: Session): number[] {
+  return session.movements
+    .map((m, i) => (warmupsDone(m).length > 0 && workingDone(m) === 0 ? i : -1))
+    .filter((i) => i >= 0)
+}
+
+/**
+ * Relabel completed warmups as working sets, for the movements named.
+ *
+ * Loads and reps are left exactly as logged — a warmup at 8 reps becomes a
+ * working set at 8 reps, because that is what was lifted. Only the kind was
+ * wrong. The trailing draft is untouched: it is the input, not a record.
+ */
+export async function convertWarmupsToWorking(
+  sessionId: string,
+  indices: number[],
+): Promise<void> {
+  const wanted = new Set(indices)
+  await mutate(sessionId, (s) => {
+    s.movements.forEach((m, i) => {
+      if (!wanted.has(i)) return
+      for (const set of m.sets) {
+        if (set.done && set.kind === 'warmup') set.kind = 'working'
+      }
+    })
+  })
+}
+
+/**
  * Progress against the plan, with anything beyond it reported separately. A
  * sixth set on a five-set movement is "5/5 +1", not "6/5" — the plan is met and
  * you did extra, which are two facts rather than one confusing ratio. It also

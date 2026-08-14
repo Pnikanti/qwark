@@ -209,7 +209,26 @@ JALKAPÄIVÄ                              ⋯
 - **Last time is a door, not a dead end.** The line under the movement name reads `Viime kerralla`, because `Edellinen` was ambiguous between the previous *set* and the previous *session*. It is a button: tapping it opens that movement's full history, so the one-line summary is no longer the only history the app will show you.
 - **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
 - **Every movement opens on `Lämmittely`**, because that is what you actually do first. The kind then carries forward from the set you just logged, so a ramp continues as a ramp and working sets stay working — it never switches on its own. Reps stay blank for a warmup: the routine's target describes a working set, and choosing `Työsarja` fills it in.
-- The cost of that default is real and worth stating: a set logged in the wrong mode is excluded from the count, the volume, the record and the progression. Three things say which mode you are in — the input takes plate yellow, the label reads `Lämmittely n`, and the movement progress stays at `0/5` — but nothing blocks it.
+- The cost of that default is real: a set logged in the wrong mode is excluded from the count, the volume, the record and the progression. Three things say which mode you are in — the input takes plate yellow, the label reads `Lämmittely n`, and the movement progress stays at `0/5` — and **`Lopeta treeni` checks before it commits**:
+
+```
+┌─ TARKISTA ────────────────────── SULJE ─┐
+  Tässä liikkeessä on vain
+  lämmittelysarjoja:
+
+  Penkkipunnerrus
+  LÄMMITTELY  80 kg × 8, 8
+
+  Lämmittelyt eivät näy volyymissä,
+  ennätyksissä eikä kehityksessä. Jos ne
+  olivat työsarjoja, merkitse ne nyt.
+
+  [ MERKITSE TYÖSARJOIKSI ]
+  [ LOPETA SILTI ]
+└─────────────────────────────────────────┘
+```
+
+  Only movements with warmups and **no** working sets are listed — a movement with both was logged deliberately. Neither action is the default: warming up and stopping is a real thing that happens (a niggle, an occupied rack), so the app must not quietly rewrite it, and a mis-logged session must not quietly vanish either. Dismissing returns you to the session unchanged, to fix it by hand. Converting keeps the loads and reps exactly as logged — only the kind was wrong. A session with nothing logged still discards silently, as it always did; there is nothing to relabel.
 - **A set needs both values before it can be logged**, so nothing is ever recorded that you did not affirm. `0` counts — it means bodyweight.
 - **The set kind is a mode, not a chip.** A segmented control — one object with two halves — rather than two chips that read as filters, and the chosen mode **recolours the whole input**: plate yellow for a warmup, cobalt for a working set. A warmup genuinely is a different kind of record, excluded from volume, from 1RM and from progression, so it should not look like a working set with a toggle flipped.
 - **Movements still to come fold behind one line** — `5 liikettä jäljellä`. Mid-set they carry almost nothing, six rows of `0/3`, while the ones already behind you carry what you lifted, so only the upcoming half folds. The list opens for reordering, and dragging force-opens it so a drag never targets a hidden row.
@@ -222,6 +241,8 @@ JALKAPÄIVÄ                              ⋯
 - **The tick is the primary action, and accent is rationed to make that legible.** Accent had drifted onto fifteen elements at once, and the only solid-filled button on screen was `Lopeta treeni` — at 1.5× the tick's area. The action performed eighteen times a session was the quietest control on it. Accent now belongs to four things: the progress rail, the suggestion while it is the next tap, the rest countdown, and the tick once it can be pressed. The tick is outlined while disabled and solid the moment it is not, so accent appears exactly when there is something to press. `Lopeta treeni` is outlined and takes its natural width; `Lisää liike` is a text link. Mode is state rather than an action, so the selected segment reads neutral and only the unusual mode — warmup — spends a colour.
 - Tapping a load opens the **custom numeric pad** with plate-pair steppers and a plate calculator, sized from your gym settings. Never the OS keyboard.
 - **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement and collapsed rows reveal their targets, then it folds away again.
+- **Rest ending is announced, not just displayed.** Three signals, configurable in Asetukset: vibration (on by default — the only one that works with the phone in a pocket, and the app already vibrates on the tick), a two-tone WebAudio beep (off by default, because a beep in a quiet gym is worse than no beep; synthesised rather than bundled, so it works offline), and a notification through the service worker (off until you grant permission, which is asked for when you switch it on and never on load). The notification names the next set rather than announcing a timer.
+- **What the cue does not promise.** A backgrounded page's timers are throttled and may be frozen outright, and scheduling a notification for a future instant needs the Notification Triggers API, which is not broadly available. So the cue fires on time when the page can run, and a `visibilitychange` listener fires it **late** when the page could not — late beats never. It fires once either way. The Asetukset copy says exactly this rather than implying a locked phone will be woken.
 - Tap targets ≥48 px — used mid-set with sweaty hands.
 - Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
 

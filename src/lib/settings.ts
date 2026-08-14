@@ -76,3 +76,38 @@ export async function writeUi(next: UiState): Promise<void> {
 export function useUi(): UiState {
   return useLiveQuery(readUi, [], { admin: false })
 }
+
+/**
+ * How the end of a rest period announces itself.
+ *
+ * Sound is off by default because a beep in a quiet gym is worse than no beep,
+ * and notifications are off because permission has to be asked for deliberately
+ * — never on load. Vibration is on: it is the only one that works with the phone
+ * in a pocket, and the app already vibrates on the tick.
+ */
+export interface Alerts {
+  vibrate: boolean
+  sound: boolean
+  notify: boolean
+}
+
+export const DEFAULT_ALERTS: Alerts = { vibrate: true, sound: false, notify: false }
+
+const ALERTS_KEY = 'alerts'
+
+export async function readAlerts(): Promise<Alerts> {
+  const stored = (await db.meta.get(ALERTS_KEY))?.value as Partial<Alerts> | undefined
+  return {
+    vibrate: stored?.vibrate ?? DEFAULT_ALERTS.vibrate,
+    sound: stored?.sound ?? DEFAULT_ALERTS.sound,
+    notify: stored?.notify ?? DEFAULT_ALERTS.notify,
+  }
+}
+
+export async function writeAlerts(next: Alerts): Promise<void> {
+  await db.meta.put({ key: ALERTS_KEY, value: next })
+}
+
+export function useAlerts(): Alerts {
+  return useLiveQuery(readAlerts, [], DEFAULT_ALERTS)
+}

@@ -2384,3 +2384,33 @@ select {
   color: var(--ink);
   font-size: 0.78rem;
 }
+
+/* --- the check before finishing ------------------------------------------ */
+
+.check-intro {
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.check-list {
+  margin-bottom: 14px;
+}
+
+.check-row {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.check-row .t-name {
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* Stacked and equally weighted: relabelling and finishing as-is are both
+   legitimate answers, so neither gets the solid fill. */
+.check-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
