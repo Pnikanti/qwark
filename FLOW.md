@@ -229,35 +229,47 @@ Result: 14 controls on one screen, against 23 for the row grid and 92 before the
 Reached from `Viime kerralla` mid-set, and from the movement's page in the library. It answers one question — am I getting stronger at this — so it opens with the answer and puts the ledger underneath.
 
 ```
-HISTORIA                          SULJE
+HISTORIA                            SULJE
 Penkkipunnerrus
 
-TREENEJÄ   ENNÄTYS      VIIME KERRALLA
-6          75 kg × 5    3 vrk
+TREENEJÄ  ENNÄTYS     1RM-ARVIO  VIIME KERRALLA
+6         75 kg × 5   87,5 kg    1 vrk
 
-RASKAIN SARJA TREENEITTÄIN
-        ▄▄  ██  ██          ██
-▄▄  ▄▄  ██  ██  ██  ▁▁  ▄▄  ██   ← newest, cobalt
+KUORMA                pallon koko = toistot
+75 kg ┐     ●───●
+      │   ╱       ╲
+      │ ●           ╲          ◎  ← latest,
+      │               ╲      ╱      haloed
+67,5  ┘                 ⬤──╯     ← 8 reps:
+      ────────────────────────────  bigger dot
+VOLYYMI                 ENINT. 1 875 KG
+      ▐▌  ▐▌  ▐▌  ▐▌      ▐▌  ▐▌
+      ────────────────────────────
+      21.7.                    13.8.
 ────────────────────────────────────────
-67,5 KG                          75 KG
-────────────────────────────────────────
-MA 10.8.2026                  YLÄKROPPA
+TO 13.8.2026                  YLÄKROPPA
 TYÖSARJAT   70 kg × 5, 5, 5, 5, 5
 LÄMMITTELY  40 × 8 · 55 × 5
 VOLYYMI     1 750 kg
 otetta leveämmäksi
 ────────────────────────────────────────
-PE 7.8.2026                       5×5 A
-TYÖSARJAT   67,5 kg × 5, 5, 5, 5, 5
+MA 10.8.2026                      5×5 A
+TYÖSARJAT   67,5 kg × 8, 8, 8
 …
 ```
 
 - **A sheet, not a screen.** It is opened mid-set; pushing a route would discard which movement the accordion has open — including one you deliberately parked on to add extra sets.
-- **The scale is cropped and says so.** Loads cluster in a narrow band, so a zero baseline draws every session the same height. The chart plots the heaviest working set per session and prints its own range underneath, which is what keeps a cropped axis honest.
-- **Three bars minimum.** Two sessions are a pair of numbers; the ledger states that better than a chart could.
+- **The x axis is real time, not session number.** Evenly spaced sessions hide the gaps, and the gaps are the difference between steady work and a month off. An eleven-day break draws as an eleven-day break.
+- **One point per session at its top set, sized by that set's reps.** So dropping the load and chasing reps reads as what it is — the dot falls and grows — instead of looking like a plain regression. The legend appears only when the reps actually vary.
+- **A whisker when the session's loads spread**, from lightest working set to heaviest. A straight 5×5 has no spread and gets no whisker. This is what an earlier version got wrong: it drew a dot per *set*, and on a 5×5 all five landed on one point with four of them invisible.
+- **The load axis is cropped and says so; volume is zero-based.** Loads cluster in a narrow band, so a zero baseline flattens every session onto one row — both ends of the range are printed instead, which is what keeps a cropped axis honest. Volume genuinely starts at zero, so it is drawn from zero, and a flat volume profile is a true reading rather than a rendering failure.
+- **Bodyweight work plots reps**, drops the volume panel and offers no 1RM estimate. There is no load to plot and nothing to extrapolate from.
+- **Three sessions minimum.** Two are a pair of numbers; the ledger states that better than a chart could.
+- **`1RM-arvio` is labelled as an estimate** (Epley), because it is a lift you have not made. It exists so sets at different rep counts are comparable.
 - **Warmups stay on their own line**, as they do in the session view, so the working sets remain comparable at a glance.
 - Same movement logged twice in one session merges into one row — that is one day's work on that lift, not two sessions.
 - Notes carry through, in the words you wrote them in.
+- The plot covers the last 30 sessions and **says so on the axis when it is dropping any**.
 
 ### Liikkeen valinta
 

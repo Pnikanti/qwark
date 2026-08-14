@@ -227,7 +227,11 @@ export const fi = {
   openHistory: 'Näytä koko historia',
   /** Column label in the history summary — the sheet is already titled Historia. */
   sessionsLabel: 'Treenejä',
-  trend: 'Raskain sarja treeneittäin',
+  oneRepMax: '1RM-arvio',
+  loadAxis: 'Kuorma',
+  dotSizeIsReps: 'pallon koko = toistot',
+  axisMax: 'enint.',
+  lastNSessions: (n: number) => `viimeiset ${n}`,
   noMovementHistory: 'Tätä liikettä ei ole vielä kirjattu.',
   noMovementHistoryHint: 'Merkitse ensimmäinen sarja tehdyksi, niin se näkyy täällä.',
   retroLogged: 'jälkikäteen kirjattu',

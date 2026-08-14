@@ -2211,39 +2211,95 @@ select {
   font-weight: 600;
 }
 
-.trend-block {
+.chart-block {
   margin-bottom: 18px;
 }
 
-.trend-label {
-  margin: 0 0 8px;
+.chart-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 4px;
   color: var(--ink-dim);
 }
 
-.trend {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 58px;
-  border-bottom: 1px solid var(--line-strong);
+/* The y-axis labels sit at the very bottom of the panel above, so the next
+   panel's heading needs clearance or the two collide. */
+.chart + .chart-label {
+  margin-top: 16px;
 }
 
-.trend-bar {
-  flex: 1;
-  min-width: 4px;
-  min-height: 2px;
-  background: var(--line-strong);
+/* The legend, and the note when the axis is showing only the recent sessions —
+   a bound on the data has to be stated, not implied by the axis stopping. */
+.chart-hint {
+  font-variation-settings: 'wdth' 70;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.04em;
 }
 
-/* The session you are in the middle of comparing against. */
-.trend-bar.now {
-  background: var(--accent);
+.chart {
+  position: relative;
+  border-bottom: 1px solid var(--line);
 }
 
-/* The scale is cropped to the loaded range, so it has to be stated. */
-.trend-scale {
+/* Both ends of a cropped axis, in the gutter the plot leaves for them. */
+.chart-y {
+  position: absolute;
+  left: 0;
+  width: 38px;
+  color: var(--ink-dim);
+  font-variation-settings: 'wdth' 70;
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-align: right;
+}
+
+.chart-y.top {
+  top: 1px;
+}
+
+.chart-y.bottom {
+  bottom: 3px;
+}
+
+/* How far the session's working loads spread, from lightest to heaviest. Absent
+   on a straight 5×5, which has no spread to report. */
+.spread {
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.topline {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.peak {
+  fill: var(--accent);
+}
+
+/* Marks the latest session without touching the dot's size, which means reps. */
+.halo {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  opacity: 0.4;
+}
+
+.volbar {
+  fill: var(--line-strong);
+}
+
+.chart-dates {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin: 6px 0 0;
   color: var(--ink-dim);
 }
