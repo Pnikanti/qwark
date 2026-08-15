@@ -1,6 +1,6 @@
 # Qwark — Product Spec
 
-Status: draft · Last updated: 2026-08-10
+Status: draft · Last updated: 2026-08-15
 
 ## Premise
 
@@ -16,6 +16,7 @@ Status: draft · Last updated: 2026-08-10
 |---|---|
 | Platform | Web / PWA first, installable to home screen |
 | Stack | Vite + React + Supabase (Postgres, auth, edge functions) |
+| Hosting | Firebase Hosting, static build from `dist/`, at `qwark.cxb.fi` |
 | v1 scope | Training only |
 | Audience | Personal use first; generalize later |
 | Offline | Must work fully offline — local-first with background sync |

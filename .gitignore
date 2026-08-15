@@ -9,6 +9,17 @@ dist-ssr/
 *.local
 .vite/
 
+# Firebase deploy cache and CLI debug output
+.firebase/
+firebase-debug.log
+*-debug.log
+
+# Agent tooling — machine-local, not part of the app
+.agents/
+skills-lock.json
+.claude/settings.local.json
+.claude/skills/
+
 # Environment
 .env
 .env.*
