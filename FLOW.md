@@ -115,7 +115,8 @@ Tapping any past or present day in the strip opens it. Future days are not
 tappable — there is nothing to show and nothing to plan.
 
 - Sessions logged that day, each opening its summary. A day with nothing logged
-  says so.
+  shows no list at all — the start row below is already the answer, and stating
+  the absence first only delayed reading it.
 - **One action**: `Aloita treeni` today, `Lisää treeni` for a day already past. It
   opens the picker. Any day that has happened can take a workout — you might have
   forgotten to log one — and only the future cannot.
@@ -206,8 +207,8 @@ JALKAPÄIVÄ                              ⋯
 - **One movement expanded**, marked with a cobalt rule. It **auto-advances** on the transition into completion — once only, so returning to add an extra set does not bounce you away again. Any collapsed line is one tap away, so an occupied machine costs nothing.
 - **Work beyond the plan is additive, never inflated.** A sixth set on a five-set movement reads `5/5 +1` and the input says `Lisäsarja 1`. `6/5` would state one confusing thing where there are two true ones, and it made the session rail exceed its own track.
 - **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh, blank one.
-- **Last time is a door, not a dead end.** The line under the movement name reads `Viime kerralla`, because `Edellinen` was ambiguous between the previous *set* and the previous *session*. It is a button: tapping it opens that movement's full history, so the one-line summary is no longer the only history the app will show you.
-- **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
+- **Last time is a door, not a dead end.** The line under the movement name reads `Viime kerralla`, because `Edellinen` was ambiguous between the previous *set* and the previous *session*. It is a button: tapping it opens that movement's full history, so the one-line summary is no longer the only history the app will show you. For a movement you have never trained, the row collapses to the bare `Historia ▸` — the label and its value were saying the same nothing twice, and a blank row already states the absence.
+- **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Opening the pad shows the same number greyed and dashed behind an empty field, so you can read the plate breakdown before committing to it; it is displayed, never stored, and `Valmis` on an untouched field writes nothing. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
 - **Every movement opens on `Lämmittely`**, because that is what you actually do first. The kind then carries forward from the set you just logged, so a ramp continues as a ramp and working sets stay working — it never switches on its own. Reps stay blank for a warmup: the routine's target describes a working set, and choosing `Työsarja` fills it in.
 - The cost of that default is real: a set logged in the wrong mode is excluded from the count, the volume, the record and the progression. Three things say which mode you are in — the input takes plate yellow, the label reads `Lämmittely n`, and the movement progress stays at `0/5` — and **`Lopeta treeni` checks before it commits**:
 
@@ -416,11 +417,41 @@ There is one user, so this is not permissioning — it is a mode switch that kee
 
 The second reason turned out to matter as much as the first: with the editing controls always present, the library had no room to say anything about your training, and both screens opened with the least interesting thing on them.
 
+## Ensimmäinen käynnistys
+
+A first launch asks who is training before it shows anything else — two steps,
+and only the name is required.
+
+- **Vaihe 1** collects name, sex, birth year, goal and bodyweight on one screen.
+  A blank field *is* the skip, so there are no `Ohita` links: four of them would
+  each do what leaving a field empty already does, while implying the blank
+  fields were what stopped you. Birth year rather than age, because an age typed
+  today is wrong next year. Bodyweight is written as a dated reading, not a
+  setting — the first point of a series the progress screen will want.
+- **Vaihe 2** is the routine list, and the goal *marks* a group rather than
+  filtering one: `Voima` surfaces 5×5, `Lihaskasvu` the push/pull/legs split,
+  `Yleiskunto` ylä/ala. All seven routines stay listed and startable. Steering is
+  helpful; hiding five of them on the strength of one tap is not.
+- Sex and birth year are stored and **nothing reads them yet**. The screen says
+  so rather than implying a use.
+
+This is a wall, and the decision table says "pick one and start, no builder
+wall". The tension is real and was accepted deliberately; it is paid down by
+keeping the wall one screen with one required field, and by ending it on the
+routine list so the last step of onboarding is the first tap of training.
+
+Completion is recorded when the name is submitted, not when a routine is chosen,
+so closing the app while choosing does not raise the wall again. Two consequences
+worth knowing: the gate is decided once at launch rather than watched — a live
+query saw its own completion write and tore the flow down before step 2 could
+render — and anyone with existing sessions or a name is backfilled as done, so
+shipping onboarding cannot wall a user who has been training for weeks.
+
 ## The first-session problem
 
 The app's core value is pre-filling from history, which on day one does not exist. Seeded templates supply structure and target reps, but **not loads** — we do not invent weights the user hasn't lifted.
 
-So session one shows `Ei aiempaa tietoa` and blank kg fields. This is a one-time cost, paid once per movement, and it is the honest option. From session two onward every field arrives pre-filled.
+So session one shows a bare `Historia ▸` and blank kg fields. This is a one-time cost, paid once per movement, and it is the honest option. From session two onward every field arrives pre-filled.
 
 The same emptiness makes several screens impossible to *look at* while building them — the movement plot will not draw under three sessions, the week strip has nothing to shade, and the rotation cannot say what is next. `Asetukset → Esimerkkidata` generates twelve weeks of one programme for that: three sessions a week, a week off in the middle so the time axis has a gap, and a progression that stalls and deloads rather than climbing cleanly, because a clean ramp is the one shape real logs never have.
 

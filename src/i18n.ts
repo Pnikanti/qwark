@@ -136,16 +136,11 @@ export const fi = {
   trainedToday: 'Tänään treenattu',
   nextTime: 'Seuraavaksi',
   anotherWorkout: 'Lisää toinen treeni',
-  pickToBegin: 'Valitse mistä aloitat.',
-  firstRunHint: 'Valitse ohjelma tai aloita tyhjä treeni. Voit muokata kaikkea matkan varrella.',
   yourRoutines: 'Omat ohjelmat',
   lastSession: 'Viime treeni',
   weekNumber: (n: number) => `Viikko ${n}`,
   sessionCount: (n: number) => (n === 1 ? '1 treeni' : `${n} treeniä`),
   noTrainingThisWeek: 'Ei treenejä tällä viikolla',
-  noTrainingThatDay: 'Ei treeniä tänä päivänä',
-  openToday: 'Tämän päivän treenit',
-  openTodayHint: 'Ohjelmat ja tyhjä treeni',
   startEmptyHint: 'Valitse liikkeet matkan varrella',
   muscleBalance: 'Lihasryhmät tällä viikolla',
   showMore: 'Näytä',
@@ -153,7 +148,6 @@ export const fi = {
   worksThese: 'Kuormittaa näitä lihasryhmiä',
   nextInCycle: '· seuraava',
   lastDone: (when: string) => `Tehty ${when}`,
-  noHistory: 'Ei vielä treenejä',
   startedAgo: (t: string) => `aloitettu ${t} sitten`,
   setCount: (n: number) => (n === 1 ? '1 sarja' : `${n} sarjaa`),
   movementWord: (n: number) => (n === 1 ? 'liike' : 'liikettä'),
@@ -183,7 +177,9 @@ export const fi = {
   proposalIncrease: (kg: string, delta: string) => `Ehdotus ${kg} kg (+${delta})`,
   proposalHold: (kg: string) => `Ehdotus ${kg} kg — sama kuin viimeksi`,
   proposalDeload: (kg: string) => `Ehdotus ${kg} kg — kevennys`,
-  noPrevious: 'Ei aiempaa tietoa',
+  /** Labels the greyed number in the pad, so it is never read as entered. */
+  padCurrent: 'Nykyinen',
+  padOffer: 'Ehdotus',
   addSet: 'Lisää sarja',
   remainingMovements: (n: number) =>
     n === 1 ? '1 liike jäljellä' : `${n} liikettä jäljellä`,
@@ -253,6 +249,39 @@ export const fi = {
   alertNotify: 'Ilmoitus',
   notifyDenied: 'Ilmoituslupa evätty. Voit sallia sen selaimen asetuksista.',
   notifyUnsupported: 'Tämä selain ei tue ilmoituksia.',
+  alertTest: 'Testaa',
+  alertTestOff: 'Kytke ensin jokin merkki päälle.',
+  vibrateUnsupported: 'Tämä laite ei tue tärinää.',
+
+  /* --- onboarding --- */
+  welcome: 'Tervetuloa',
+  onboardingIntro:
+    'Muutama tieto, niin sovellus tietää kuka treenaa ja mistä kannattaa aloittaa.',
+  onboardingOnlyName: 'Vain nimi on pakollinen. Muut voit täyttää myöhemmin asetuksissa.',
+  onboardingStep: (n: number, total: number) => `Vaihe ${n} / ${total}`,
+  continueOn: 'Jatka',
+  chooseFirstRoutine: 'Mistä aloitat?',
+  chooseFirstRoutineHint:
+    'Valitse ohjelma tai aloita tyhjä treeni. Voit muokata kaikkea matkan varrella.',
+  recommended: '· suositus',
+  startLater: 'Aloitan myöhemmin',
+
+  bodyweight: 'Paino',
+  bodyweightHint: 'Tallennetaan päivämäärän kanssa, jotta kehitystä voi seurata myöhemmin.',
+  sex: 'Sukupuoli',
+  sexMale: 'Mies',
+  sexFemale: 'Nainen',
+  birthYear: 'Syntymävuosi',
+  birthYearHint: 'Ikä vanhenee, syntymävuosi ei.',
+  goal: 'Tavoite',
+  goalStrength: 'Voima',
+  goalMuscle: 'Lihaskasvu',
+  goalHabit: 'Yleiskunto',
+  goalHint:
+    'Vaikuttaa vain siihen, minkä ohjelman sovellus ehdottaa ensin. Voit valita minkä tahansa.',
+  profileStoredHint:
+    'Sukupuolta ja syntymävuotta ei vielä käytetä mihinkään — ne tallennetaan tulevia laskelmia varten.',
+  profile: 'Profiili',
 
   demoData: 'Esimerkkidata',
   demoDataHint:
@@ -285,5 +314,10 @@ export const fi = {
 } as const
 
 export const muscleFi = (key: string): string => tax.muscles[key] ?? key
+/**
+ * Empty, not a dash, for a movement with no equipment. Absence is the caller's
+ * business: every caller composing a line does so with `.filter(Boolean)`, and a
+ * dash is truthy — which is how a bodyweight movement came to read `Rinta · –`.
+ */
 export const equipmentFi = (key: string | null): string =>
-  key ? (tax.equipment[key] ?? key) : '–'
+  key ? (tax.equipment[key] ?? key) : ''

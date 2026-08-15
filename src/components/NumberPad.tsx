@@ -13,18 +13,30 @@ export type PadMode = 'kg' | 'reps'
 export function NumberPad({
   mode,
   value,
+  hint,
   label,
   onCommit,
   onClose,
 }: {
   mode: PadMode
   value: number | null
+  /** The inferred load to show greyed when nothing is stored yet. Never written. */
+  hint: number | null
   label: string
+  /** The user affirmed a value. The parent owns the sheet from here. */
   onCommit: (value: number | null) => void | Promise<void>
+  /** Dismissed. Nothing was affirmed and nothing is written. */
   onClose: () => void
 }) {
   const gym = useGym()
-  const [draft, setDraft] = useState<string>(value === null ? '' : String(value))
+  /**
+   * The draft starts empty even when a value is stored, and `pristine` says so.
+   * Seeding the draft with the value was what made typing append — open on 60,
+   * tap 8, get 608 — because a stored number and a typed one were the same
+   * string. Keeping them apart is what lets the first keystroke replace.
+   */
+  const [draft, setDraft] = useState('')
+  const [pristine, setPristine] = useState(true)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -35,29 +47,50 @@ export function NumberPad({
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  const numeric = draft === '' ? null : Number(draft.replace(',', '.'))
+  const typed = draft === '' ? null : Number(draft.replace(',', '.'))
+  /** What is stored, or failing that what is merely offered. */
+  const ghost = value ?? hint
+  /** An offer is dashed; a stored value is not. Solid means you entered it. */
+  const ghostIsOffer = value === null && hint !== null
+  /** The number the plate breakdown and the steppers work from. */
+  const shown = pristine ? ghost : typed
   const step = mode === 'kg' ? stepKg(gym) : 1
 
   // Await the write before closing: the value must be on disk, not in flight,
   // before the sheet disappears and the app can be killed.
   const commit = async () => {
-    await onCommit(numeric !== null && Number.isFinite(numeric) ? numeric : null)
-    onClose()
+    // Nothing was touched, so nothing is asserted — least of all a load the app
+    // inferred. Dismissing is the honest outcome; `Täytä` is how an offer is
+    // accepted, and it is a deliberate tap on the offer itself.
+    if (pristine) return onClose()
+    await onCommit(typed !== null && Number.isFinite(typed) ? typed : null)
+  }
+
+  /** Adopt whatever is on screen as the starting point for an edit. */
+  const materialise = () => {
+    setPristine(false)
+    return pristine ? (ghost === null ? '' : String(ghost)) : draft
   }
 
   const bump = (delta: number) => {
-    const base = numeric ?? (mode === 'kg' ? gym.barKg : 0)
-    const next = Math.max(0, Math.round((base + delta) * 100) / 100)
-    setDraft(String(next))
+    const base = shown ?? (mode === 'kg' ? gym.barKg : 0)
+    setPristine(false)
+    setDraft(String(Math.max(0, Math.round((base + delta) * 100) / 100)))
   }
 
   const press = (key: string) => {
-    if (key === 'del') return setDraft((d) => d.slice(0, -1))
-    if (key === ',') return setDraft((d) => (d.includes('.') ? d : d + '.'))
-    setDraft((d) => (d === '0' ? key : d + key))
+    // Editing keys work on what you can see; digits start over. Without the
+    // first branch, ⌫ on a ghost would read as a dead key.
+    if (key === 'del') return setDraft(materialise().slice(0, -1))
+    if (key === ',') {
+      const d = materialise()
+      return setDraft(d.includes('.') ? d : (d || '0') + '.')
+    }
+    setDraft(pristine ? key : draft + key)
+    setPristine(false)
   }
 
-  const load = mode === 'kg' && numeric !== null ? platesFor(numeric, gym) : null
+  const load = mode === 'kg' && shown !== null ? platesFor(shown, gym) : null
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -76,8 +109,26 @@ export function NumberPad({
         </div>
 
         <div className="readout">
-          <span className="readout-value">{draft.replace('.', ',') || '–'}</span>
+          <span
+            className={`readout-value${pristine && ghost !== null ? ' is-ghost' : ''}${
+              pristine && ghostIsOffer ? ' is-offer' : ''
+            }`}
+            /* A screen reader must not be told the field holds a number it does
+               not hold, so the ghost announces itself as an offer. */
+            aria-label={
+              pristine && ghost !== null
+                ? `${ghostIsOffer ? fi.padOffer : fi.padCurrent} ${ghost}`
+                : undefined
+            }
+          >
+            {(pristine ? (ghost === null ? '' : String(ghost)) : draft).replace('.', ',') || '–'}
+          </span>
           <span className="readout-unit t-data">{mode === 'kg' ? 'kg' : fi.reps}</span>
+          {pristine && ghost !== null && (
+            <span className="readout-source t-data">
+              {ghostIsOffer ? fi.padOffer : fi.padCurrent}
+            </span>
+          )}
         </div>
 
         {mode === 'kg' && (
@@ -101,7 +152,13 @@ export function NumberPad({
                   ))
                 )}
                 {load.remainder > 0 && (
-                  <button className="revert" onClick={() => setDraft(String(snapToBar(numeric!, gym)))}>
+                  <button
+                    className="revert"
+                    onClick={() => {
+                      setPristine(false)
+                      setDraft(String(snapToBar(shown!, gym)))
+                    }}
+                  >
                     {fi.snapToBar(load.remainder)}
                   </button>
                 )}

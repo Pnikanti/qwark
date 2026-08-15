@@ -3,6 +3,7 @@ import movementSeed from '../data/movements.seed.json'
 import templateSeed from '../data/templates.seed.json'
 import { localDay } from './lib/format'
 import type {
+  BodyMetric,
   CustomMovement,
   Movement,
   MovementOverride,
@@ -29,6 +30,8 @@ class QwarkDB extends Dexie {
   customMovements!: Table<CustomMovement, string>
   templates!: Table<Template, string>
   sessions!: Table<Session, string>
+  /** Bodyweight over time, one row per local day. */
+  bodyMetrics!: Table<BodyMetric, string>
   meta!: Table<Meta, string>
 
   constructor() {
@@ -92,6 +95,12 @@ class QwarkDB extends Dexie {
           session.startedLocalDay ??= localDay(session.startedAt)
         }),
     )
+    /**
+     * Bodyweight, from onboarding onward. `.stores()` is a delta, so declaring
+     * only the new table leaves the rest untouched and no upgrade function is
+     * needed — the same shape as version 4.
+     */
+    this.version(7).stores({ bodyMetrics: 'day, at' })
   }
 }
 

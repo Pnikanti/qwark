@@ -193,14 +193,17 @@ body {
   margin-top: 5px;
 }
 
+/* Wraps rather than squeezes: in Hallinta the library carries four buttons, and
+   "JOUKKOKÄÄNNÖS" is wider than the quarter-width they were each being given. */
 .masthead-actions {
   display: flex;
-  gap: 7px;
-  margin-top: 11px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .masthead-actions .btn {
-  flex: 1;
+  flex: 1 1 auto;
 }
 
 .back {
@@ -359,20 +362,18 @@ select {
 
 /* --- the ledger --------------------------------------------------------- */
 
-.tally {
-  padding: 12px var(--gutter) 6px;
-}
-
 .ledger {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* Not sticky. `top: 62px` was set against a masthead that now measures ~116px
+   and paints opaquely at a higher layer, so the marker stuck itself underneath
+   the header and vanished on scroll. A marker that cannot be seen while
+   scrolling is not doing the job stickiness was for; it scrolls with its
+   section instead. */
 .section-mark {
-  position: sticky;
-  top: 62px;
-  z-index: 10;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -982,9 +983,12 @@ select {
 
 /* --- summary figures ---------------------------------------------------- */
 
+/* auto-fit rather than a hard 3: at 393px three 96px tracks still fit, so the
+   normal row is unchanged, but a long value like "1 h 25 min" is no longer
+   squeezed into a fixed 111px column and wrapped. */
 .figures {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 12px;
 }
 
@@ -1083,6 +1087,23 @@ select {
   font-size: 2.9rem;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+/* A number shown but not entered. Same cut and size as a real value, so the
+   first keystroke changes the colour and nothing moves. */
+.readout-value.is-ghost {
+  color: var(--ink-dim);
+}
+
+/* Dashed means on offer — the same language the `Täytä` row uses. A ghost of a
+   value you already stored is grey but solid: it was entered, just not here. */
+.readout-value.is-offer {
+  border-bottom: 1px dashed var(--line-strong);
+}
+
+.readout-source {
+  margin-left: auto;
+  color: var(--ink-dim);
 }
 
 .plates {
@@ -1244,7 +1265,9 @@ select {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 3px;
+  /* 3px put the movement name all but touching the `Viime kerralla` row on the
+     screen the whole workout is spent in. */
+  margin-bottom: 8px;
 }
 
 .active-head .t-name {
@@ -1253,14 +1276,17 @@ select {
   font-weight: 700;
 }
 
+/* Consolidated from two rules 400 lines apart; the later one's `flex-start` and
+   padding were the ones taking effect, so they are the ones kept. Top-aligned
+   because the warmup and working loglines stack. */
 .doneline {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   width: 100%;
   min-height: 40px;
   margin-bottom: 10px;
-  padding: 0 10px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
   border-radius: 2px;
   background: transparent;
@@ -1606,10 +1632,6 @@ select {
   margin-top: 4px;
 }
 
-.draft-kind {
-  margin-bottom: 10px;
-}
-
 .draft-label {
   display: block;
   margin-bottom: 5px;
@@ -1669,12 +1691,6 @@ select {
   color: var(--mark);
 }
 
-.doneline {
-  align-items: flex-start;
-  min-height: 40px;
-  padding: 7px 10px;
-}
-
 .logline {
   display: block;
   overflow: hidden;
@@ -1710,40 +1726,6 @@ select {
 
 /* --- next in the cycle --------------------------------------------------- */
 
-.nextup {
-  padding: 12px var(--gutter) 14px;
-  border-bottom: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
-  background: var(--accent-wash);
-}
-
-.nextup-tag {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--accent);
-}
-
-.nextup-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nextup-row .grow {
-  flex: 1;
-  min-width: 0;
-}
-
-.nextup-row .t-name,
-.nextup-row .t-data {
-  display: block;
-}
-
-.nextup-row .t-name {
-  font-size: 1.08rem;
-  font-weight: 700;
-}
-
 .entry.routine.is-next .t-name {
   color: var(--accent);
 }
@@ -1768,9 +1750,12 @@ select {
   margin-bottom: 12px;
 }
 
+/* The week is support under the hero, so its title steps back. Consolidated from
+   two rules 270 lines apart that were resolving by source order. */
 .week-title {
-  font-size: 1.02rem;
   margin-bottom: 3px;
+  font-size: 0.86rem;
+  color: var(--ink-mid);
 }
 
 .week-days {
@@ -1833,7 +1818,9 @@ select {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-  font-size: 0.56rem;
+  /* 0.56rem computed to 9px — under the size at which this face is readable at
+     all, so the cell was spending a row on characters nobody could resolve. */
+  font-size: 0.62rem;
   letter-spacing: 0.02em;
   color: var(--ink-dim);
 }
@@ -2038,11 +2025,6 @@ select {
 }
 
 /* The week is support under the hero, so its title steps back. */
-.week-title {
-  font-size: 0.86rem;
-  color: var(--ink-mid);
-}
-
 /* --- set kind, as a mode rather than a chip ------------------------------ */
 
 /* One object with two halves reads as a switch; two separate chips read as
@@ -2224,7 +2206,9 @@ select {
 .hist-summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 26px;
+  /* The row gap has to beat the 2px between a label and its own value, or the
+     wrapped rows read as one block instead of four figures. */
+  gap: 12px 26px;
   margin: 0 0 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
@@ -2277,10 +2261,15 @@ select {
 }
 
 /* Both ends of a cropped axis, in the gutter the plot leaves for them. */
+/* Width is coupled to `GUTTER` in MovementHistory.tsx — the plot's left inset is
+   derived from it, so the two move together or the labels sit over the dots.
+   `nowrap` because "137,5 kg" wrapped to two lines and the second one landed
+   inside the plot. */
 .chart-y {
   position: absolute;
   left: 0;
-  width: 38px;
+  width: 46px;
+  white-space: nowrap;
   color: var(--ink-dim);
   font-variation-settings: 'wdth' 70;
   font-weight: 600;
@@ -2413,4 +2402,40 @@ select {
   flex-direction: column;
   gap: 8px;
   margin-top: 14px;
+}
+
+/* --- onboarding ---------------------------------------------------------- */
+
+/* First run has room the mid-session controls do not, so its chips get the full
+   48px target rather than the compact 34px used where space is contested. */
+.chipset.roomy .toggle {
+  min-height: var(--tap);
+  padding: 0 16px;
+}
+
+.field-note {
+  margin: 8px 0 0;
+}
+
+/* Carries its own gutter: step 2's intro sits on the ground rather than inside
+   a panel, so it has no padding to inherit. */
+.onboard-intro {
+  margin: 0 0 16px;
+  padding: 14px var(--gutter) 0;
+}
+
+/* Inside a panel the gutter is already there, so only the rhythm is needed. */
+.panel .onboard-intro {
+  padding: 0;
+}
+
+.onboard-commit {
+  width: 100%;
+}
+
+.onboard-later {
+  display: block;
+  width: 100%;
+  margin: 4px 0 24px;
+  text-align: center;
 }

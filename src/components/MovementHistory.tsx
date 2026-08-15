@@ -164,8 +164,12 @@ function useWidth() {
   return [ref, width] as const
 }
 
-/** Room for the y-axis labels, left of the plot. */
-const GUTTER = 44
+/**
+ * Room for the y-axis labels, left of the plot. Coupled to `.chart-y`'s width in
+ * styles.css — they are 2000 lines apart in different files, so they must be
+ * changed together. 44 was narrower than "137,5 kg" renders.
+ */
+const GUTTER = 52
 const LOAD_H = 118
 const VOL_H = 32
 const R_MAX = 6

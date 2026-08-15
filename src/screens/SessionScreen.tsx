@@ -178,6 +178,25 @@ export function SessionScreen({
     setUpcomingOpen(false)
   }
 
+  /**
+   * The number the pad shows greyed when the field is empty — the same
+   * inference the `Täytä` row below the input offers, so the two can never
+   * disagree about what is being proposed. Never shown over a logged set: that
+   * is a record being corrected, not a decision waiting to be made.
+   */
+  const padHint = (at: PadTarget): number | null => {
+    const m = session.movements[at.mIndex]
+    const set = m.sets[at.sIndex]
+    const ctx = context?.[m.movementId]
+    if (!set || set.done || !ctx?.next) return null
+    const s = suggestionFor(m, set.kind, ctx.ramp, {
+      kg: ctx.next.kg,
+      reps: ctx.next.reps,
+      fromKg: ctx.next.fromKg,
+    })
+    return at.mode === 'kg' ? (s?.kg ?? null) : (s?.reps ?? null)
+  }
+
   const commit = async (mIndex: number) => {
     const movement = session.movements[mIndex]
     const draft = movement.sets.at(-1)
@@ -185,7 +204,10 @@ export function SessionScreen({
     const wasWarmup = draft.kind === 'warmup'
 
     await commitSet(id, mIndex)
-    navigator.vibrate?.(12)
+    // 12ms was below what a phone's vibration motor can spin up for — accepted by
+    // the browser, felt as nothing. Still a tick, not a buzz: this fires 18 times
+    // a session and the rest cue has to stay distinguishable from it.
+    navigator.vibrate?.(30)
 
     // Warmups are moved through quickly; a countdown after each would be noise.
     if (!wasWarmup && movement.restSeconds) {
@@ -363,6 +385,10 @@ export function SessionScreen({
 
       {pad && (
         <NumberPad
+          /* Switching kg → reps renders the same element type, so React would
+             reconcile and the reps pad would inherit the weight's draft. The key
+             forces the remount that `NumberPad`'s fresh-mount state assumes. */
+          key={`${pad.mIndex}-${pad.sIndex}-${pad.mode}`}
           mode={pad.mode}
           label={`${name(session.movements[pad.mIndex].movementId)} · ${fi.set} ${
             pad.sIndex + 1
@@ -372,9 +398,14 @@ export function SessionScreen({
               ? session.movements[pad.mIndex].sets[pad.sIndex].kg
               : session.movements[pad.mIndex].sets[pad.sIndex].reps
           }
-          onCommit={(v) =>
-            patchSet(id, pad.mIndex, pad.sIndex, pad.mode === 'kg' ? { kg: v } : { reps: v })
-          }
+          hint={padHint(pad)}
+          onCommit={async (v) => {
+            const at = pad
+            await patchSet(id, at.mIndex, at.sIndex, at.mode === 'kg' ? { kg: v } : { reps: v })
+            // Weight leads to reps; reps is the last field, so it closes and
+            // leaves the tick as the only thing left to press.
+            setPad(at.mode === 'kg' && v !== null ? { ...at, mode: 'reps' } : null)
+          }}
           onClose={() => setPad(null)}
         />
       )}
@@ -635,11 +666,17 @@ function ActiveMovement({
       {/* The last session, and the way into every session before it. This line
           used to be inert text labelled "Edellinen" — ambiguous between the
           previous set and the previous session, and a dead end either way. */}
+      {/* With no history the label and its value said the same nothing twice, so
+          the row folds to the bare door — the same shape `Note` takes when there
+          is nothing written yet. The button itself stays either way: it is the
+          only way into the history sheet from here. */}
       <button className="prev" onClick={onOpenHistory}>
-        <span className="grow">
-          <span className="prev-tag t-data">{fi.previous}</span>
-          <span className="t-data">{previousLine || fi.noPrevious}</span>
-        </span>
+        {previousLine && (
+          <span className="grow">
+            <span className="prev-tag t-data">{fi.previous}</span>
+            <span className="t-data">{previousLine}</span>
+          </span>
+        )}
         <span className="t-data prev-more">{fi.history} ▸</span>
       </button>
 

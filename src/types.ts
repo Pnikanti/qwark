@@ -164,3 +164,21 @@ export interface GymSettings {
  * destroyed by the next seed bump.
  */
 export type CustomMovement = Movement & { custom: true }
+
+/**
+ * One bodyweight reading.
+ *
+ * A table rather than a number on the profile, because bodyweight is an
+ * observation with a date and not a setting: TODO.md wants it smoothed over
+ * time, and a scalar would have to be migrated into a series later with no
+ * timestamp to migrate — the app would have to invent one.
+ *
+ * Keyed on the local day so re-weighing yourself in the evening corrects the
+ * morning's entry instead of stacking a second one, the same reason
+ * `Session.startedLocalDay` exists.
+ */
+export interface BodyMetric {
+  day: string
+  at: number
+  kg: number
+}

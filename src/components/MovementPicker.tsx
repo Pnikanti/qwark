@@ -84,9 +84,12 @@ export function MovementPicker({
                 <BodyPlan primary={m.primaryMuscles} secondary={m.secondaryMuscles} size={34} />
                 <span className="grow">
                   <span className="t-name">{m.nameFi ?? m.nameEn}</span>
+                  {/* Assembled from the parts that exist: a bodyweight movement
+                      has no equipment, and a fixed separator left it as "· –". */}
                   <span className="t-data">
-                    {m.primaryMuscles.map(muscleFi).join(' · ')} ·{' '}
-                    {equipmentFi(m.equipment)}
+                    {[...m.primaryMuscles.map(muscleFi), equipmentFi(m.equipment)]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </span>
                 </span>
               </button>

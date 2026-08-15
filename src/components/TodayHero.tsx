@@ -117,7 +117,6 @@ export function TodayHero({
     return (
       <section className="hero">
         {greeting}
-        <p className="hero-meta t-data">{fi.pickToBegin}</p>
         <button className="btn solid hero-action" onClick={onPick}>
           {fi.chooseRoutine}
         </button>

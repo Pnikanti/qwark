@@ -25,22 +25,72 @@ export function primeAudio(): void {
   if (audio.state === 'suspended') void audio.resume()
 }
 
-/** Two short tones. Synthesised rather than bundled, so it works offline. */
-function beep(): void {
-  if (!audio || audio.state !== 'running') return
+/**
+ * Three rising tones. Synthesised rather than bundled, so it works offline.
+ *
+ * Built to be heard across a gym rather than to be tasteful. A sine at 0.25 gain
+ * — what this was — is close to the quietest sound a browser can make: a sine has
+ * no harmonics, and a phone speaker reproduces almost nothing of a pure tone that
+ * low. Three things fix that, and all three are needed:
+ *
+ * - **Square, not sine.** The odd harmonics are what a small speaker can actually
+ *   move air with, so the same nominal level lands far louder.
+ * - **Near full scale.** The compressor holds the peaks, so the pulses can sit at
+ *   the top of the range without the clipping that raw 0.9-gain squares produce.
+ * - **Longer, and three of them.** 0.6s of rising pattern reads as a signal; two
+ *   quiet blips read as a UI noise you are not sure you heard.
+ *
+ * The lowpass is the one concession to taste: unfiltered square harmonics come out
+ * of a phone speaker as hiss.
+ */
+async function beep(): Promise<void> {
+  if (!audio) return
+  // `resume()` is a promise, so a context primed by the same tap that asked for
+  // this beep can still be suspended right now. Awaiting it here is what keeps the
+  // first press of Testaa from being silent.
+  if (audio.state === 'suspended') {
+    try {
+      await audio.resume()
+    } catch {
+      return
+    }
+  }
+  if (audio.state !== 'running') return
   const at = audio.currentTime
-  for (const [i, hz] of [880, 1320].entries()) {
+
+  const master = audio.createGain()
+  // 0.85, not higher: measured in an OfflineAudioContext, 0.9 overshoots to
+  // 1.006 and clips. This peaks at -0.3 dBFS with the limiter holding it there.
+  master.gain.value = 0.85
+
+  const tone = audio.createBiquadFilter()
+  tone.type = 'lowpass'
+  tone.frequency.value = 5000
+
+  const limiter = audio.createDynamicsCompressor()
+  limiter.threshold.value = -14
+  limiter.ratio.value = 12
+  limiter.attack.value = 0.002
+
+  master.connect(tone).connect(limiter).connect(audio.destination)
+
+  const PULSE = 0.15
+  const STEP = 0.21
+  // A5 · A5 · E6 — inside the band a phone speaker is most efficient in.
+  for (const [i, hz] of [880, 880, 1319].entries()) {
+    const start = at + i * STEP
     const osc = audio.createOscillator()
     const gain = audio.createGain()
-    osc.type = 'sine'
+    osc.type = 'square'
     osc.frequency.value = hz
     // Ramped, because a square-edged gain change clicks.
-    gain.gain.setValueAtTime(0, at + i * 0.18)
-    gain.gain.linearRampToValueAtTime(0.25, at + i * 0.18 + 0.02)
-    gain.gain.linearRampToValueAtTime(0, at + i * 0.18 + 0.16)
-    osc.connect(gain).connect(audio.destination)
-    osc.start(at + i * 0.18)
-    osc.stop(at + i * 0.18 + 0.18)
+    gain.gain.setValueAtTime(0, start)
+    gain.gain.linearRampToValueAtTime(1, start + 0.012)
+    gain.gain.setValueAtTime(1, start + PULSE - 0.03)
+    gain.gain.linearRampToValueAtTime(0, start + PULSE)
+    osc.connect(gain).connect(master)
+    osc.start(start)
+    osc.stop(start + PULSE + 0.02)
   }
 }
 
@@ -67,8 +117,45 @@ async function notify(title: string, body: string): Promise<void> {
   }
 }
 
+/**
+ * Whether the browser has the Vibration API at all.
+ *
+ * iOS has never shipped it — in every browser on the platform, including Chrome,
+ * `navigator.vibrate` is simply absent. The optional call below makes that a
+ * silent no-op, which is right for the cue and wrong for the toggle in Asetukset:
+ * a switch that sits on while nothing can ever happen is worse than one that says
+ * the device cannot do it.
+ */
+export function canVibrate(): boolean {
+  return typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function'
+}
+
+/**
+ * Long pulses, because a vibration motor has to spin up before anything is felt.
+ * The old [120, 80, 120] was near the floor of what a phone renders at all — some
+ * report it as fired and never move. Three 300ms pulses cannot be missed with the
+ * phone on a bench, and are still felt through a pocket.
+ *
+ * Android additionally drops vibrations while the document is hidden, which is why
+ * the caller reconciles a missed cue on `visibilitychange` rather than assuming the
+ * timer's call was heard.
+ */
+const BUZZ = [300, 120, 300, 120, 300]
+
 export function restOver(alerts: Alerts, title: string, body: string): void {
-  if (alerts.vibrate) navigator.vibrate?.([120, 80, 120])
-  if (alerts.sound) beep()
+  if (alerts.vibrate) navigator.vibrate?.(BUZZ)
+  if (alerts.sound) void beep()
   if (alerts.notify) void notify(title, body)
+}
+
+/**
+ * Fires whichever cues are switched on, for the Testaa button in Asetukset.
+ *
+ * Priming here is what makes the test meaningful: it runs inside the tap, which is
+ * the only context iOS will start an AudioContext from, so what you hear is what a
+ * real rest period will sound like rather than silence from a suspended context.
+ */
+export function testCue(alerts: Alerts, title: string, body: string): void {
+  if (alerts.sound) primeAudio()
+  restOver(alerts, title, body)
 }

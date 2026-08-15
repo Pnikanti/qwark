@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { fi } from '../i18n'
+import { ProfileFields } from '../components/ProfileFields'
+import { latestBodyweight, logBodyweight } from '../lib/body'
+import { canVibrate, testCue } from '../lib/cue'
 import { countDemoSessions, removeDemoSessions, seedDemoSessions } from '../lib/demo'
 import { shortDate } from '../lib/format'
 import { stepKg } from '../lib/plates'
@@ -14,7 +17,7 @@ import {
   writeProfile,
 } from '../lib/settings'
 import { toast } from '../lib/toast'
-import type { Alerts } from '../lib/settings'
+import type { Alerts, Profile } from '../lib/settings'
 import type { GymSettings } from '../types'
 
 /**
@@ -24,14 +27,23 @@ import type { GymSettings } from '../types'
  */
 export function Settings({ onBack }: { onBack: () => void }) {
   const [gym, setGym] = useState<GymSettings | null>(null)
-  const [name, setName] = useState<string | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [weight, setWeight] = useState<string | null>(null)
 
   useEffect(() => {
     readGym().then(setGym)
-    readProfile().then((p) => setName(p.name))
+    readProfile().then(setProfile)
+    latestBodyweight().then((b) => setWeight(b ? String(b.kg) : ''))
   }, [])
 
-  if (!gym || name === null) return <p className="blank note">{fi.loading}</p>
+  if (!gym || !profile || weight === null) return <p className="blank note">{fi.loading}</p>
+
+  // Onboarding's fields, still editable — the same component, so they cannot
+  // drift apart. Writes as you go rather than on a Jatka that does not exist here.
+  const saveProfile = (next: Profile) => {
+    setProfile(next)
+    void writeProfile(next)
+  }
 
   const save = async (next: GymSettings) => {
     setGym(next)
@@ -60,19 +72,30 @@ export function Settings({ onBack }: { onBack: () => void }) {
       </header>
 
       <div className="panel">
+        <div className="panel-head">
+          <span className="t-data">{fi.profile}</span>
+        </div>
+        <ProfileFields value={profile} onChange={saveProfile} />
+
         <div className="field">
           <div className="field-label">
-            <span className="t-data">{fi.yourName}</span>
+            <span className="t-data">{fi.bodyweight}</span>
           </div>
+          {/* Appends a dated reading rather than overwriting a setting, so the
+              copy must not read like a preference. Same day replaces itself. */}
           <input
-            value={name}
-            placeholder={fi.yourName}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={() => writeProfile({ name })}
+            type="number"
+            inputMode="decimal"
+            step="0.1"
+            value={weight}
+            placeholder="80"
+            onChange={(e) => setWeight(e.target.value)}
+            onBlur={() => {
+              const kg = Number(weight.replace(',', '.'))
+              if (Number.isFinite(kg) && kg > 0) void logBodyweight(kg)
+            }}
           />
-          <p className="note" style={{ marginTop: 8 }}>
-            {fi.yourNameHint}
-          </p>
+          <p className="note field-note">{fi.bodyweightHint}</p>
         </div>
       </div>
 
@@ -164,6 +187,27 @@ function RestAlerts() {
   const set = async (key: keyof Alerts, value: boolean) =>
     writeAlerts({ ...alerts, [key]: value })
 
+  const toggleVibrate = async () => {
+    if (!alerts.vibrate && !canVibrate()) {
+      toast(fi.vibrateUnsupported, { tone: 'warn' })
+      return
+    }
+    await set('vibrate', !alerts.vibrate)
+  }
+
+  /**
+   * Fires the cue exactly as a finished rest period would, because otherwise the
+   * only way to hear it is to sit through a real rest — which is both slow and the
+   * worst moment to discover the beep is inaudible.
+   */
+  const test = () => {
+    if (!alerts.vibrate && !alerts.sound && !alerts.notify) {
+      toast(fi.alertTestOff, { tone: 'warn' })
+      return
+    }
+    testCue(alerts, fi.restDone, fi.alertTest)
+  }
+
   const toggleNotify = async () => {
     if (alerts.notify) return set('notify', false)
     if (typeof Notification === 'undefined') {
@@ -190,7 +234,7 @@ function RestAlerts() {
         <button
           className="toggle"
           aria-pressed={alerts.vibrate}
-          onClick={() => set('vibrate', !alerts.vibrate)}
+          onClick={toggleVibrate}
         >
           {fi.alertVibrate}
         </button>
@@ -203,6 +247,9 @@ function RestAlerts() {
         </button>
         <button className="toggle" aria-pressed={alerts.notify} onClick={toggleNotify}>
           {fi.alertNotify}
+        </button>
+        <button className="toggle" onClick={test}>
+          {fi.alertTest}
         </button>
       </div>
       <p className="note">{fi.alertsHint}</p>

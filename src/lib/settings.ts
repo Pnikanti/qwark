@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
+import type { Goal } from './goals'
 import type { GymSettings } from '../types'
 
 /** Olympic bar and a full set of IWF discs — the common case, not an assumption. */
@@ -34,21 +35,47 @@ export function useGym(): GymSettings {
   return useLiveQuery(readGym, [], DEFAULT_GYM)
 }
 
+export type Sex = 'male' | 'female'
+
+/**
+ * Sex and birth year are stored and nothing reads them yet — said plainly rather
+ * than dressed up. The one foreseen consumer is the deferred nutrition maths.
+ * The goal does have a reader: it picks which routine group is recommended.
+ *
+ * Birth year rather than age, because an age typed today is wrong next year.
+ */
 export interface Profile {
   name: string
+  sex: Sex | null
+  birthYear: number | null
+  goal: Goal | null
 }
 
+export const EMPTY_PROFILE: Profile = { name: '', sex: null, birthYear: null, goal: null }
+
 export async function readProfile(): Promise<Profile> {
-  const stored = (await db.meta.get(PROFILE_KEY))?.value as Profile | undefined
-  return { name: stored?.name?.trim() ?? '' }
+  const stored = (await db.meta.get(PROFILE_KEY))?.value as Partial<Profile> | undefined
+  // Defaulted per field, like readAlerts: someone who onboarded before these
+  // existed has a name-only profile and must read back as nulls, not undefined.
+  return {
+    name: stored?.name?.trim() ?? '',
+    sex: stored?.sex ?? null,
+    birthYear: stored?.birthYear ?? null,
+    goal: stored?.goal ?? null,
+  }
 }
 
 export async function writeProfile(profile: Profile): Promise<void> {
-  await db.meta.put({ key: PROFILE_KEY, value: { name: profile.name.trim() } })
+  // Every field, not just the name. Writing `{ name }` here — which is what this
+  // did — would wipe sex, birth year and goal on every blur of the name input.
+  await db.meta.put({
+    key: PROFILE_KEY,
+    value: { ...profile, name: profile.name.trim() },
+  })
 }
 
 export function useProfile(): Profile {
-  return useLiveQuery(readProfile, [], { name: '' })
+  return useLiveQuery(readProfile, [], EMPTY_PROFILE)
 }
 
 /**

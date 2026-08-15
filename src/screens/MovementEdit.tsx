@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { Choice } from '../components/Choice'
 import { MovementHistory, MovementOverview } from '../components/MovementHistory'
 import { equipmentFi, fi, muscleFi, tax } from '../i18n'
 import {
@@ -87,13 +88,28 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
             <div className="panel-head">
               <span className="t-data">{fi.movementDetails}</span>
             </div>
+            {/* Each pair is dropped whole when it has nothing to say, the way
+                `mechanic` and `force` below always have. A label beside a dash
+                spends a row to report an absence. */}
             <dl className="summary">
-              <dt className="t-data">{fi.primaryMuscles}</dt>
-              <dd>{movement.primaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
-              <dt className="t-data">{fi.secondaryMuscles}</dt>
-              <dd>{movement.secondaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
-              <dt className="t-data">{fi.equipment}</dt>
-              <dd>{equipmentFi(movement.equipment)}</dd>
+              {movement.primaryMuscles.length > 0 && (
+                <>
+                  <dt className="t-data">{fi.primaryMuscles}</dt>
+                  <dd>{movement.primaryMuscles.map(muscleFi).join(', ')}</dd>
+                </>
+              )}
+              {movement.secondaryMuscles.length > 0 && (
+                <>
+                  <dt className="t-data">{fi.secondaryMuscles}</dt>
+                  <dd>{movement.secondaryMuscles.map(muscleFi).join(', ')}</dd>
+                </>
+              )}
+              {movement.equipment && (
+                <>
+                  <dt className="t-data">{fi.equipment}</dt>
+                  <dd>{equipmentFi(movement.equipment)}</dd>
+                </>
+              )}
               {movement.mechanic && (
                 <>
                   <dt className="t-data">{fi.mechanic}</dt>
@@ -171,10 +187,18 @@ export function MovementEdit({ id, onBack }: { id: string; onBack: () => void })
           </>
         ) : (
           <dl className="summary">
-            <dt className="t-data">{fi.primaryMuscles}</dt>
-            <dd>{movement.primaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
-            <dt className="t-data">{fi.secondaryMuscles}</dt>
-            <dd>{movement.secondaryMuscles.map(muscleFi).join(', ') || '–'}</dd>
+            {movement.primaryMuscles.length > 0 && (
+              <>
+                <dt className="t-data">{fi.primaryMuscles}</dt>
+                <dd>{movement.primaryMuscles.map(muscleFi).join(', ')}</dd>
+              </>
+            )}
+            {movement.secondaryMuscles.length > 0 && (
+              <>
+                <dt className="t-data">{fi.secondaryMuscles}</dt>
+                <dd>{movement.secondaryMuscles.map(muscleFi).join(', ')}</dd>
+              </>
+            )}
           </dl>
         )}
       </div>
@@ -320,33 +344,6 @@ function Field({
         )}
       </div>
       {children}
-    </div>
-  )
-}
-
-function Choice({
-  options,
-  labels,
-  value,
-  onChange,
-}: {
-  options: string[]
-  labels: Record<string, string>
-  value: string | null
-  onChange: (v: string | null) => void
-}) {
-  return (
-    <div className="chipset">
-      {options.map((option) => (
-        <button
-          key={option}
-          className="toggle"
-          aria-pressed={value === option}
-          onClick={() => onChange(value === option ? null : option)}
-        >
-          {labels[option] ?? option}
-        </button>
-      ))}
     </div>
   )
 }

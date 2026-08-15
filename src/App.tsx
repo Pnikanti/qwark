@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ensureSeeded } from './db'
+import { readOnboarded } from './lib/onboarding'
 import { closeStaleSessions } from './lib/session'
 import { Toaster, toast } from './lib/toast'
 import { fi } from './i18n'
@@ -11,6 +12,7 @@ import { Settings } from './screens/Settings'
 import { SessionScreen } from './screens/SessionScreen'
 import { SessionSummary } from './screens/SessionSummary'
 import { Day } from './screens/Day'
+import { Onboarding } from './screens/Onboarding'
 import { RoutinePicker } from './screens/RoutinePicker'
 import { Today } from './screens/Today'
 
@@ -32,6 +34,16 @@ const ROOTS = ['today', 'library'] as const
 
 export function App() {
   const [ready, setReady] = useState(false)
+  /**
+   * Decided once, at mount, and not re-read afterwards.
+   *
+   * A live query here was wrong in a way worth recording: onboarding writes its
+   * completion flag when the name is submitted — so that killing the app on the
+   * routine step does not raise the wall again — and a reactive gate saw that
+   * write and unmounted the flow before its second step could render. Who is
+   * being shown the app is not a question to re-answer mid-flow.
+   */
+  const [onboarded, setOnboarded] = useState<boolean | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [view, setView] = useState<View>({ name: 'today' })
 
@@ -39,7 +51,11 @@ export function App() {
     ensureSeeded()
       // Sessions nobody came back to are closed at their last logged set.
       .then(closeStaleSessions)
-      .then(() => setReady(true), (err) => setError(String(err)))
+      .then(readOnboarded)
+      .then((done) => {
+        setOnboarded(done)
+        setReady(true)
+      }, (err) => setError(String(err)))
   }, [])
 
   const today = () => setView({ name: 'today' })
@@ -50,8 +66,18 @@ export function App() {
     <div className="app">
       {error ? (
         <p className="blank note">{error}</p>
-      ) : !ready ? (
+      ) : !ready || onboarded === null ? (
         <p className="blank note">{fi.loading}</p>
+      ) : !onboarded ? (
+        /* Above the view switch and outside the dock: the gate is about the
+           whole shell, and leaving the tabs live would let Liikekirjasto walk
+           straight around it. After `ready`, because step 2 needs the seed. */
+        <Onboarding
+          onStarted={(id) => {
+            setView(id ? { name: 'session', id } : { name: 'today' })
+            setOnboarded(true)
+          }}
+        />
       ) : (
         <>
           {view.name === 'today' ? (

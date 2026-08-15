@@ -19,6 +19,7 @@ export function RoutineList({
   meta,
   onStart,
   startLabel,
+  markLabel = fi.nextInCycle,
 }: {
   templates: Template[]
   movements: Map<string, EffectiveMovement>
@@ -26,6 +27,8 @@ export function RoutineList({
   onStart: (template: Template) => void
   /** "Aloita" today, "Lisää" for a day already past. */
   startLabel: string
+  /** What `isNext` is marked as — the cycle position, or a goal's suggestion. */
+  markLabel?: string
 }) {
   const name = (id: string) =>
     movements.get(id)?.nameFi ?? movements.get(id)?.nameEn ?? id
@@ -49,6 +52,7 @@ export function RoutineList({
                   movements={movements}
                   label={t.items.map((i) => name(i.movementId)).join(' · ')}
                   meta={meta(t.id)}
+                  markLabel={markLabel}
                   startLabel={startLabel}
                   onStart={() => onStart(t)}
                 />
@@ -66,6 +70,7 @@ function RoutineRow({
   movements,
   label,
   meta,
+  markLabel,
   startLabel,
   onStart,
 }: {
@@ -73,6 +78,7 @@ function RoutineRow({
   movements: Map<string, EffectiveMovement>
   label: string
   meta: RoutineMeta
+  markLabel: string
   startLabel: string
   onStart: () => void
 }) {
@@ -90,7 +96,7 @@ function RoutineRow({
       <span className="grow">
         <span className="t-name">
           {template.name}
-          {meta.isNext && <span className="cycle-mark"> {fi.nextInCycle}</span>}
+          {meta.isNext && <span className="cycle-mark"> {markLabel}</span>}
         </span>
         <span className="t-data">
           {meta.lastDoneAt

@@ -133,9 +133,17 @@ export function Library({ onEdit, onBulkRename, onOverrides }: Props) {
             <h1 className="t-title">{fi.library}</h1>
           </span>
         </div>
+        {/* The second clause is dropped at zero rather than reporting one: "68
+            liikettä · ei vielä tehtyjä" spends a clause saying nothing. */}
         <span className="t-data">
-          {fi.movementCount(visible.length)} ·{' '}
-          {admin ? fi.editedCount(editedCount) : fi.trainedCount(trainedCount)}
+          {[
+            fi.movementCount(visible.length),
+            admin
+              ? editedCount > 0 && fi.editedCount(editedCount)
+              : trainedCount > 0 && fi.trainedCount(trainedCount),
+          ]
+            .filter(Boolean)
+            .join(' · ')}
         </span>
 
         {/* The mode switch is always here; what it reveals is not. */}

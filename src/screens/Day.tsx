@@ -51,11 +51,9 @@ export function Day({
         </span>
       </header>
 
-      {sessions.length === 0 ? (
-        <div className="blank">
-          <span className="t-data">{fi.noTrainingThatDay}</span>
-        </div>
-      ) : (
+      {/* No "ei treeniä" line: the start row below already says the day is open,
+          and stating the absence first only delays reading the one action. */}
+      {sessions.length > 0 && (
         <ul className="ledger">
           {sessions.map((s) => (
             <li key={s.id}>

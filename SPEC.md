@@ -23,7 +23,7 @@ Status: draft · Last updated: 2026-08-15
 | AI in v1 | None. Deferred until real training history exists |
 | Units | Metric (kg, cm) |
 | Language | Finnish only in the UI; code and identifiers in English |
-| First run | Seeded Finnish templates — pick one and start, no builder wall |
+| First run | Name asked once, everything else optional, ending on the routine list — pick one and start, no builder wall |
 | Main screen | Tänään (today's session) with the routine list below |
 
 Screen-by-screen flow in [FLOW.md](FLOW.md).
