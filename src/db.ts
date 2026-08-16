@@ -8,6 +8,7 @@ import type {
   Movement,
   MovementOverride,
   Session,
+  SessionFeedback,
   Template,
 } from './types'
 
@@ -32,6 +33,8 @@ class QwarkDB extends Dexie {
   sessions!: Table<Session, string>
   /** Bodyweight over time, one row per local day. */
   bodyMetrics!: Table<BodyMetric, string>
+  /** Answers given to the Ensi kerralle sheet, one row per session. */
+  sessionFeedback!: Table<SessionFeedback, string>
   meta!: Table<Meta, string>
 
   constructor() {
@@ -101,6 +104,12 @@ class QwarkDB extends Dexie {
      * needed — the same shape as version 4.
      */
     this.version(7).stores({ bodyMetrics: 'day, at' })
+    /**
+     * Dialogue answers. Additive delta again, so no upgrade function and nothing
+     * to backfill: a session with no row reads as unanswered, which is exactly
+     * the behaviour before this table existed.
+     */
+    this.version(8).stores({ sessionFeedback: 'sessionId, at' })
   }
 }
 

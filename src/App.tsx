@@ -22,7 +22,9 @@ type View =
   /** `from` is where Back returns to — the picker is reachable from both. */
   | { name: 'pick'; at: number; from: 'today' | 'day' }
   | { name: 'session'; id: string }
-  | { name: 'summary'; id: string }
+  /** `fresh` marks arriving straight from finishing, which is the only path
+   *  that may raise the review sheet unprompted. */
+  | { name: 'summary'; id: string; fresh?: boolean }
   | { name: 'library' }
   | { name: 'edit'; id: string }
   | { name: 'rename' }
@@ -105,14 +107,14 @@ export function App() {
           ) : view.name === 'session' ? (
             <SessionScreen
               id={view.id}
-              onFinished={(id) => setView({ name: 'summary', id })}
+              onFinished={(id) => setView({ name: 'summary', id, fresh: true })}
               onDiscarded={() => {
                 toast(fi.discarded, { tone: 'warn' })
                 today()
               }}
             />
           ) : view.name === 'summary' ? (
-            <SessionSummary id={view.id} onDone={today} />
+            <SessionSummary id={view.id} justFinished={view.fresh === true} onDone={today} />
           ) : view.name === 'library' ? (
             <Library
               onEdit={(id) => setView({ name: 'edit', id })}

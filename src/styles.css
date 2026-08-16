@@ -2439,3 +2439,153 @@ select {
   margin: 4px 0 24px;
   text-align: center;
 }
+
+/* --- the session review dialogue ----------------------------------------- */
+
+/* Turn-taking rendered as a ledger, not as chat. A conversation is alternation
+   in time, and this app already renders alternation in time as hairline rows —
+   the session screen is the proof. So there are no bubbles, no left/right flip
+   and no avatars: the app's voice is the app's default type, and a committed
+   answer takes the condensed uppercase every other logged fact takes, because
+   the moment it is tapped it *is* a logged fact. */
+
+.thread {
+  /* Full-bleed hairlines while the text stays in the column, the same trick
+     `.scroller` uses. Coupled to `.turn`'s horizontal padding below. */
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0;
+  list-style: none;
+}
+
+.turn {
+  padding: 14px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+/* What the app states before it asks. No width override — the default cut is
+   the app's speaking voice, which is the least chrome available. */
+.turn-say {
+  margin: 0 0 8px;
+  color: var(--ink-mid);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.turn-ask {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.turn .chipset {
+  margin-top: 14px;
+}
+
+/* Chips size to their content, so a five-letter answer would otherwise be a
+   physically smaller target than a twelve-letter one. */
+.turn .toggle {
+  min-width: 96px;
+}
+
+/* The settled answer: label left, value right, like every other data row. */
+.turn.is-answer {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 44px;
+}
+
+/* No `min-width` here, unlike `.prev-tag` — the value is pushed right by
+   `margin-left: auto`, so there is no column to align. The padding stays: it is
+   the guard that stops a long label touching its own value. */
+.turn-tag {
+  padding-right: 8px;
+  color: var(--ink-dim);
+}
+
+.turn-value {
+  margin-left: auto;
+  text-align: right;
+  color: var(--ink);
+}
+
+/* An overridden inference is an edited field, which is what plate yellow is
+   for. Colour arrives after the decision, describing rather than steering. */
+.turn-value.is-override {
+  color: var(--mark);
+}
+
+.turn-clear {
+  margin-left: auto;
+}
+
+/* The beat before a turn lands. Kept when a model supplies the text, where the
+   wait is real and its absence would look like a frozen screen. */
+.turn-wait {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 22px;
+}
+
+.turn-wait span {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ink-dim);
+  animation: thread-wait 1200ms infinite cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.turn-wait span:nth-child(2) {
+  animation-delay: 140ms;
+}
+
+.turn-wait span:nth-child(3) {
+  animation-delay: 280ms;
+}
+
+@keyframes thread-wait {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* There is no blanket reduced-motion rule in this file, so every animation
+   carries its own opt-out. The row still renders — only the pulse stops. */
+@media (prefers-reduced-motion: reduce) {
+  .turn-wait span {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+
+/* The proposals table under the thread: every movement, its next load. */
+.next-loads {
+  margin: 0;
+  padding: 14px var(--gutter) 0;
+}
+
+.next-load {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.next-load .grow {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.next-load-kg {
+  margin-left: auto;
+  color: var(--ink);
+}

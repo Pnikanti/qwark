@@ -67,6 +67,7 @@ export async function closeStaleSessions(): Promise<number> {
       .filter((m) => m.sets.length > 0)
     if (!done.length) {
       await db.sessions.delete(session.id)
+      await db.sessionFeedback.delete(session.id)
       continue
     }
     await db.sessions.put({
@@ -444,6 +445,7 @@ export async function finishSession(
   const completed = session.movements.some((m) => m.sets.some((s) => s.done))
   if (!completed) {
     await db.sessions.delete(sessionId)
+    await db.sessionFeedback.delete(sessionId)
     return { kept: false }
   }
 
@@ -456,7 +458,13 @@ export async function finishSession(
   return { kept: true }
 }
 
-export const discardSession = (sessionId: string) => db.sessions.delete(sessionId)
+/** Feedback is deleted with the session it describes — an answer about a
+ *  workout that no longer exists is an orphan, and "Data export + delete" will
+ *  eventually walk these tables expecting them to agree. */
+export const discardSession = async (sessionId: string) => {
+  await db.sessions.delete(sessionId)
+  await db.sessionFeedback.delete(sessionId)
+}
 
 /** Save a finished ad hoc session as a reusable routine. */
 export async function saveAsTemplate(sessionId: string, name: string): Promise<void> {

@@ -314,6 +314,72 @@ TYÖSARJAT   67,5 kg × 8, 8, 8
 - Ad hoc sessions offer `Tallenna pohjaksi` here.
 - A session opened but with no completed sets is discarded rather than saved as junk.
 
+### Ensi kerralle — the review dialogue
+
+The app decides one thing unilaterally: after a load is missed twice running, it
+cuts about ten per cent. Everything else it infers is additive, neutral or
+absent. **So the rule is that the dialogue speaks when the app is about to take
+something away** — nothing else, and that sentence is what stops the cadence
+drifting back into chatter after every session.
+
+```
+┌─ ENSI KERRALLE ──────────────── SULJE ─┐
+  Penkkipunnerrus: 100 kg × 8, 7, 5.
+  Tavoite 8.
+
+  Sama kuorma jäi tavoitteesta kahdesti
+  peräkkäin. Ilman muuta tietoa ehdotus
+  ensi kerralle on 90 kg.
+
+  Mistä se johtui?
+
+  [ PAINO OLI LIIAN RASKAS ]
+  [ PÄIVÄ OLI HUONO ] [ EN OSAA SANOA ]
+─────────────────────────────────────────
+  VASTASIT          PÄIVÄ OLI HUONO
+─────────────────────────────────────────
+  Kevennys peruttu. Ehdotus ensi kerralle
+  on 100 kg. Jos sama toistuu, tämä
+  kysytään uudelleen.
+└─────────────────────────────────────────┘
+```
+
+- **It is a ledger, not a chat.** Turn-taking is alternation in time, and this
+  app already renders alternation in time as hairline rows — the session screen
+  is the proof. So there are no bubbles, no left/right flip and no avatars. The
+  app's voice is the app's default type; a committed answer takes the condensed
+  uppercase every other logged fact takes, because the moment it is tapped it
+  *is* a logged fact. The last row is not "you said RASKAS", it is the number
+  that changed.
+- **One answer, one authority rule**: *an answer may hold a load the rules would
+  have moved; it may never move a load the rules would have held.* Holding at
+  100 kg proposes a weight with two sessions of evidence behind it; turning a
+  hold into an increase would propose one with none. There is deliberately no
+  "make it lighter" and no "it felt easy" chip — after missing twice, a chip the
+  log contradicts invites a claim that is not true. The honest decline claims
+  something the log *cannot* contradict: that the cause was outside the lift.
+- **The influence expires by itself.** An answer steers exactly the next
+  proposal. Once a newer session with that movement exists the old answer is out
+  of the two-session window and is never read again — no expiry logic, and no
+  invisible steering three weeks later.
+- **It arrives uninvited, so dismissal costs nothing.** Every other sheet opens
+  on a tap. This one rises 500 ms after the summary paints, so the figures are
+  readable first, and the backdrop, `Sulje` and `Escape` all close it with
+  nothing written. Dismissal is never a silent yes: the rule's cut simply
+  stands. `Ehdotukset ensi kerralle` stays on the summary afterwards, so closing
+  the sheet never destroys the content, and reopening the same summary from
+  Päivä never re-raises it.
+- **The rarity is the licence.** It is acceptable as an interruption only
+  because it fires on a real event. Making it appear after every session would
+  turn it into a modal nag between finishing a workout and seeing what you
+  lifted — that version was considered and rejected.
+- **Scripted, with the seam for a model.** `turnsFor` is pure and returns data;
+  a phraser sits between it and the screen and is the identity function today.
+  The call site awaits it already, which is the one decision that avoids a
+  rewrite later. The invariant if a model ever lands: **it may choose words, it
+  may not choose what happens** — which is what makes the offline path the base
+  case rather than a fallback.
+
 ## Liikekirjaston hallinta (admin)
 
 The seeded Finnish names are drafts, so correcting them in-app is the fix loop — not editing the build script and rebuilding. Same for the metadata gaps free-exercise-db leaves behind.

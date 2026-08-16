@@ -12,6 +12,7 @@ import {
   progressionFor,
   type Progression,
   type ProgressionKind,
+  type ProgressionReason,
 } from '../lib/progression'
 import { primeAudio, restOver } from '../lib/cue'
 import { useAlerts, useGym } from '../lib/settings'
@@ -578,11 +579,25 @@ function CollapsedMovement({
   )
 }
 
-/** Where the offered numbers come from, said plainly. */
-function suggestionText(s: Suggestion, proposalKind?: ProgressionKind): string {
+/**
+ * Where the offered numbers come from, said plainly.
+ *
+ * `reason` is what makes a held load visible: a deload the user declined must
+ * not silently read as "sama kuin viimeksi", or an answer would change a future
+ * load with nothing on screen to show for it.
+ */
+function suggestionText(
+  s: Suggestion,
+  proposalKind?: ProgressionKind,
+  reason?: ProgressionReason,
+): string {
   const kg = kgLabel(s.kg)
   if (s.source === 'repeat') return fi.suggestRepeat(kg)
   if (s.source === 'ramp') return fi.suggestRamp(kg, s.reps)
+  if (reason === 'bodyweight') return fi.proposalBodyweight
+  if (reason === 'toldDay') return fi.proposalHeld(kg)
+  if (reason === 'mixed') return fi.proposalMixedLoads(kg)
+  if (reason === 'noTarget') return fi.proposalNoTarget(kg)
   if (proposalKind === 'increase' && s.fromKg !== null)
     return fi.proposalIncrease(kg, kgLabel(s.kg - s.fromKg))
   if (proposalKind === 'deload') return fi.proposalDeload(kg)
@@ -742,6 +757,7 @@ function ActiveMovement({
               : null
           }
           proposalKind={proposal?.kind}
+          proposalReason={proposal?.reason}
           onApply={onApply}
           label={draftLabelFor(m, draft)}
           onSetKind={onSetKind}
@@ -824,6 +840,7 @@ function Draft({
   label,
   suggestion,
   proposalKind,
+  proposalReason,
   onApply,
   onSetKind,
   onKg,
@@ -834,6 +851,7 @@ function Draft({
   label: string
   suggestion: Suggestion | null
   proposalKind?: ProgressionKind
+  proposalReason?: ProgressionReason
   onApply: (kg: number, reps: number | null) => void
   onSetKind: (kind: SetKind) => void
   onKg: () => void
@@ -897,7 +915,7 @@ function Draft({
           className={`suggestion t-data kind-${proposalKind ?? 'hold'}`}
           onClick={() => onApply(suggestion.kg, set.reps ?? suggestion.reps)}
         >
-          <span className="grow">{suggestionText(suggestion, proposalKind)}</span>
+          <span className="grow">{suggestionText(suggestion, proposalKind, proposalReason)}</span>
           <span className="suggestion-apply">{fi.applySuggestion}</span>
         </button>
       )}

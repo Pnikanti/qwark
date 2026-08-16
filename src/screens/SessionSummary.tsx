@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BodyPlan } from '../components/BodyPlan'
+import { Dialogue } from '../components/Dialogue'
 import { MovementHistory } from '../components/MovementHistory'
 import { fi } from '../i18n'
 import { durationOrDash, setsLine, shortDate } from '../lib/format'
+import { buildDialogueContext, clearAnswer, saveAnswer } from '../lib/feedback'
 import { listMovements } from '../lib/movements'
+import { useGym } from '../lib/settings'
 import { toast } from '../lib/toast'
 import {
   bestWorkingSet,
@@ -16,11 +19,37 @@ import {
   volumeKg,
 } from '../lib/session'
 
-export function SessionSummary({ id, onDone }: { id: string; onDone: () => void }) {
+export function SessionSummary({
+  id,
+  justFinished = false,
+  onDone,
+}: {
+  id: string
+  /**
+   * True only when arriving straight from finishing. Reaching the same summary
+   * from Päivä must never raise the review sheet unprompted — the question has
+   * usually been settled by later training.
+   */
+  justFinished?: boolean
+  onDone: () => void
+}) {
   const [name, setName] = useState('')
   const [saved, setSaved] = useState(false)
   /** Movement id whose history is open, as a sheet over the summary. */
   const [historyOf, setHistoryOf] = useState<string | null>(null)
+  const [reviewOpen, setReviewOpen] = useState(false)
+  const gym = useGym()
+
+  // The dialogue's own trigger: no events means nothing to say, and the sheet
+  // never appears. Kept live so answering re-derives the stated loads.
+  const review = useLiveQuery(() => buildDialogueContext(id, gym), [id, gym])
+
+  // A beat before it rises, so the figures just earned are readable first.
+  useEffect(() => {
+    if (!justFinished || !review?.events.length) return
+    const t = setTimeout(() => setReviewOpen(true), 500)
+    return () => clearTimeout(t)
+  }, [justFinished, review?.events.length])
 
   const data = useLiveQuery(async () => {
     const session = await getSession(id)
@@ -93,6 +122,30 @@ export function SessionSummary({ id, onDone }: { id: string; onDone: () => void 
           </section>
         )
       })}
+
+      {/* The permanent way in, whether or not the sheet rose — so dismissing
+          it never destroys the content. Absent when there is nothing to say,
+          and because every block carries its own rule, its absence leaves no
+          gap to compensate for. */}
+      {review !== undefined && review.events.length > 0 && (
+        <button className="entry" onClick={() => setReviewOpen(true)}>
+          <span className="grow">
+            <span className="t-data">{fi.nextTimeSheet}</span>
+            <span className="t-name">{fi.openNextTime}</span>
+          </span>
+          <span className="t-data">▸</span>
+        </button>
+      )}
+
+      {reviewOpen && review && (
+        <Dialogue
+          ctx={review}
+          nameOf={(mid) => byId.get(mid)?.nameFi ?? byId.get(mid)?.nameEn ?? mid}
+          onAnswer={(mid, cause) => saveAnswer(id, mid, cause)}
+          onClear={(mid) => clearAnswer(id, mid)}
+          onClose={() => setReviewOpen(false)}
+        />
+      )}
 
       {historyOf && (
         <MovementHistory

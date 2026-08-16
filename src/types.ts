@@ -182,3 +182,42 @@ export interface BodyMetric {
   at: number
   kg: number
 }
+
+/* --- dialogue ------------------------------------------------------------ */
+
+/**
+ * Why working sets fell short.
+ *
+ * What the user *said*, never what the app does about it — the consequence is
+ * derived in `progression.ts`, so the record stays a record and the rule stays
+ * inspectable. There is deliberately no "it felt easy": after two sessions of
+ * missing target, a chip the log contradicts invites a false claim.
+ */
+export type ShortfallCause = 'load' | 'day' | 'unsure'
+
+export interface MovementAnswer {
+  /** Which question this answers. One member today; it is what makes a stored
+   *  answer self-describing when a second question type arrives. */
+  turn: 'shortfall'
+  value: ShortfallCause
+  at: number
+}
+
+/**
+ * Answers for one session, one row, written whole.
+ *
+ * Its own table rather than a field on `Session`: `finishSession` does a
+ * read-modify-put of the entire session row, so a write from the summary screen
+ * would race it — and a whole-object write silently dropping fields is a bug
+ * this repo has already had once, in `writeProfile`.
+ *
+ * Sparse and keyed by movementId, because at most three movements are ever
+ * asked about. `at` is when the answer was given, not when the session happened.
+ */
+export interface SessionFeedback {
+  sessionId: string
+  at: number
+  answers: Record<string, MovementAnswer>
+  /** Script generation, so a later rewrite can tell what it is reading. */
+  script: number
+}

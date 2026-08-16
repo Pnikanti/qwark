@@ -177,6 +177,60 @@ export const fi = {
   proposalIncrease: (kg: string, delta: string) => `Ehdotus ${kg} kg (+${delta})`,
   proposalHold: (kg: string) => `Ehdotus ${kg} kg — sama kuin viimeksi`,
   proposalDeload: (kg: string) => `Ehdotus ${kg} kg — kevennys`,
+  /* --- dialogue: Ensi kerralle --- */
+  /** Titled by what it is about — proposals — rather than "Palaute". */
+  nextTimeSheet: 'Ensi kerralle',
+  /** The permanent way back in, on Yhteenveto. */
+  openNextTime: 'Ehdotukset ensi kerralle',
+
+  /** The observation. `setsLine` writes the numbers; the target is bare, since
+   *  the reps are unmistakable after the ×, which also avoids "1 toistoa". */
+  shortfallSeen: (name: string, line: string, target: number) =>
+    `${name}: ${line}. Tavoite ${target}.`,
+  shortfallSeenNoTarget: (name: string, line: string) => `${name}: ${line}.`,
+  /** Why this is raised at all, and what happens if nothing is said — stated
+   *  before the question, so closing the sheet is an informed choice. */
+  shortfallTwice: (kg: string) =>
+    `Sama kuorma jäi tavoitteesta kahdesti peräkkäin. Ilman muuta tietoa ehdotus ensi kerralle on ${kg} kg.`,
+  /** The session-level opener, when more than one lift stalled. */
+  shortfallMany: (names: string) =>
+    `Useampi liike jäi tavoitteesta: ${names}. Ehdotukset kevenevät, ellei niitä muuta.`,
+  /** Beyond the three asked about, the rest are stated rather than queried. */
+  shortfallRest: (names: string) =>
+    `Sama toistui myös näissä: ${names}. Ehdotukset kevenevät, ellei niitä muuta.`,
+
+  askShortfall: 'Mistä se johtui?',
+  causeLoad: 'Paino oli liian raskas',
+  causeDay: 'Päivä oli huono',
+  causeUnsure: 'En osaa sanoa',
+
+  /** Three replies of the same shape, each stating the resulting load. None is
+   *  written as the right answer. Unit abbreviations stay uninflected — `kg` is
+   *  read *kilogramma*, so `kg:hen` would be wrong Finnish. */
+  replyCauseLoad: (kg: string) => `Kevennys jää voimaan. Ehdotus ensi kerralle on ${kg} kg.`,
+  replyCauseDay: (kg: string) =>
+    `Kevennys peruttu. Ehdotus ensi kerralle on ${kg} kg. Jos sama toistuu, tämä kysytään uudelleen.`,
+  replyCauseUnsure: (kg: string) => `Ehdotus ensi kerralle on ${kg} kg.`,
+  replyManyDay: 'Kevennykset peruttu. Kuormat pysyvät ennallaan.',
+
+  answerTag: 'Vastasit',
+  nextTimeTag: 'Ensi kerralla',
+  clearAnswer: 'Poista vastaus',
+  /** The lower half of the sheet: every movement and its next proposed load. */
+  nextLoads: 'Ehdotukset',
+  nextNoProposal: 'ei ehdotusta',
+  /** Accurate about the mechanism: the field is never pre-filled. */
+  proposalsAreOffers: 'Ehdotus tarjotaan kirjatessa, ei täytetä valmiiksi.',
+
+  /* --- proposal reasons, on the session screen's suggestion row --- */
+  /** A deload the user declined: the load stands because they said the miss
+   *  was the day, not the weight. Without this the change would be silent. */
+  proposalHeld: (kg: string) => `Ehdotus ${kg} kg — kevennys peruttu`,
+  /** Bodyweight work proposed "Ehdotus 0 kg" until this existed. */
+  proposalBodyweight: 'Oma paino — kehitys tulee toistoista',
+  proposalMixedLoads: (kg: string) => `Ehdotus ${kg} kg — raskain viime kerralta`,
+  proposalNoTarget: (kg: string) => `Ehdotus ${kg} kg — ei tavoitetoistoja`,
+
   /** Labels the greyed number in the pad, so it is never read as entered. */
   padCurrent: 'Nykyinen',
   padOffer: 'Ehdotus',
