@@ -201,11 +201,65 @@ export async function seedDemoSessions(weeks = 12): Promise<DemoResult> {
     }
   }
 
+  leavePendingDeload(sessions)
+
   await db.sessions.bulkPut(sessions)
   return {
     sessions: sessions.length,
     from: sessions[0]?.startedAt ?? 0,
     to: sessions[sessions.length - 1]?.startedAt ?? 0,
+  }
+}
+
+/**
+ * Leave exactly one load waiting to be cut.
+ *
+ * The generator applies its deloads as it goes, so a run of it ends with every
+ * lift already backed off and nothing pending — which meant `Ensi kerralle`
+ * could not be seen without training for two real weeks until a lift stalled
+ * twice. Whether the random shortfalls happen to land on a movement's final two
+ * appearances is roughly a one-in-eleven chance per movement, so it was left to
+ * luck rather than shown.
+ *
+ * This forces it on the newest session's first barbell movement: its last two
+ * appearances are put at the same load with the closing set short of target,
+ * which is precisely the shape `progressionFor` reads as a deload. Nothing else
+ * in the history moves, and it stays inside `demo-` ids so removal is unchanged.
+ */
+function leavePendingDeload(sessions: Session[]): void {
+  const newest = sessions[sessions.length - 1]
+  if (!newest) return
+
+  // Bodyweight work can only ever hold, so it would never raise the dialogue.
+  const pick = newest.movements.find((m) =>
+    m.sets.some((x) => x.kind === 'working' && (x.kg ?? 0) > 0),
+  )
+  if (!pick) return
+
+  // The same movement's previous outing, searching backwards from the newest.
+  const earlier = [...sessions]
+    .slice(0, -1)
+    .reverse()
+    .flatMap((s) => s.movements)
+    .find((m) => m.movementId === pick.movementId)
+  if (!earlier) return
+
+  const load = earlier.sets.find((x) => x.kind === 'working')?.kg ?? null
+  if (load === null || load <= 0) return
+  const target = pick.targetReps ?? earlier.targetReps ?? 8
+
+  // Same load in both, and the last working set short in both. Two shortfalls
+  // running at one load is the whole of the deload rule.
+  for (const [i, m] of [earlier, pick].entries()) {
+    const working = m.sets.filter((x) => x.kind === 'working')
+    working.forEach((set, n) => {
+      set.kg = load
+      // A grind rather than a collapse: one rep short, then two.
+      set.reps = n === working.length - 1 ? Math.max(1, target - 1 - i) : target
+    })
+    for (const warmup of m.sets.filter((x) => x.kind === 'warmup')) {
+      if ((warmup.kg ?? 0) > load) warmup.kg = load
+    }
   }
 }
 
