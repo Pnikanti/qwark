@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { fi } from '../i18n'
+import { NoticeSheet } from '../components/EarlyNotice'
 import { ProfileFields } from '../components/ProfileFields'
 import { latestBodyweight, logBodyweight } from '../lib/body'
 import { canVibrate, testCue } from '../lib/cue'
 import { countDemoSessions, removeDemoSessions, seedDemoSessions } from '../lib/demo'
 import { shortDate } from '../lib/format'
+import { dismissNotice } from '../lib/notice'
 import { stepKg } from '../lib/plates'
 import {
   DEFAULT_GYM,
@@ -170,7 +172,46 @@ export function Settings({ onBack }: { onBack: () => void }) {
           </button>
         </div>
       </div>
+
+      <AboutNotice />
     </>
+  )
+}
+
+/**
+ * Where the early-stage notice goes to live after it has been dismissed.
+ *
+ * Its whole point is that dismissing the strip on Tänään costs nothing — what
+ * the app is now and what it becomes is the kind of thing you want to re-read
+ * a month later, and a warning you can only ever see once is a warning you
+ * cannot go back and check.
+ */
+function AboutNotice() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <span className="t-data">{fi.noticeAbout}</span>
+      </div>
+      <p className="note">{fi.noticeAboutHint}</p>
+      <div className="row-actions">
+        <button className="btn" onClick={() => setOpen(true)}>
+          {fi.showNotice}
+        </button>
+      </div>
+      {open && (
+        <NoticeSheet
+          onClose={() => setOpen(false)}
+          /* Same path as the strip's. Re-acknowledging the current version is a
+             no-op write, which is cheaper than two ways to close one sheet. */
+          onAck={() => {
+            void dismissNotice()
+            setOpen(false)
+          }}
+        />
+      )}
+    </div>
   )
 }
 

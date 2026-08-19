@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { NoticeSheet, NoticeStrip } from '../components/EarlyNotice'
 import { TodayHero } from '../components/TodayHero'
 import { WeekStrip } from '../components/WeekStrip'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
+import { NOTICE_VERSION, dismissNotice, useNoticeSeen } from '../lib/notice'
 import { weekOf } from '../lib/week'
 
 interface Props {
@@ -25,6 +28,11 @@ export function Today({ onOpenSession, onOpenDay, onPick, onOpenSettings }: Prop
     movements: await listMovements(),
   }))
 
+  // The notice rides on the landing screen only. On Liikekirjasto it would be
+  // off-topic, and mid-session it would be noise between sets.
+  const noticeSeen = useNoticeSeen()
+  const [notice, setNotice] = useState(false)
+
   return (
     <>
       <div className="appbar">
@@ -38,9 +46,21 @@ export function Today({ onOpenSession, onOpenDay, onPick, onOpenSettings }: Prop
         </button>
       </div>
 
+      {noticeSeen < NOTICE_VERSION && <NoticeStrip onOpen={() => setNotice(true)} />}
+
       <TodayHero onOpenSession={onOpenSession} onPick={onPick} />
 
       {data && <WeekStrip week={data.week} onOpenDay={onOpenDay} />}
+
+      {notice && (
+        <NoticeSheet
+          onClose={() => setNotice(false)}
+          onAck={() => {
+            void dismissNotice()
+            setNotice(false)
+          }}
+        />
+      )}
     </>
   )
 }

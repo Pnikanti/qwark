@@ -365,6 +365,30 @@ export const fi = {
   noMovementHistoryHint: 'Merkitse ensimmäinen sarja tehdyksi, niin se näkyy täällä.',
   retroLogged: 'jälkikäteen kirjattu',
 
+  /* Tiedote — the early-stage notice. The strip carries only the warning; the
+     rest lives behind it, because a tester needs the data-loss line before
+     anything else and the roadmap is not urgent. */
+  noticeStrip: 'Qwark on varhaisessa vaiheessa — tiedot voivat kadota.',
+  noticeMore: 'Lue lisää',
+  noticeSheet: 'Tiedote',
+  noticeTitle: 'Kiitos että testaat',
+  noticeLoss:
+    'Qwark on kesken. Tietojen rakenne muuttuu vielä matkan varrella, ja kirjatut treenit voivat kadota jonkin päivityksen mukana. Älä siis luota tähän toistaiseksi ainoana treenipäiväkirjanasi.',
+  noticeLocal:
+    'Kaikki on tallessa vain tässä laitteessa — mitään ei lähetetä minnekään. Selaimen tietojen tyhjentäminen vie treenit mennessään.',
+  noticeNow: 'Nyt',
+  noticeNowBody:
+    'Qwark tekee yhtä asiaa: treenin kirjaamista. Kaikki työ menee siihen, että kirjaaminen salin lattialla sujuu mahdollisimman kevyesti.',
+  noticeNext: 'Myöhemmin',
+  noticeNextBody:
+    'Ravinnon seuranta samaan päiväkirjaan. Sen jälkeen älyä: MCP-yhteys omaan tekoälyalustaasi, joka näkee treenit ja syömiset ja osaa sanoa niistä jotain.',
+  noticeThanks: 'Palaute on tervetullutta — kerro jos jokin tökkii.',
+  noticeAck: 'Selvä',
+  noticeReopenHint: 'Löydät tämän myöhemmin Asetuksista.',
+  noticeAbout: 'Tietoa Qwarkista',
+  noticeAboutHint: 'Sovelluksen tila, tiedon säilyvyys ja mitä on tulossa.',
+  showNotice: 'Näytä tiedote',
+
 } as const
 
 export const muscleFi = (key: string): string => tax.muscles[key] ?? key

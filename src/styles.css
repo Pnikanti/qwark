@@ -2589,3 +2589,66 @@ select {
   margin-left: auto;
   color: var(--ink);
 }
+
+/* --- tiedote ------------------------------------------------------------ */
+
+/* A ledger row, not a card: flush to the shell, hairline below, plate yellow
+   for attention. The 3px left rule is the toast's, borrowed on purpose — the
+   two are the only things in the app that interrupt you. */
+.notice-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 10px var(--gutter);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid var(--mark);
+  border-radius: 0;
+  background: var(--mark-wash);
+  color: var(--ink);
+  font: inherit;
+  /* A notch under body size: the warning has to be read, but at 16px regular it
+     sits outside the app's register and reads as somebody else's chrome. */
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.notice-strip:active {
+  background: var(--accent-wash);
+}
+
+.notice-strip svg {
+  flex: none;
+  color: var(--mark);
+}
+
+.notice-strip .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.notice-more {
+  flex: none;
+  color: var(--accent);
+}
+
+.notice-body h2 {
+  margin: 0 0 12px;
+}
+
+.notice-body p {
+  margin: 0 0 12px;
+}
+
+.notice-body .t-data {
+  display: block;
+  margin: 20px 0 6px;
+}
+
+.notice-reopen {
+  margin: 10px 0 0;
+  text-align: center;
+}
