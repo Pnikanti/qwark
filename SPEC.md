@@ -90,10 +90,10 @@ Notes:
 ## Logging a session
 
 - Live session view: current movement, previous performance inline, rest timer.
-- Sets pre-filled with last session's numbers — adjust only what changed. An unchanged set is one tap.
+- Sets pre-filled with last session's numbers — adjust only what changed. An unchanged set is one tap: the offered load shows greyed and dashed in the field itself, and the checkmark affirms it.
 - One checkmark per set completes it, starts the rest timer, and fires a haptic.
 - Custom numeric pad with 2.5 kg steppers and a plate calculator — never the OS keyboard.
-- Warmup sets distinguished from working sets, and excluded from volume and 1RM math.
+- Warmup sets distinguished from working sets, and excluded from volume, set count and 1RM math. Warming up is a choice, not the default: the input is always a working set, a remembered ramp is offered as one tap, and a set's kind is corrected on the logged row rather than declared before it.
 - RPE / RIR optional per set.
 - Per-movement notes that persist to next session.
 - Session can be paused, resumed, and finished later; survives a PWA reload.

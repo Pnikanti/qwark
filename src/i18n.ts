@@ -156,7 +156,6 @@ export const fi = {
   reps: 'toistoa',
   set: 'Sarja',
   setOf: (n: number, total: number) => (total > 0 ? `Sarja ${n} / ${total}` : `Sarja ${n}`),
-  warmupNumber: (n: number) => `Lämmittely ${n}`,
   extraSet: (n: number) => `Lisäsarja ${n}`,
   plusExtra: (n: number) => `+${n}`,
   setKind: 'Sarjan tyyppi',
@@ -170,7 +169,6 @@ export const fi = {
   working: 'Työsarja',
   /** "Last time", not "Edellinen" — that read equally as the previous *set*. */
   previous: 'Viime kerralla',
-  applySuggestion: 'Täytä',
   suggestRepeat: (kg: string) => `Sama kuin edellinen ${kg} kg`,
   suggestRamp: (kg: string, reps: number | null) =>
     `Viimeksi lämmittelyssä ${kg} kg${reps ? ` × ${reps}` : ''}`,
@@ -239,21 +237,18 @@ export const fi = {
     n === 1 ? '1 liike jäljellä' : `${n} liikettä jäljellä`,
   addMovement: 'Lisää liike',
   removeSet: 'Poista sarja',
+  editSet: 'Muokkaa sarjaa',
+  /** The ⋯ on a movement. "⋯" announces as nothing, so it needs a real name. */
+  movementActions: 'Liikkeen toiminnot',
+  /** Takes last time's ramp in one tap. Imperative, like every other action. */
+  addRamp: 'Lisää',
+  logAsWarmup: 'Kirjaa lämmittelynä',
+  logAsWarmupHint: 'Syötä paino ja toistot ensin.',
+  addNote: 'Lisää muistiinpano',
+  editNote: 'Muokkaa muistiinpanoa',
   removeMovement: 'Poista liike',
   reorder: 'Siirrä',
   finish: 'Lopeta treeni',
-  checkBeforeFinish: 'Tarkista',
-  warmupOnlyIntro: (n: number) =>
-    n === 1
-      ? 'Tässä liikkeessä on vain lämmittelysarjoja:'
-      : 'Näissä liikkeissä on vain lämmittelysarjoja:',
-  /* A negated list takes eikä on the last item, not a second eivät. */
-  warmupOnlyWhy:
-    'Lämmittelyt eivät näy volyymissä, ennätyksissä eikä kehityksessä. Jos ne olivat työsarjoja, merkitse ne nyt.',
-  markAsWorking: 'Merkitse työsarjoiksi',
-  finishAnyway: 'Lopeta silti',
-  markedAsWorking: (n: number) =>
-    n === 1 ? '1 liike merkittiin työsarjoiksi' : `${n} liikettä merkittiin työsarjoiksi`,
   note: 'Muistiinpano',
   notePlaceholder: 'Esim. otetta leveämmäksi',
   rest: 'Palautus',
@@ -262,7 +257,6 @@ export const fi = {
   allSetsDone: 'Kaikki sarjat tehty',
   markDone: 'Merkitse tehdyksi',
   editLogged: 'Muokkaa',
-  hideLogged: 'Piilota tehdyt sarjat',
   emptySessionHint: 'Lisää liike, niin pääset kirjaamaan sarjoja.',
   skipRest: 'Ohita',
   restDone: 'Palautus ohi',

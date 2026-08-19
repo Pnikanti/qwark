@@ -178,22 +178,19 @@ JALKAPÄIVÄ                              ⋯
 ────────────────────────────────────────
 ✓  Jalkakyykky          100 kg × 8, 8, 8
 ────────────────────────────────────────
-▏ Romanialainen maastaveto           1/3
+▏ Romanialainen maastaveto        1/3  ⋯
 ▏ VIIME KERRALLA 90 kg × 8, 8, 7  HISTORIA ▸
 ▏
-▏ LÄMMITTELY  50 × 8 · 70 × 5
-▏ TYÖSARJAT   92,5 kg × 8          Muokkaa
+▏ LÄMMITTELY  [50 × 8] [70 × 5]
+▏ TYÖSARJAT   [92,5 kg × 8]
 ▏
-▏ [ LÄMMITTELY ] [ TYÖSARJA ]
 ▏ SARJA 2 / 3
 ▏ ┌──────────┐ ┌──────────┐ ┌────┐
-▏ │    –     │ │     8    │ │ ✓  │   ← tick disabled
+▏ │  92,5    │ │     8    │ │ ✓  │
+▏ │  ╌╌╌╌    │ │          │ │    │
 ▏ │    kg    │ │  toistoa │ │    │
 ▏ └──────────┘ └──────────┘ └────┘
-▏ ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-▏ ╎ EHDOTUS 92,5 KG (+2,5)  TÄYTÄ ╎
-▏ └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-▏ + Muistiinpano
+▏ EHDOTUS 92,5 KG (+2,5)
 ────────────────────────────────────────
    Jalkaprässi              0/3 · 3 × 10
    Pohkeen nosto seisten    0/4 · 4 × 12
@@ -204,50 +201,58 @@ JALKAPÄIVÄ                              ⋯
  Seuraava: Sarja 3 · 92,5 kg × 8
 ```
 
+On a movement not yet started, where a ramp is remembered:
+
+```
+▏ Penkkipunnerrus                  0/3  ⋯
+▏ VIIME KERRALLA 80 kg × 8, 8, 7  HISTORIA ▸
+▏ ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+▏ ╎ LÄMMITTELY 40 × 8 · 60 × 5   LISÄÄ ╎
+▏ └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+▏ SARJA 1 / 3
+```
+
 - **One movement expanded**, marked with a cobalt rule. It **auto-advances** on the transition into completion — once only, so returning to add an extra set does not bounce you away again. Any collapsed line is one tap away, so an occupied machine costs nothing.
+- **Completion is decided by the write, not predicted by the screen.** `commitSet` reports whether that set was the one that met the plan, comparing before and after inside its own transaction. The screen used to predict it — `workingDone(movement) + 1 === plannedSets` against its own render snapshot — which is only right if that snapshot is strictly pre-commit, and whether it is depends on what the live query handed React and when. When it was not, the arithmetic silently came out one too high and the workout simply stopped advancing: the failure was total, permanent, and invisible in the data.
+- **The next movement is searched forward, then wrapped.** Finishing the second of three used to send you back to the first one you had deliberately left part-done, because the search started at index 0 — which reads exactly like the advance being broken. It now starts at the movement after this one and wraps round, so an occupied rack is still picked up later, and after the last movement a half-done one behind you is still offered.
+- **The screen asks one question: what did you just lift?** Everything that is not that question — writing a note, removing the movement, logging a warmup the app did not remember — lives behind the movement's `⋯`. The count of controls is the design constraint, not a side effect of one.
 - **Work beyond the plan is additive, never inflated.** A sixth set on a five-set movement reads `5/5 +1` and the input says `Lisäsarja 1`. `6/5` would state one confusing thing where there are two true ones, and it made the session rail exceed its own track.
-- **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh, blank one.
+- **One input, not a row per set.** The set you are about to do is the only editable thing on screen. Committing it moves it into the log and opens a fresh one.
 - **Last time is a door, not a dead end.** The line under the movement name reads `Viime kerralla`, because `Edellinen` was ambiguous between the previous *set* and the previous *session*. It is a button: tapping it opens that movement's full history, so the one-line summary is no longer the only history the app will show you. For a movement you have never trained, the row collapses to the bare `Historia ▸` — the label and its value were saying the same nothing twice, and a blank row already states the absence.
-- **Loads are inferred and offered, never filled in for you.** The suggestion sits below the input with a dashed border — offered, not entered — and one tap applies it. Opening the pad shows the same number greyed and dashed behind an empty field, so you can read the plate breakdown before committing to it; it is displayed, never stored, and `Valmis` on an untouched field writes nothing. Within a session it repeats what you last lifted; across sessions it is the progression proposal, with its reasoning attached. Target reps *do* pre-fill, because they come from the routine you chose rather than from a guess.
-- **Every movement opens on `Lämmittely`**, because that is what you actually do first. The kind then carries forward from the set you just logged, so a ramp continues as a ramp and working sets stay working — it never switches on its own. Reps stay blank for a warmup: the routine's target describes a working set, and choosing `Työsarja` fills it in.
-- The cost of that default is real: a set logged in the wrong mode is excluded from the count, the volume, the record and the progression. Three things say which mode you are in — the input takes plate yellow, the label reads `Lämmittely n`, and the movement progress stays at `0/5` — and **`Lopeta treeni` checks before it commits**:
+- **Loads are inferred and shown in place, and written only when the tick affirms them.** The offered number sits in the field itself, greyed and dashed — the same language the pad uses for a number it is showing but has not stored. The tick commits exactly what is on screen. Leaving the movement writes nothing, and `Valmis` on an untouched pad field writes nothing.
 
-```
-┌─ TARKISTA ────────────────────── SULJE ─┐
-  Tässä liikkeessä on vain
-  lämmittelysarjoja:
+  This replaced a dashed `TÄYTÄ` row below the input. That row existed because the number had no other way to reach the field, and it made the app's most repeated action cost two taps — fill, then tick — while `SPEC.md` claimed one. Affirming a number you can read is the same standard the pad already applied; what changed is that the offer no longer needs its own control to get where it was always going.
 
-  Penkkipunnerrus
-  LÄMMITTELY  80 kg × 8, 8
+  Within a session the offer repeats what you last lifted; across sessions it is the progression proposal, with its reasoning on the line below. Target reps are *stored*, not offered, so they read solid: they come from the routine you chose rather than from a guess.
+- **Every movement opens on the work.** `Sarja 1 / 3`, target reps already in the field, tick live. The draft is never a warmup — there is no mode on the input at all.
 
-  Lämmittelyt eivät näy volyymissä,
-  ennätyksissä eikä kehityksessä. Jos ne
-  olivat työsarjoja, merkitse ne nyt.
+  It used to open on `Lämmittely`, on the argument that a warmup is what you actually do first. True, and still the wrong default: it put a mode decision in front of the first set of every movement, five or six times a session, and `commitSet` carries the kind forward — so one missed switch quietly logged an entire movement as warmup, counted towards nothing. The app grew an end-of-session `TARKISTA` modal whose only job was catching that. Both are gone. The failure mode did not become impossible, it *inverted* — a warmup can now be logged as work — and that one is corrected in place, where it is read, rather than questioned on the way out.
+- **A remembered ramp is one tap.** When last session's warmups are known and nothing is logged yet, a dashed row above the input offers the whole ramp; tapping it logs every rung at once. It does not start the rest timer and does not advance the movement — neither belongs to warming up — and it disappears once anything is logged, which is also what makes a double tap unreachable. Ignoring it costs nothing and leaves you on the working set.
 
-  [ MERKITSE TYÖSARJOIKSI ]
-  [ LOPETA SILTI ]
-└─────────────────────────────────────────┘
-```
-
-  Only movements with warmups and **no** working sets are listed — a movement with both was logged deliberately. Neither action is the default: warming up and stopping is a real thing that happens (a niggle, an occupied rack), so the app must not quietly rewrite it, and a mis-logged session must not quietly vanish either. Dismissing returns you to the session unchanged, to fix it by hand. Converting keeps the loads and reps exactly as logged — only the kind was wrong. A session with nothing logged still discards silently, as it always did; there is nothing to relabel.
-- **A set needs both values before it can be logged**, so nothing is ever recorded that you did not affirm. `0` counts — it means bodyweight.
-- **The set kind is a mode, not a chip.** A segmented control — one object with two halves — rather than two chips that read as filters, and the chosen mode **recolours the whole input**: plate yellow for a warmup, cobalt for a working set. A warmup genuinely is a different kind of record, excluded from volume, from 1RM and from progression, so it should not look like a working set with a toggle flipped.
+  The ramp is read from the newest session that contains the movement at all, not the newest one that happened to have warmups. Warming up is optional now, so an unbounded search would keep offering absolute kilos from months ago against a load that has since moved. The last time you trained it and did not warm up is an answer.
+- **A warmup the app did not remember goes through `⋯ → Kirjaa lämmittelynä`**, which takes the numbers already in the input rather than asking for them twice. The draft it leaves behind is a working set again, so there is no mode to get stuck in.
+- **A set needs both values before it can be logged**, so nothing is ever recorded that you did not affirm. `0` counts — it means bodyweight. The tick is enabled on the *resolved* numbers, typed or offered, and the resolution is computed identically here and inside `commitSet`'s transaction — so an enabled tick can never turn out to be a no-op. It stays disabled while the offer is still loading, or it would flip live under a finger already on its way down.
 - **Movements still to come fold behind one line** — `5 liikettä jäljellä`. Mid-set they carry almost nothing, six rows of `0/3`, while the ones already behind you carry what you lifted, so only the upcoming half folds. The list opens for reordering, and dragging force-opens it so a drag never targets a hidden row.
-- **Warmups are first-class and do not consume planned sets.** The kind is chosen *before* logging, so a warmup is never a working row that got reclassified. They are excluded from the count, from volume, and from 1RM — three warmups must not "finish" a three-set movement. A familiar ramp replays itself from last session's warmups.
-- **The kind is never changed for you.** Guessing that a ramp has finished would silently mislabel a set.
-- **Logged work reads as two lines**, warmups and working separately, expandable to edit or delete a set. Logged sets are records: they can be corrected or removed, never un-ticked — that would leave two sets in flight at once.
+- **Warmups are first-class and do not consume planned sets.** They are excluded from the count, from volume, and from 1RM — three warmups must not "finish" a three-set movement.
+- **Logged work reads as two lines**, warmups and working separately, each set its own small button. Tapping one opens it for correction: the load, the reps, its kind, or removal. Logged sets are records — they can be corrected or removed, never un-ticked, which would leave two sets in flight at once.
+
+  The kind belongs *here* rather than on the input, because this is the only moment it is ever wrong: you know what a set was once you have done it. That is also the mitigation for the inverted failure mode above, and it is why there is no second modal. The two lines used to collapse behind a `Muokkaa` toggle that unfolded a grid of nine controls — a rare correction competing with the action performed eighteen times a session.
 - **Previous performance and the proposal** sit above the input. The comparison is the habit loop.
-- **One tick** commits the set, starts the rest timer, and fires a haptic. Warmups skip the timer — you move through them quickly.
+- **One tick** commits the set, starts the rest timer, and fires a haptic.
 - **`Lisää liike` is the last row of the list, above the fold count.** It belongs inside the list because that is what appending to a list looks like; the `N liikettä jäljellä` row is a footer for the list rather than another item in it, so the append goes above it. It appears only once the list is all there — under the fold it invited adding a movement while five were still hidden, which is how the same lift ends up in a session twice. An empty ad hoc session has nothing folded away, so it still offers it; that regression happened once before, which is why the condition is about the fold rather than about the movement count.
-- **The tick is the primary action, and accent is rationed to make that legible.** Accent had drifted onto fifteen elements at once, and the only solid-filled button on screen was `Lopeta treeni` — at 1.5× the tick's area. The action performed eighteen times a session was the quietest control on it. Accent now belongs to four things: the progress rail, the suggestion while it is the next tap, the rest countdown, and the tick once it can be pressed. The tick is outlined while disabled and solid the moment it is not, so accent appears exactly when there is something to press. `Lopeta treeni` is outlined and takes its natural width; `Lisää liike` is a text link. Mode is state rather than an action, so the selected segment reads neutral and only the unusual mode — warmup — spends a colour.
+- **The tick is the primary action, and accent is rationed to make that legible.** Accent had drifted onto fifteen elements at once, and the only solid-filled button on screen was `Lopeta treeni` — at 1.5× the tick's area. The action performed eighteen times a session was the quietest control on it. Accent now belongs to three things: the progress rail, the rest countdown, and the tick once it can be pressed. `Lopeta treeni` is outlined and takes its natural width; `Lisää liike` is a text link.
+
+  The tick now reads solid on arrival at most movements, which is the point rather than a regression of that rule. It used to go solid only once `TÄYTÄ` had been pressed, so accent marked *the blanks are filled*. The blanks are filled on arrival now, and what is still provisional is said by the numbers themselves — greyed and dashed until affirmed. The signal moved; it was not spent.
+- **The drag handle lives on collapsed rows only.** Those are what you actually reorder, and dragging force-opens the list. It carries keyboard reordering as well as the pointer drag, so it has to stay a real focusable control — which is exactly why it cannot be folded into `⋯`: `onPointerDown` captures the pointer immediately, and a menu button that starts a drag would swallow the tap that opens the menu.
 - Tapping a load opens the **custom numeric pad** with plate-pair steppers and a plate calculator, sized from your gym settings. Never the OS keyboard.
 - **Rest is dead time, so it is where the plan belongs.** While the timer runs, the bar names the next set or movement and collapsed rows reveal their targets, then it folds away again.
 - **Rest ending is announced, not just displayed.** Three signals, configurable in Asetukset: vibration (on by default — the only one that works with the phone in a pocket, and the app already vibrates on the tick), a two-tone WebAudio beep (off by default, because a beep in a quiet gym is worse than no beep; synthesised rather than bundled, so it works offline), and a notification through the service worker (off until you grant permission, which is asked for when you switch it on and never on load). The notification names the next set rather than announcing a timer.
 - **What the cue does not promise.** A backgrounded page's timers are throttled and may be frozen outright, and scheduling a notification for a future instant needs the Notification Triggers API, which is not broadly available. So the cue fires on time when the page can run, and a `visibilitychange` listener fires it **late** when the page could not — late beats never. It fires once either way. The Asetukset copy says exactly this rather than implying a locked phone will be woken.
 - Tap targets ≥48 px — used mid-set with sweaty hands.
 - Every change writes to IndexedDB immediately, including the un-committed input, so a reload mid-set loses nothing.
+- **A session left open across the change is migrated, not resumed as-is.** `db.version(9)` rewrites the trailing warmup draft of every unfinished session to a working set. Without it, one draft left over from the old default would have carried its kind forward through every remaining set of that workout, with the check that used to catch it deleted. Only the draft is touched: it is the input, not a record, and warmups already logged are exactly what was meant.
 
-Result: 14 controls on one screen, against 23 for the row grid and 92 before the accordion.
+Result: 7 controls on the active movement, against 13 before this pass, 23 for the row grid and 92 before the accordion.
 
 ### Liikkeen historia
 

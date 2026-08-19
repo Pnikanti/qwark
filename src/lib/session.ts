@@ -190,6 +190,13 @@ function heaviest(sets: LoggedSet[]): LoggedSet | null {
 /**
  * Last session's warmup ramp for this movement. The counterpart to
  * previousPerformance, which deliberately looks at working sets only.
+ *
+ * It stops at the newest session containing the movement at all, rather than
+ * searching back until it finds one that happened to have warmups. Warming up is
+ * optional now, so most sessions will have none, and an unbounded search would
+ * keep offering a ramp in absolute kilos from months ago — against a working load
+ * that has since moved. The last time you trained it and did not warm up is an
+ * answer, not a miss.
  */
 export async function previousWarmups(movementId: string): Promise<LoggedSet[]> {
   const sessions = await db.sessions.orderBy('startedAt').reverse().toArray()
@@ -197,8 +204,7 @@ export async function previousWarmups(movementId: string): Promise<LoggedSet[]> 
     if (s.finishedAt === null) continue
     const m = s.movements.find((x) => x.movementId === movementId)
     if (!m) continue
-    const warmups = m.sets.filter((x) => x.done && x.kind === 'warmup')
-    if (warmups.length) return warmups
+    return m.sets.filter((x) => x.done && x.kind === 'warmup')
   }
   return []
 }
@@ -242,10 +248,13 @@ export async function startSession(
       plannedSets: item.sets,
       restSeconds: item.restSeconds,
       note: null,
-      /* Each movement opens on a warmup, because that is what you actually do
-         first. Reps stay blank for it: the routine's target describes a working
-         set, and switching to Työsarja fills it — see setDraftKind. */
-      sets: [emptySet('warmup')],
+      /* Opens on the work, with the routine's target reps already in it. The
+         draft is never a warmup — a remembered ramp is logged whole from the
+         session screen, and a one-off from the movement menu; see
+         `applyWarmupRamp` and `addWarmupSet`. Opening on Lämmittely instead cost
+         a mode decision before the first set of every movement, and needed an
+         end-of-session check to catch the sets it silently excluded. */
+      sets: [{ ...emptySet('working'), reps: item.targetReps }],
     })),
   }
 
@@ -290,8 +299,9 @@ export async function addMovement(
       plannedSets: null,
       restSeconds: null,
       note,
-      // Same as a templated movement: you warm up on it first.
-      sets: [emptySet('warmup')],
+      // Same as a templated movement, minus the target: added ad hoc, it has no
+      // plan to pre-fill from.
+      sets: [emptySet('working')],
     })
   })
   return uid
@@ -332,56 +342,170 @@ export const patchSet = (
     Object.assign(s.movements[mIndex].sets[sIndex], changes)
   })
 
+export interface CommitResult {
+  /** Whether a set was written at all. */
+  logged: boolean
+  /**
+   * Whether this set is the one that met the movement's plan.
+   *
+   * The *transition* into completion, not the state of being complete — so
+   * returning later to add a sixth set to a five-set movement does not report it
+   * again, and does not bounce you off a movement you came back to on purpose.
+   */
+  completedMovement: boolean
+}
+
 /**
  * Log the draft and open a fresh one. The app's most-repeated action.
  *
- * The next draft keeps the kind and the load just used, because mid-session the
- * obvious default is "same again" — re-deriving from history would ignore what
- * you actually just lifted. A warmup steps to the next rung of last session's
- * ramp when there is one, so a familiar ramp replays itself.
+ * `fill` is what the tick affirmed when a field was left showing an offer rather
+ * than a typed number. It is applied here, inside the commit's own transaction,
+ * and only to fields still empty — writing it first and committing second would
+ * be two transactions, and an interruption between them would leave inferred
+ * numbers on disk that nobody ever affirmed.
  *
- * The kind is never changed for you. Flipping to Työsarja is the user's call:
- * guessing that a ramp has finished would silently mislabel a warmup.
+ * `completedMovement` is decided in here, against the row this transaction read,
+ * because the screen cannot decide it safely. It used to predict the outcome from
+ * its own render snapshot — `workingDone(movement) + 1 === plannedSets` — which
+ * is only right if that snapshot is strictly pre-commit. Whether it is depends on
+ * what the live query handed React and when, and getting it wrong fails silently
+ * and permanently: the workout simply never advances. Before and after are both
+ * known here, and neither is a guess.
  */
-export async function commitSet(sessionId: string, mIndex: number): Promise<void> {
-  const session = await db.sessions.get(sessionId)
-  if (!session) return
-  const movement = session.movements[mIndex]
-  const draft = movement.sets.at(-1)
-  if (!draft || draft.done) return
-
-  // Both values must have been set. 0 counts — it means bodyweight, deliberately
-  // recorded — but null means never entered, and there is nothing to log.
-  const reps = draft.reps ?? movement.targetReps
-  if (draft.kg === null || reps === null) return
-
+export async function commitSet(
+  sessionId: string,
+  mIndex: number,
+  fill?: { kg: number | null; reps: number | null },
+): Promise<CommitResult> {
+  const result: CommitResult = { logged: false, completedMovement: false }
   await mutate(sessionId, (s) => {
     const m = s.movements[mIndex]
     const set = m.sets.at(-1)
     if (!set || set.done) return
+
+    // Both values must resolve. 0 counts — it means bodyweight, deliberately
+    // recorded — but null means never entered, and there is nothing to log. The
+    // guard runs against the row read inside this transaction, not the one the
+    // screen was looking at.
+    const kg = set.kg ?? fill?.kg ?? null
+    const reps = set.reps ?? fill?.reps ?? m.targetReps
+    if (kg === null || reps === null) return
+
+    const wasComplete = movementComplete(m)
+
+    set.kg = kg
+    set.reps = reps
     set.done = true
     set.completedAt = Date.now()
-    set.reps = reps
 
-    // Blank again. What you just lifted becomes a suggestion, not a fact the app
-    // records on your behalf.
-    m.sets.push({
-      ...emptySet(set.kind),
-      reps: set.kind === 'working' ? m.targetReps : null,
-    })
+    // Blank again, and working again. What you just lifted becomes a suggestion,
+    // not a fact the app records on your behalf.
+    m.sets.push({ ...emptySet('working'), reps: m.targetReps })
+
+    result.logged = true
+    result.completedMovement = !wasComplete && movementComplete(m)
+  })
+  return result
+}
+
+/**
+ * Where to go once the movement at `mIndex` is finished: the next one still
+ * unfinished, wrapping round to earlier ones only when nothing is left ahead.
+ *
+ * The wrap is what makes this correct rather than merely forward-looking — an
+ * occupied rack gets skipped and come back to, and after the last movement there
+ * may still be a half-done one behind you. But it searches *forward first*, which
+ * a bare `findIndex` from zero did not: finishing the second movement of three
+ * sent you back to the first one you had deliberately left part-done, which reads
+ * exactly like the advance being broken.
+ */
+export function nextMovementAfter(session: Session, mIndex: number): number | null {
+  const n = session.movements.length
+  for (let k = 1; k < n; k++) {
+    const i = (mIndex + k) % n
+    if (!movementComplete(session.movements[i])) return i
+  }
+  return null
+}
+
+/**
+ * Log a remembered ramp in one go.
+ *
+ * Spliced in *before* the draft rather than pushed after it: the draft is the
+ * input, and it may already hold numbers typed before the row was noticed.
+ * Pushing and opening a fresh draft would throw those away.
+ *
+ * It refuses once anything is logged, which is also what makes a double tap
+ * harmless — `mutate` re-reads inside its own transaction, so the second tap
+ * sees the first one's writes even before the query repaints.
+ */
+export async function applyWarmupRamp(
+  sessionId: string,
+  mIndex: number,
+  ramp: LoggedSet[],
+): Promise<void> {
+  const rungs = ramp.filter((r) => r.kg !== null)
+  if (!rungs.length) return
+  await mutate(sessionId, (s) => {
+    const m = s.movements[mIndex]
+    const at = draftIndex(m)
+    if (at === null || m.sets.some((x) => x.done)) return
+    // One instant for the whole ramp: these are asserted retroactively and a
+    // timestamp per rung would be precision the app does not have. It cannot be
+    // null — `lastActivityAt` reads it to decide when training actually stopped.
+    const completedAt = Date.now()
+    m.sets.splice(
+      at,
+      0,
+      ...rungs.map((r) => ({
+        kind: 'warmup' as SetKind,
+        kg: r.kg,
+        reps: r.reps,
+        done: true,
+        completedAt,
+      })),
+    )
   })
 }
 
-/** Flip the draft between warmup and working. Values stay blank either way. */
-export const setDraftKind = (sessionId: string, mIndex: number, kind: SetKind) =>
-  mutate(sessionId, (s) => {
+/**
+ * Log the draft as a warmup rather than a working set.
+ *
+ * For a ramp the app did not remember. It takes the numbers already in the input
+ * instead of asking for them again, and leaves a fresh working draft behind — so
+ * there is no warmup *mode* to get stuck in, which is what made the old
+ * segmented control need an end-of-session check to undo.
+ */
+export async function commitAsWarmup(
+  sessionId: string,
+  mIndex: number,
+): Promise<boolean> {
+  let logged = false
+  await mutate(sessionId, (s) => {
     const m = s.movements[mIndex]
-    const draft = m.sets.at(-1)
-    if (!draft || draft.done) return
-    m.sets[m.sets.length - 1] = {
-      ...emptySet(kind),
-      reps: kind === 'working' ? m.targetReps : null,
-    }
+    const set = m.sets.at(-1)
+    if (!set || set.done || set.kg === null || set.reps === null) return
+    set.kind = 'warmup'
+    set.done = true
+    set.completedAt = Date.now()
+    m.sets.push({ ...emptySet('working'), reps: m.targetReps })
+    logged = true
+  })
+  return logged
+}
+
+/** Correct a logged set's kind, from the edit sheet. Drafts are never touched:
+ *  the draft is always working, and that is the invariant everything else rests
+ *  on. */
+export const setLoggedKind = (
+  sessionId: string,
+  mIndex: number,
+  sIndex: number,
+  kind: SetKind,
+) =>
+  mutate(sessionId, (s) => {
+    const set = s.movements[mIndex].sets[sIndex]
+    if (set?.done) set.kind = kind
   })
 
 export type SuggestionSource = 'progression' | 'repeat' | 'ramp'
@@ -497,11 +621,17 @@ export function volumeKg(session: Session): number {
   return Math.round(total)
 }
 
-export function completedSetCount(session: Session): number {
-  return session.movements.reduce(
-    (n, m) => n + m.sets.filter((s) => s.done).length,
-    0,
-  )
+/**
+ * Logged working sets. Everywhere a session reports "sarjaa", and the counterpart
+ * to `volumeKg` and `sessionProgress`, which are both working-only.
+ *
+ * It used to count warmups too. That was survivable while every movement opened
+ * on Lämmittely and the inflation was uniform; now that warming up is a choice, a
+ * movement you ramped would score two or three sets above the same work without a
+ * ramp, and the one-tap ramp row would read as if it padded your session.
+ */
+export function workingSetCount(session: Session): number {
+  return session.movements.reduce((n, m) => n + workingDone(m), 0)
 }
 
 /** Epley. Only meaningful for low-rep working sets, so cap the range. */
@@ -550,47 +680,6 @@ export function workingDone(m: SessionMovement): number {
 
 export function warmupsDone(m: SessionMovement): LoggedSet[] {
   return m.sets.filter((s) => s.done && s.kind === 'warmup')
-}
-
-/**
- * Movements whose only logged work is warmups — indices, so the caller can act
- * on them.
- *
- * Every movement opens on Lämmittely, and a warmup counts towards nothing: not
- * the set count, the volume, the record, the 1RM estimate, or progression. Three
- * things on screen say which mode you are in, but a session logged entirely in
- * the wrong one still disappears from every number the app keeps. This is what
- * `Lopeta treeni` checks before it commits.
- *
- * Pure, so the screen derives it from the session it already holds rather than
- * querying again — the same reason `suggestionFor` is pure.
- */
-export function warmupOnlyMovements(session: Session): number[] {
-  return session.movements
-    .map((m, i) => (warmupsDone(m).length > 0 && workingDone(m) === 0 ? i : -1))
-    .filter((i) => i >= 0)
-}
-
-/**
- * Relabel completed warmups as working sets, for the movements named.
- *
- * Loads and reps are left exactly as logged — a warmup at 8 reps becomes a
- * working set at 8 reps, because that is what was lifted. Only the kind was
- * wrong. The trailing draft is untouched: it is the input, not a record.
- */
-export async function convertWarmupsToWorking(
-  sessionId: string,
-  indices: number[],
-): Promise<void> {
-  const wanted = new Set(indices)
-  await mutate(sessionId, (s) => {
-    s.movements.forEach((m, i) => {
-      if (!wanted.has(i)) return
-      for (const set of m.sets) {
-        if (set.done && set.kind === 'warmup') set.kind = 'working'
-      }
-    })
-  })
 }
 
 /**

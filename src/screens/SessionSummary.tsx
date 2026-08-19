@@ -11,7 +11,7 @@ import { useGym } from '../lib/settings'
 import { toast } from '../lib/toast'
 import {
   bestWorkingSet,
-  completedSetCount,
+  workingSetCount,
   estimatedOneRepMax,
   getSession,
   previousBestKg,
@@ -81,7 +81,7 @@ export function SessionSummary({
           label={fi.duration}
           value={durationOrDash((session.finishedAt ?? Date.now()) - session.startedAt)}
         />
-        <Figure label={fi.completedSets} value={String(completedSetCount(session))} />
+        <Figure label={fi.completedSets} value={String(workingSetCount(session))} />
         <Figure label={fi.volume} value={`${volumeKg(session).toLocaleString('fi')} kg`} />
       </div>
 
@@ -90,6 +90,8 @@ export function SessionSummary({
         const best = bestWorkingSet(m)
         const oneRm = best?.kg && best?.reps ? estimatedOneRepMax(best.kg, best.reps) : null
         const label = movement?.nameFi ?? movement?.nameEn ?? m.movementId
+        const warmups = m.sets.filter((s) => s.kind === 'warmup')
+        const working = m.sets.filter((s) => s.kind === 'working')
         return (
           <section className="panel movement" key={`${m.movementId}-${i}`}>
             {/* The row is the control, not just the name: a summary is read on a
@@ -112,7 +114,17 @@ export function SessionSummary({
                 ▸
               </span>
             </button>
-            <p className="setline t-data">{setsLine(m.sets)}</p>
+            {/* Warmups on their own line, never mixed into the work. They are
+                excluded from the volume and the set count above, so folding them
+                into one undifferentiated line here would make the numbers look
+                wrong rather than make the session look bigger. */}
+            {warmups.length > 0 && (
+              <p className="setline t-data">
+                <span className="logline-tag t-data">{fi.warmupsLabel}</span>
+                {setsLine(warmups)}
+              </p>
+            )}
+            {working.length > 0 && <p className="setline t-data">{setsLine(working)}</p>}
             {oneRm !== null && (
               <p className="t-data">
                 {fi.estimatedMax} ≈ {oneRm} kg
@@ -188,7 +200,7 @@ export function SessionSummary({
       <div className="footbar">
         <span className="t-data">
           {volumeKg(session).toLocaleString('fi')} kg ·{' '}
-          {fi.setCount(completedSetCount(session))}
+          {fi.setCount(workingSetCount(session))}
         </span>
         <button className="btn solid" style={{ marginLeft: 'auto' }} onClick={onDone}>
           {fi.done}

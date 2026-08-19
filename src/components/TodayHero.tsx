@@ -7,7 +7,7 @@ import { listMovements } from '../lib/movements'
 import { currentRotation } from '../lib/rotation'
 import {
   activeSession,
-  completedSetCount,
+  workingSetCount,
   startSession,
   volumeKg,
 } from '../lib/session'
@@ -73,7 +73,7 @@ export function TodayHero({
         <span className="hero-tag t-data">{fi.inProgress}</span>
         <h2 className="hero-name">{session.templateName ?? fi.startEmpty}</h2>
         <p className="hero-meta t-data">
-          {fi.setCount(completedSetCount(session))} ·{' '}
+          {fi.setCount(workingSetCount(session))} ·{' '}
           {duration(Date.now() - session.startedAt)}
         </p>
         <button className="btn solid hero-action" onClick={() => onOpenSession(session.id)}>
@@ -86,7 +86,7 @@ export function TodayHero({
   /* Trained already today: acknowledge it. Proposing the next routine the moment
      you finish one reads as nagging, so what is next is stated, not offered. */
   if (data.doneToday.length > 0) {
-    const sets = data.doneToday.reduce((n, s) => n + completedSetCount(s), 0)
+    const sets = data.doneToday.reduce((n, s) => n + workingSetCount(s), 0)
     const volume = data.doneToday.reduce((n, s) => n + volumeKg(s), 0)
     return (
       <section className="hero">

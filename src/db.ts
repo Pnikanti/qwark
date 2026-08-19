@@ -110,6 +110,31 @@ class QwarkDB extends Dexie {
      * the behaviour before this table existed.
      */
     this.version(8).stores({ sessionFeedback: 'sessionId, at' })
+    /**
+     * The draft is a working set now, and there is no longer a control that can
+     * turn one into the other.
+     *
+     * Every movement used to open on Lämmittely, so a session left open across
+     * this upgrade carries a warmup draft — and `commitSet` copies the committed
+     * kind into the next draft, so that one warmup would make every remaining set
+     * of the session a warmup, counted towards nothing, with no way back. Only the
+     * trailing draft is touched: it is the input, not a record, and warmups
+     * already logged are exactly what the user meant.
+     */
+    this.version(9).upgrade((tx) =>
+      tx
+        .table<Session>('sessions')
+        .toCollection()
+        .modify((session) => {
+          if (session.finishedAt !== null) return
+          for (const m of session.movements) {
+            const draft = m.sets.at(-1)
+            if (!draft || draft.done || draft.kind === 'working') continue
+            draft.kind = 'working'
+            draft.reps ??= m.targetReps
+          }
+        }),
+    )
   }
 }
 

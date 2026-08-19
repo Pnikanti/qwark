@@ -3,10 +3,10 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { NumberPad, type PadMode } from '../components/NumberPad'
 import { MovementHistory } from '../components/MovementHistory'
 import { MovementPicker } from '../components/MovementPicker'
+import { Sheet } from '../components/Sheet'
 import { useDragReorder } from '../lib/useDragReorder'
 import { fi } from '../i18n'
 import { listMovements } from '../lib/movements'
-import { toast } from '../lib/toast'
 import { clock, duration, kgLabel, setsLine } from '../lib/format'
 import {
   progressionFor,
@@ -18,8 +18,9 @@ import { primeAudio, restOver } from '../lib/cue'
 import { useAlerts, useGym } from '../lib/settings'
 import {
   addMovement,
+  applyWarmupRamp,
+  commitAsWarmup,
   commitSet,
-  convertWarmupsToWorking,
   draftIndex,
   draftSet,
   finishSession,
@@ -27,19 +28,17 @@ import {
   getSession,
   movementComplete,
   movementProgress,
+  nextMovementAfter,
   patchSet,
   previousPerformance,
   previousWarmups,
   removeMovement,
   removeSet,
   reorderMovements,
-  setDraftKind,
+  setLoggedKind,
   setMovementNote,
   sessionProgress,
   suggestionFor,
-  warmupOnlyMovements,
-  warmupsDone,
-  workingDone,
 } from '../lib/session'
 import type { LoggedSet, Session, SessionMovement, SetKind } from '../types'
 import type { Suggestion } from '../lib/session'
@@ -50,10 +49,21 @@ interface PadTarget {
   mode: PadMode
 }
 
+/** A logged set opened for correction. Held by index within its movement. */
+interface EditTarget {
+  mIndex: number
+  sIndex: number
+}
+
 /**
  * One movement is expanded at a time; the rest collapse to a single line.
  * Mid-workout your attention is on one set, and giving five movements equal
  * weight put 92 controls on screen for a one-set decision.
+ *
+ * The draft is always a working set. Everything that is a *decision* — whether
+ * to ramp, correcting a set you mislabelled, removing a movement — is either
+ * one tap on an offer or lives behind the movement's `⋯`, because in the gym the
+ * screen should ask one question at a time.
  */
 export function SessionScreen({
   id,
@@ -67,18 +77,21 @@ export function SessionScreen({
   const session = useLiveQuery(() => getSession(id), [id])
   const movements = useLiveQuery(listMovements, [])
   const [pad, setPad] = useState<PadTarget | null>(null)
+  const [editing, setEditing] = useState<EditTarget | null>(null)
   const [picking, setPicking] = useState(false)
   /** Movement id whose history is open, as a sheet over the session. */
   const [historyOf, setHistoryOf] = useState<string | null>(null)
+  /** uid of the movement whose ⋯ menu is open. Keyed by uid, not index, so a
+   *  reorder underneath cannot retarget `Poista liike` at another movement. */
+  const [menuOf, setMenuOf] = useState<string | null>(null)
+  /** uid of the movement whose note is being written. */
+  const [notingOf, setNotingOf] = useState<string | null>(null)
   const [restUntil, setRestUntil] = useState<number | null>(null)
   const [now, setNow] = useState(Date.now())
   /** null follows the workout; a uid means the user parked on that movement.
    *  Tracked by uid, not index, so reordering cannot shift the focus. */
   const [chosenUid, setChosenUid] = useState<string | null>(null)
-  const [showLogged, setShowLogged] = useState(false)
   const [upcomingOpen, setUpcomingOpen] = useState(false)
-  /** Movement indices holding only warmups, held while the check is on screen. */
-  const [warmupOnly, setWarmupOnly] = useState<number[] | null>(null)
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000)
@@ -175,84 +188,93 @@ export function SessionScreen({
 
   const focus = (index: number) => {
     setChosenUid(session.movements[index]?.uid ?? null)
-    setShowLogged(false)
     setUpcomingOpen(false)
   }
 
+  /** Index of the movement a sheet is open for, or -1. */
+  const indexOfUid = (uid: string | null) =>
+    uid === null ? -1 : session.movements.findIndex((m) => m.uid === uid)
+
   /**
-   * The number the pad shows greyed when the field is empty — the same
-   * inference the `Täytä` row below the input offers, so the two can never
-   * disagree about what is being proposed. Never shown over a logged set: that
-   * is a record being corrected, not a decision waiting to be made.
+   * What the offer resolves to for a movement's draft — the same numbers the
+   * cells show greyed and the tick commits, so the three can never disagree.
+   * `undefined` context means it has not loaded: no offer yet, or the tick
+   * would flip live under a finger already on its way down.
    */
-  const padHint = (at: PadTarget): number | null => {
-    const m = session.movements[at.mIndex]
-    const set = m.sets[at.sIndex]
+  const offerFor = (m: SessionMovement): Suggestion | null => {
+    const draft = draftSet(m)
     const ctx = context?.[m.movementId]
-    if (!set || set.done || !ctx?.next) return null
-    const s = suggestionFor(m, set.kind, ctx.ramp, {
+    if (!draft || !ctx) return null
+    return suggestionFor(m, draft.kind, ctx.ramp, {
       kg: ctx.next.kg,
       reps: ctx.next.reps,
       fromKg: ctx.next.fromKg,
     })
+  }
+
+  /**
+   * The number the pad shows greyed when the field is empty — the same offer the
+   * cells show. Never shown over a logged set: that is a record being corrected,
+   * not a decision waiting to be made.
+   */
+  const padHint = (at: PadTarget): number | null => {
+    const m = session.movements[at.mIndex]
+    const set = m.sets[at.sIndex]
+    if (!set || set.done) return null
+    const s = offerFor(m)
     return at.mode === 'kg' ? (s?.kg ?? null) : (s?.reps ?? null)
   }
 
   const commit = async (mIndex: number) => {
     const movement = session.movements[mIndex]
-    const draft = movement.sets.at(-1)
-    if (!draft || draft.done) return
-    const wasWarmup = draft.kind === 'warmup'
+    const offer = offerFor(movement)
+    const { logged, completedMovement } = await commitSet(
+      id,
+      mIndex,
+      offer ? { kg: offer.kg, reps: offer.reps } : undefined,
+    )
+    if (!logged) return
 
-    await commitSet(id, mIndex)
     // 12ms was below what a phone's vibration motor can spin up for — accepted by
     // the browser, felt as nothing. Still a tick, not a buzz: this fires 18 times
     // a session and the rest cue has to stay distinguishable from it.
     navigator.vibrate?.(30)
 
-    // Warmups are moved through quickly; a countdown after each would be noise.
-    if (!wasWarmup && movement.restSeconds) {
+    if (movement.restSeconds) {
       // Inside the tap, because iOS will not start an AudioContext from a timer.
       if (alerts.sound) primeAudio()
       setRestUntil(Date.now() + movement.restSeconds * 1000)
     }
 
-    // Advance once the plan is met. Warmups never trigger this.
-    if (wasWarmup) return
-    // Only on the transition into completion — otherwise every extra set would
-    // bounce you off a movement you deliberately came back to.
-    const planned = movement.plannedSets
-    if (planned !== null && workingDone(movement) + 1 === planned) {
-      const next = session.movements.findIndex(
-        (m, i) => i !== mIndex && !movementComplete(m),
-      )
-      setChosenUid(next === -1 ? null : session.movements[next].uid)
-      setShowLogged(false)
+    // Advance once the plan is met. `completedMovement` is decided inside the
+    // commit's transaction rather than predicted from this render's snapshot —
+    // see `commitSet`. The other movements are untouched by the write, so the
+    // snapshot is a fine place to look for where to go next.
+    if (completedMovement) {
+      const next = nextMovementAfter(session, mIndex)
+      setChosenUid(next === null ? null : session.movements[next].uid)
+      setUpcomingOpen(false)
     }
   }
 
-  const close = async () => {
+  /**
+   * The ramp, logged whole. Deliberately not routed through `commit` — that is
+   * where the rest timer and the auto-advance live, and neither belongs to
+   * warming up.
+   */
+  const ramp = async (mIndex: number) => {
+    const rungs = context?.[session.movements[mIndex].movementId]?.ramp ?? []
+    await applyWarmupRamp(id, mIndex, rungs)
+    navigator.vibrate?.(30)
+  }
+
+  const finish = async () => {
     const { kept } = await finishSession(id)
     kept ? onFinished(id) : onDiscarded()
   }
 
-  /**
-   * Everything opens on Lämmittely, and a warmup counts towards nothing, so a
-   * movement logged entirely in the wrong mode would vanish from every number
-   * the app keeps. Checked here rather than mid-set: switching modes on purpose
-   * is normal, and only at the end is it clear you never switched back.
-   */
-  const finish = async () => {
-    // A session with nothing logged has nothing to relabel — it is discarded, as
-    // it always was. This has to come first or the guard fires on an empty one.
-    const logged = session.movements.some((m) => m.sets.some((s) => s.done))
-    const suspect = logged ? warmupOnlyMovements(session) : []
-    if (suspect.length > 0) {
-      setWarmupOnly(suspect)
-      return
-    }
-    await close()
-  }
+  const menuIndex = indexOfUid(menuOf)
+  const noteIndex = indexOfUid(notingOf)
 
   return (
     <>
@@ -311,20 +333,16 @@ export function SessionScreen({
                 name={name(m.movementId)}
                 previousLine={context?.[m.movementId]?.line ?? ''}
                 proposal={context?.[m.movementId]?.next}
+                offer={offerFor(m)}
+                ready={context !== undefined}
                 ramp={context?.[m.movementId]?.ramp ?? []}
-                onApply={(kg, reps) =>
-                  patchSet(id, mIndex, m.sets.length - 1, { kg, reps })
-                }
-                showLogged={showLogged}
-                onToggleLogged={() => setShowLogged((v) => !v)}
+                onRamp={() => ramp(mIndex)}
                 onOpenHistory={() => setHistoryOf(m.movementId)}
-                handleProps={reorder.handleProps(mIndex)}
+                onOpenMenu={() => setMenuOf(m.uid)}
                 onOpenPad={(sIndex, mode) => setPad({ mIndex, sIndex, mode })}
+                onEditSet={(sIndex) => setEditing({ mIndex, sIndex })}
                 onCommit={() => commit(mIndex)}
-                onRemoveSet={(sIndex) => removeSet(id, mIndex, sIndex)}
-                onSetKind={(kind) => setDraftKind(id, mIndex, kind)}
-                onNote={(note) => setMovementNote(id, mIndex, note)}
-                onRemove={() => removeMovement(id, mIndex)}
+                onOpenNote={() => setNotingOf(m.uid)}
               />
             ) : (
               <CollapsedMovement
@@ -384,6 +402,60 @@ export function SessionScreen({
         </div>
       )}
 
+      {menuIndex >= 0 && (
+        <MovementMenu
+          movement={session.movements[menuIndex]}
+          name={name(session.movements[menuIndex].movementId)}
+          onClose={() => setMenuOf(null)}
+          onWarmup={async () => {
+            await commitAsWarmup(id, menuIndex)
+            navigator.vibrate?.(30)
+            setMenuOf(null)
+          }}
+          onNote={() => {
+            setNotingOf(session.movements[menuIndex].uid)
+            setMenuOf(null)
+          }}
+          onRemove={async () => {
+            setMenuOf(null)
+            await removeMovement(id, menuIndex)
+          }}
+        />
+      )}
+
+      {noteIndex >= 0 && (
+        <NoteSheet
+          name={name(session.movements[noteIndex].movementId)}
+          value={session.movements[noteIndex].note}
+          onSave={(note) => setMovementNote(id, noteIndex, note)}
+          onClose={() => setNotingOf(null)}
+        />
+      )}
+
+      {editing && session.movements[editing.mIndex]?.sets[editing.sIndex]?.done && (
+        <SetEditor
+          set={session.movements[editing.mIndex].sets[editing.sIndex]}
+          label={`${name(session.movements[editing.mIndex].movementId)} · ${
+            fi.set
+          } ${markerFor(session.movements[editing.mIndex], editing.sIndex)}`}
+          onKg={() => {
+            setPad({ ...editing, mode: 'kg' })
+            setEditing(null)
+          }}
+          onReps={() => {
+            setPad({ ...editing, mode: 'reps' })
+            setEditing(null)
+          }}
+          onKind={(kind) => setLoggedKind(id, editing.mIndex, editing.sIndex, kind)}
+          onRemove={async () => {
+            const at = editing
+            setEditing(null)
+            await removeSet(id, at.mIndex, at.sIndex)
+          }}
+          onClose={() => setEditing(null)}
+        />
+      )}
+
       {pad && (
         <NumberPad
           /* Switching kg → reps renders the same element type, so React would
@@ -403,74 +475,14 @@ export function SessionScreen({
           onCommit={async (v) => {
             const at = pad
             await patchSet(id, at.mIndex, at.sIndex, at.mode === 'kg' ? { kg: v } : { reps: v })
-            // Weight leads to reps; reps is the last field, so it closes and
-            // leaves the tick as the only thing left to press.
-            setPad(at.mode === 'kg' && v !== null ? { ...at, mode: 'reps' } : null)
+            // Weight leads to reps on a set being entered; reps is the last
+            // field, so it closes and leaves the tick as the only thing left to
+            // press. A logged set is a correction of one number, so it closes.
+            const draft = !session.movements[at.mIndex].sets[at.sIndex].done
+            setPad(draft && at.mode === 'kg' && v !== null ? { ...at, mode: 'reps' } : null)
           }}
           onClose={() => setPad(null)}
         />
-      )}
-
-      {warmupOnly && (
-        <div className="sheet-backdrop" onClick={() => setWarmupOnly(null)}>
-          <div
-            className="sheet"
-            role="dialog"
-            aria-modal="true"
-            aria-label={fi.checkBeforeFinish}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sheet-head">
-              <span className="t-data">{fi.checkBeforeFinish}</span>
-              <button className="revert" onClick={() => setWarmupOnly(null)}>
-                {fi.close}
-              </button>
-            </div>
-
-            <p className="check-intro">{fi.warmupOnlyIntro(warmupOnly.length)}</p>
-            <ul className="ledger check-list">
-              {warmupOnly.map((mIndex) => {
-                const m = session.movements[mIndex]
-                return (
-                  <li key={m.uid} className="check-row">
-                    <span className="t-name">{name(m.movementId)}</span>
-                    <span className="logline">
-                      <span className="logline-tag t-data">{fi.warmupsLabel}</span>
-                      {setsLine(warmupsDone(m))}
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
-            <p className="note">{fi.warmupOnlyWhy}</p>
-
-            {/* Neither is the default. Warming up and stopping is a real thing
-                that happens, so the app must not quietly rewrite it — and a
-                mis-logged session must not quietly disappear either. */}
-            <div className="check-actions">
-              <button
-                className="btn btn-tall"
-                onClick={async () => {
-                  await convertWarmupsToWorking(id, warmupOnly)
-                  toast(fi.markedAsWorking(warmupOnly.length))
-                  setWarmupOnly(null)
-                  await close()
-                }}
-              >
-                {fi.markAsWorking}
-              </button>
-              <button
-                className="btn btn-tall"
-                onClick={async () => {
-                  setWarmupOnly(null)
-                  await close()
-                }}
-              >
-                {fi.finishAnyway}
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {historyOf && (
@@ -489,7 +501,6 @@ export function SessionScreen({
             const uid = await addMovement(id, movementId)
             setPicking(false)
             setChosenUid(uid)
-            setShowLogged(false)
           }}
           onClose={() => setPicking(false)}
         />
@@ -498,9 +509,8 @@ export function SessionScreen({
   )
 }
 
-/** Label for the set being entered: warmup, planned set, or one beyond the plan. */
-function draftLabelFor(m: SessionMovement, draft: LoggedSet): string {
-  if (draft.kind === 'warmup') return fi.warmupNumber(warmupsDone(m).length + 1)
+/** Label for the set being entered: a planned set, or one beyond the plan. */
+function draftLabelFor(m: SessionMovement): string {
   const { done, total, extra } = movementProgress(m)
   if (total !== null && done >= total) return fi.extraSet(extra + 1)
   return fi.setOf(done + 1, total ?? 0)
@@ -523,8 +533,11 @@ function nextUpLine(
   if (current && (parked || !movementComplete(current))) {
     const draft = draftSet(current)
     if (draft) {
-      const load = draft.kg ? ` · ${kgLabel(draft.kg)} kg × ${draft.reps ?? '–'}` : ''
-      return `${fi.nextUp}: ${draftLabelFor(current, draft)}${load}`
+      // `!== null` rather than truthiness: 0 kg is bodyweight, a real load that
+      // was deliberately recorded, and it must not read as an empty field.
+      const load =
+        draft.kg !== null ? ` · ${kgLabel(draft.kg)} kg × ${draft.reps ?? '–'}` : ''
+      return `${fi.nextUp}: ${draftLabelFor(current)}${load}`
     }
   }
   const upcoming = session.movements.find((m, i) => i !== active && !movementComplete(m))
@@ -606,7 +619,10 @@ function suggestionText(
 
 export type GripProps = Omit<React.ComponentProps<'button'>, 'className' | 'children'>
 
-/** Drag handle. Also moves the row with the arrow keys, so it is not mouse-only. */
+/** Drag handle. Also moves the row with the arrow keys, so it is not mouse-only.
+ *  It lives on collapsed rows only — those are what you reorder, and dragging
+ *  force-opens the list. The active movement's header has no room for a control
+ *  that does nothing to the set in front of you. */
 function Grip({ label, ...props }: GripProps & { label: string }) {
   return (
     <button className="grip" aria-label={label} title={label} {...props}>
@@ -620,61 +636,68 @@ function ActiveMovement({
   name,
   previousLine,
   proposal,
+  offer,
+  ready,
   ramp,
-  onApply,
-  showLogged,
-  onToggleLogged,
+  onRamp,
   onOpenHistory,
-  handleProps,
+  onOpenMenu,
   onOpenPad,
+  onEditSet,
   onCommit,
-  onRemoveSet,
-  onSetKind,
-  onNote,
-  onRemove,
+  onOpenNote,
 }: {
   movement: SessionMovement
   name: string
   previousLine: string
   proposal: Progression | undefined
+  offer: Suggestion | null
+  /** Whether the offer has loaded. Until it has there is nothing to affirm. */
+  ready: boolean
   ramp: LoggedSet[]
-  onApply: (kg: number, reps: number | null) => void
-  showLogged: boolean
-  onToggleLogged: () => void
+  onRamp: () => void
   onOpenHistory: () => void
-  handleProps: GripProps
-  onNote: (note: string) => void
+  onOpenMenu: () => void
   onOpenPad: (sIndex: number, mode: PadMode) => void
+  onEditSet: (sIndex: number) => void
   onCommit: () => void
-  onRemoveSet: (sIndex: number) => void
-  onSetKind: (kind: SetKind) => void
-  onRemove: () => void
+  onOpenNote: () => void
 }) {
   const { done, total, extra } = movementProgress(m)
   const draftAt = draftIndex(m)
   const draft = draftAt === null ? null : m.sets[draftAt]
-  const warmups = warmupsDone(m)
-  const working = m.sets.filter((s) => s.done && s.kind === 'working')
-  const loggedRows = m.sets
+  const anyLogged = m.sets.some((s) => s.done)
+
+  const warmups = m.sets
     .map((set, sIndex) => ({ set, sIndex }))
-    .filter(({ set }) => set.done)
+    .filter(({ set }) => set.done && set.kind === 'warmup')
+  const working = m.sets
+    .map((set, sIndex) => ({ set, sIndex }))
+    .filter(({ set }) => set.done && set.kind === 'working')
+
+  /* Offered only before the first set: a ramp belongs at the start, and the row
+     disappearing on the first tap is also what makes a double tap unreachable.
+     A ramp with no load is not a ramp — `setsLine` would render it as bare rep
+     counts, which says nothing about what to put on the bar. */
+  const showRamp =
+    !anyLogged && ramp.length > 0 && ramp.some((r) => r.kg !== null && r.kg > 0)
 
   return (
     <section className="active">
       <div className="active-head">
-        <Grip {...handleProps} label={`${fi.reorder}: ${name}`} />
         <h2 className="t-name grow">{name}</h2>
         <span className="t-data">
           {total === null ? done : `${done}/${total}`}
           {extra > 0 && <span className="extra"> {fi.plusExtra(extra)}</span>}
         </span>
         <button
-          className="quiet-x"
-          onClick={onRemove}
-          aria-label={fi.removeMovement}
-          title={fi.removeMovement}
+          className="menu-btn"
+          onClick={onOpenMenu}
+          aria-haspopup="dialog"
+          aria-label={fi.movementActions}
+          title={fi.movementActions}
         >
-          ×
+          <span aria-hidden="true">⋯</span>
         </button>
       </div>
 
@@ -682,9 +705,9 @@ function ActiveMovement({
           used to be inert text labelled "Edellinen" — ambiguous between the
           previous set and the previous session, and a dead end either way. */}
       {/* With no history the label and its value said the same nothing twice, so
-          the row folds to the bare door — the same shape `Note` takes when there
-          is nothing written yet. The button itself stays either way: it is the
-          only way into the history sheet from here. */}
+          the row folds to the bare door — the same shape the note takes when
+          there is nothing written yet. The button itself stays either way: it is
+          the only way into the history sheet from here. */}
       <button className="prev" onClick={onOpenHistory}>
         {previousLine && (
           <span className="grow">
@@ -695,130 +718,82 @@ function ActiveMovement({
         <span className="t-data prev-more">{fi.history} ▸</span>
       </button>
 
-
-      {/* Logged work is history. Warmups read on their own line so they are
-          visibly tracked without being confused for the work. */}
-      {(warmups.length > 0 || working.length > 0) && !showLogged && (
-        <button className="doneline" onClick={onToggleLogged}>
-          <span className="grow">
-            {warmups.length > 0 && (
-              <span className="logline">
-                <span className="logline-tag t-data">{fi.warmupsLabel}</span>
-                {setsLine(warmups)}
-              </span>
-            )}
-            {working.length > 0 && (
-              <span className="logline">
-                <span className="logline-tag t-data">{fi.workingLabel}</span>
-                {setsLine(working)}
-              </span>
-            )}
-          </span>
-          <span className="t-data">{fi.editLogged}</span>
-        </button>
+      {/* Logged work stays visible as records, one button per set so a
+          mislabelled or mistyped one can be corrected where it is read. Warmups
+          read on their own line so they are visibly tracked without being
+          confused for the work. */}
+      {(warmups.length > 0 || working.length > 0) && (
+        <div className="logged">
+          {warmups.length > 0 && (
+            <LoggedLine label={fi.warmupsLabel} rows={warmups} onEdit={onEditSet} />
+          )}
+          {working.length > 0 && (
+            <LoggedLine label={fi.workingLabel} rows={working} onEdit={onEditSet} />
+          )}
+        </div>
       )}
 
-      {showLogged && (
-        <>
-          <button className="doneline open" onClick={onToggleLogged}>
-            <span className="grow t-data">{fi.hideLogged}</span>
-            <span className="t-data">▲</span>
-          </button>
-          <div className="setgrid">
-            <span className="t-data">{fi.set}</span>
-            <span className="t-data">kg</span>
-            <span className="t-data">{fi.reps}</span>
-            <span />
-            {loggedRows.map(({ set, sIndex }) => (
-              <LoggedRow
-                key={sIndex}
-                set={set}
-                marker={markerFor(m, sIndex)}
-                onKg={() => onOpenPad(sIndex, 'kg')}
-                onReps={() => onOpenPad(sIndex, 'reps')}
-                onRemove={() => onRemoveSet(sIndex)}
-              />
-            ))}
-          </div>
-        </>
+      {/* The ramp you did last time, as one tap. Warming up is no longer a mode
+          you have to notice and switch out of — it is an offer you take or
+          ignore, and ignoring it leaves you on the working set. */}
+      {showRamp && (
+        <button className="ramp" onClick={onRamp}>
+          <span className="ramp-tag t-data">{fi.warmupsLabel}</span>
+          <span className="t-data grow">{setsLine(ramp)}</span>
+          <span className="ramp-apply t-data">{fi.addRamp}</span>
+        </button>
       )}
 
       {/* The one input: the set about to be done. */}
       {draft && draftAt !== null && (
         <Draft
           set={draft}
-          suggestion={
-            proposal
-              ? suggestionFor(m, draft.kind, ramp, {
-                  kg: proposal.kg,
-                  reps: proposal.reps,
-                  fromKg: proposal.fromKg,
-                })
-              : null
-          }
+          offer={ready ? offer : null}
           proposalKind={proposal?.kind}
           proposalReason={proposal?.reason}
-          onApply={onApply}
-          label={draftLabelFor(m, draft)}
-          onSetKind={onSetKind}
+          label={draftLabelFor(m)}
+          targetReps={m.targetReps}
           onKg={() => onOpenPad(draftAt, 'kg')}
           onReps={() => onOpenPad(draftAt, 'reps')}
           onCommit={onCommit}
         />
       )}
 
-      <Note value={m.note} onChange={onNote} />
+      {/* Shown when there is something to say. Writing one is in the ⋯ menu:
+          it matters, but it is not what you came to this screen for. */}
+      {m.note && (
+        <button className="noteline" onClick={onOpenNote}>
+          <span className="grow">{m.note}</span>
+          <span className="t-data">{fi.editLogged}</span>
+        </button>
+      )}
     </section>
   )
 }
 
-/**
- * Folded away unless there is something to say — notes matter but they are not
- * what you came to this screen for. Carried forward from the last session, so a
- * standing cue keeps showing up.
- */
-function Note({
-  value,
-  onChange,
+/** One kind of logged set, as a row of correctable chips. */
+function LoggedLine({
+  label,
+  rows,
+  onEdit,
 }: {
-  value: string | null
-  onChange: (note: string) => void
+  label: string
+  rows: { set: LoggedSet; sIndex: number }[]
+  onEdit: (sIndex: number) => void
 }) {
-  const [open, setOpen] = useState(false)
-  const [draft, setDraft] = useState(value ?? '')
-
-  if (!open && !value)
-    return (
-      <button className="revert note-add" onClick={() => setOpen(true)}>
-        + {fi.note}
-      </button>
-    )
-
-  if (!open)
-    return (
-      <button className="noteline" onClick={() => setOpen(true)}>
-        <span className="grow">{value}</span>
-        <span className="t-data">{fi.editLogged}</span>
-      </button>
-    )
-
   return (
-    <div className="field note-field">
-      <div className="field-label">
-        <span className="t-data">{fi.note}</span>
-      </div>
-      <textarea
-        className="note-input"
-        autoFocus
-        rows={2}
-        value={draft}
-        placeholder={fi.notePlaceholder}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => {
-          onChange(draft)
-          setOpen(false)
-        }}
-      />
+    <div className="logline">
+      <span className="logline-tag t-data">{label}</span>
+      {rows.map(({ set, sIndex }) => (
+        <button
+          key={sIndex}
+          className="setchip t-data"
+          onClick={() => onEdit(sIndex)}
+          aria-label={`${fi.editSet}: ${setsLine([set])}`}
+        >
+          {setsLine([set])}
+        </button>
+      ))}
     </div>
   )
 }
@@ -832,65 +807,205 @@ function markerFor(m: SessionMovement, sIndex: number): string {
 }
 
 /**
- * The input. One set at a time, with the kind chosen before logging so a warmup
- * is a first-class entry rather than a working row that got reclassified.
+ * The input. Always a working set — the kind is not a question asked eighteen
+ * times a session, and a set logged in the wrong one is corrected where it is
+ * read rather than pre-empted by a mode switch.
  */
 function Draft({
   set,
   label,
-  suggestion,
+  offer,
   proposalKind,
   proposalReason,
-  onApply,
-  onSetKind,
+  targetReps,
   onKg,
   onReps,
   onCommit,
 }: {
   set: LoggedSet
   label: string
-  suggestion: Suggestion | null
+  offer: Suggestion | null
   proposalKind?: ProgressionKind
   proposalReason?: ProgressionReason
-  onApply: (kg: number, reps: number | null) => void
-  onSetKind: (kind: SetKind) => void
+  targetReps: number | null
   onKg: () => void
   onReps: () => void
   onCommit: () => void
 }) {
-  // 0 is a value; null is not. A set with either field unset has nothing in it.
+  /* What the tick would commit. `?? null` throughout and never truthiness: 0 is
+     a value — it means bodyweight — and only null means never entered. This is
+     the same resolution `commitSet` performs inside its transaction, so an
+     enabled tick can never turn out to be a no-op. */
+  const kg = set.kg ?? offer?.kg ?? null
+  const reps = set.reps ?? offer?.reps ?? targetReps ?? null
+  const ready = kg !== null && reps !== null
+
   const missing =
-    set.kg === null && set.reps === null
+    kg === null && reps === null
       ? fi.needBoth
-      : set.kg === null
+      : kg === null
         ? fi.needWeight
-        : set.reps === null
+        : reps === null
           ? fi.needReps
           : null
 
-  const warmup = set.kind === 'warmup'
-
   return (
-    /* The mode colours the whole input, not just the switch. A warmup really is a
-       different kind of record — excluded from volume, from 1RM and from
-       progression — so it should not look like a working set with a chip toggled. */
-    <div className={`draft${warmup ? ' is-warmup' : ''}`}>
-      <div className="segmented" role="group" aria-label={fi.setKind}>
-        {(['warmup', 'working'] as SetKind[]).map((kind) => (
-          <button
-            key={kind}
-            className="segment"
-            aria-pressed={set.kind === kind}
-            onClick={() => onSetKind(kind)}
-          >
-            {kind === 'warmup' ? fi.warmupsLabel : fi.working}
-          </button>
-        ))}
-      </div>
-
+    <div className="draft">
       <span className="t-data draft-label">{label}</span>
 
       <div className="draft-row">
+        <Cell
+          value={set.kg}
+          offered={offer?.kg ?? null}
+          unit="kg"
+          format={kgLabel}
+          onClick={onKg}
+        />
+        <Cell
+          value={set.reps}
+          offered={offer?.reps ?? targetReps ?? null}
+          unit={fi.reps}
+          format={String}
+          onClick={onReps}
+        />
+        <button
+          className="tick big"
+          onClick={onCommit}
+          disabled={!ready}
+          aria-label={fi.logSet}
+        >
+          ✓
+        </button>
+      </div>
+
+      {/* Where the offered load came from. Only while it is still an offer: once
+          a weight is typed, a line reading "Ehdotus 92,5 kg" under a cell showing
+          100 would be describing a number that is no longer on screen. */}
+      {offer && set.kg === null && (
+        <p className={`offer-why t-data kind-${proposalKind ?? 'hold'}`}>
+          {suggestionText(offer, proposalKind, proposalReason)}
+        </p>
+      )}
+
+      {missing && <p className="draft-missing t-data">{missing}</p>}
+    </div>
+  )
+}
+
+/**
+ * One field of the input.
+ *
+ * A stored value renders solid; an offer renders greyed and dashed, borrowing the
+ * pad's language exactly — grey means shown but not entered, dashed means
+ * inferred. A rep target copied from the routine you picked is *stored*, so it
+ * reads solid: it is a plan, not a guess.
+ */
+function Cell({
+  value,
+  offered,
+  unit,
+  format,
+  onClick,
+}: {
+  value: number | null
+  offered: number | null
+  unit: string
+  format: (n: number) => string
+  onClick: () => void
+}) {
+  const shown = value ?? offered
+  const isOffer = value === null && offered !== null
+  return (
+    <button className="cell next" onClick={onClick}>
+      <span
+        className={`cell-value${isOffer ? ' is-ghost is-offer' : ''}`}
+        aria-label={isOffer ? `${fi.padOffer} ${format(offered!)}` : undefined}
+      >
+        {shown === null ? '–' : format(shown)}
+      </span>
+      <span className="cell-unit t-data">{unit}</span>
+    </button>
+  )
+}
+
+/**
+ * Everything about the movement that is not the set in front of you.
+ *
+ * Built on `Sheet` rather than hand-rolled, so it gets the focus trap, Escape and
+ * focus restore the five older sheets in this app do without.
+ */
+function MovementMenu({
+  movement: m,
+  name,
+  onClose,
+  onWarmup,
+  onNote,
+  onRemove,
+}: {
+  movement: SessionMovement
+  name: string
+  onClose: () => void
+  onWarmup: () => void
+  onNote: () => void
+  onRemove: () => void
+}) {
+  const draft = draftSet(m)
+  // Logging the draft as a warmup uses the numbers already in the input rather
+  // than asking for them twice, so it needs them to be there.
+  const canWarmup = draft !== null && draft.kg !== null && draft.reps !== null
+
+  return (
+    <Sheet label={name} onClose={onClose}>
+      <div className="sheet-head">
+        <span className="t-data">{name}</span>
+        <button className="revert" onClick={onClose}>
+          {fi.close}
+        </button>
+      </div>
+      <div className="menu">
+        <button className="menu-item" onClick={onWarmup} disabled={!canWarmup}>
+          <span className="grow">{fi.logAsWarmup}</span>
+        </button>
+        {!canWarmup && <p className="note menu-hint">{fi.logAsWarmupHint}</p>}
+        <button className="menu-item" onClick={onNote}>
+          <span className="grow">{m.note ? fi.editNote : fi.addNote}</span>
+        </button>
+        <button className="menu-item danger" onClick={onRemove}>
+          <span className="grow">{fi.removeMovement}</span>
+        </button>
+      </div>
+    </Sheet>
+  )
+}
+
+/** Correcting a set already logged. Where a mislabelled warmup gets fixed. */
+function SetEditor({
+  set,
+  label,
+  onKg,
+  onReps,
+  onKind,
+  onRemove,
+  onClose,
+}: {
+  set: LoggedSet
+  label: string
+  onKg: () => void
+  onReps: () => void
+  onKind: (kind: SetKind) => void
+  onRemove: () => void
+  onClose: () => void
+}) {
+  return (
+    <Sheet label={label} onClose={onClose}>
+      <div className="sheet-head">
+        <span className="t-data">{label}</span>
+        <button className="revert" onClick={onClose}>
+          {fi.close}
+        </button>
+      </div>
+
+      <div className="draft-row edit-row">
         <button className="cell next" onClick={onKg}>
           <span className="cell-value">{set.kg === null ? '–' : kgLabel(set.kg)}</span>
           <span className="cell-unit t-data">kg</span>
@@ -899,62 +1014,77 @@ function Draft({
           <span className="cell-value">{set.reps ?? '–'}</span>
           <span className="cell-unit t-data">{fi.reps}</span>
         </button>
-        <button
-          className="tick big"
-          onClick={onCommit}
-          disabled={missing !== null}
-          aria-label={fi.logSet}
-        >
-          ✓
-        </button>
       </div>
 
-      {/* Inferred, never applied on its own — one tap fills the blanks. */}
-      {suggestion && set.kg === null && (
-        <button
-          className={`suggestion t-data kind-${proposalKind ?? 'hold'}`}
-          onClick={() => onApply(suggestion.kg, set.reps ?? suggestion.reps)}
-        >
-          <span className="grow">{suggestionText(suggestion, proposalKind, proposalReason)}</span>
-          <span className="suggestion-apply">{fi.applySuggestion}</span>
-        </button>
-      )}
+      {/* The kind lives here rather than on the input, because this is the only
+          moment it is ever wrong: you know what a set was once you have done it.
+          A warmup counts towards nothing, so being able to say so afterwards is
+          what keeps the numbers honest. */}
+      <div className="segmented" role="group" aria-label={fi.setKind}>
+        {(['warmup', 'working'] as SetKind[]).map((kind) => (
+          <button
+            key={kind}
+            className="segment"
+            aria-pressed={set.kind === kind}
+            onClick={() => onKind(kind)}
+          >
+            {kind === 'warmup' ? fi.warmupsLabel : fi.working}
+          </button>
+        ))}
+      </div>
 
-      {missing && !suggestion && <p className="draft-missing t-data">{missing}</p>}
-    </div>
+      <button className="menu-item danger" onClick={onRemove}>
+        <span className="grow">{fi.removeSet}</span>
+      </button>
+    </Sheet>
   )
 }
 
-/** A set already logged: editable, deletable, never un-tickable. */
-function LoggedRow({
-  set,
-  marker,
-  onKg,
-  onReps,
-  onRemove,
+/**
+ * Notes matter but they are not what you came to this screen for, so writing one
+ * is a deliberate trip through the menu. Carried forward from the last session,
+ * so a standing cue keeps showing up.
+ */
+function NoteSheet({
+  name,
+  value,
+  onSave,
+  onClose,
 }: {
-  set: LoggedSet
-  marker: string
-  onKg: () => void
-  onReps: () => void
-  onRemove: () => void
+  name: string
+  value: string | null
+  onSave: (note: string) => void
+  onClose: () => void
 }) {
+  const [draft, setDraft] = useState(value ?? '')
+
   return (
-    <>
-      <span className={`marker static${set.kind === 'warmup' ? ' warm' : ''}`}>
-        {marker}
-      </span>
-      <button className="cell locked" onClick={onKg}>
-        {set.kg === null ? '–' : kgLabel(set.kg)}
-      </button>
-      <button className="cell locked" onClick={onReps}>
-        {set.reps ?? '–'}
-      </button>
-      <span className="set-actions">
-        <button className="quiet-x" onClick={onRemove} aria-label={fi.removeSet}>
-          ×
+    <Sheet label={fi.note} onClose={onClose}>
+      <div className="sheet-head">
+        <span className="t-data">
+          {fi.note} · {name}
+        </span>
+        <button className="revert" onClick={onClose}>
+          {fi.close}
         </button>
-      </span>
-    </>
+      </div>
+      <textarea
+        className="note-input"
+        autoFocus
+        rows={3}
+        value={draft}
+        placeholder={fi.notePlaceholder}
+        onChange={(e) => setDraft(e.target.value)}
+      />
+      <button
+        className="btn solid btn-tall sheet-commit"
+        onClick={() => {
+          onSave(draft)
+          onClose()
+        }}
+      >
+        {fi.done}
+      </button>
+    </Sheet>
   )
 }

@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { fi } from '../i18n'
 import { durationOrDash, localDay, shortDate, weekdayName } from '../lib/format'
-import { completedSetCount, volumeKg } from '../lib/session'
+import { workingSetCount, volumeKg } from '../lib/session'
 
 /**
  * One day: what was trained, and one way to add to it.
@@ -61,7 +61,7 @@ export function Day({
                 <span className="grow">
                   <span className="t-name">{s.templateName ?? fi.startEmpty}</span>
                   <span className="t-data">
-                    {shortDate(s.startedAt)} · {fi.setCount(completedSetCount(s))}
+                    {shortDate(s.startedAt)} · {fi.setCount(workingSetCount(s))}
                     {volumeKg(s) > 0 && ` · ${volumeKg(s).toLocaleString('fi')} kg`}
                     {s.finishedAt !== null &&
                       ` · ${durationOrDash(s.finishedAt - s.startedAt)}`}

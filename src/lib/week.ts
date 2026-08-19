@@ -1,7 +1,7 @@
 import { db } from '../db'
 import { addDays, localDay } from './format'
 import { listMovements } from './movements'
-import { completedSetCount, volumeKg, workingDone } from './session'
+import { workingSetCount, volumeKg, workingDone } from './session'
 import type { Session } from '../types'
 
 export interface WeekDay {
@@ -120,7 +120,7 @@ export async function weekOf(at: number): Promise<Week> {
     end,
     days,
     sessionCount: sessions.length,
-    setCount: sessions.reduce((n, s) => n + completedSetCount(s), 0),
+    setCount: sessions.reduce((n, s) => n + workingSetCount(s), 0),
     volume: sessions.reduce((n, s) => n + volumeKg(s), 0),
     muscleLoad,
     workedMuscles: Object.keys(raw),
